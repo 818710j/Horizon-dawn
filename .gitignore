@@ -54,3 +54,5 @@ ExportedObj/
 
 #idea stuff
 .idea/
+*.meta
+Assets.zip

@@ -7,7 +7,6 @@ using GameDatabase.DataModel;
 using GameDatabase.Model;
 using GameModel;
 using UnityEngine;
-using Utils;
 using Zenject;
 using Helpers = GameModel.Serialization.Helpers;
 
@@ -125,7 +124,7 @@ namespace Session.Content
 			var version = Helpers.DeserializeInt(buffer, ref index);
 			if (version != CurrentVersion && !TryUpgrade(ref buffer, version, gameSeed))
 			{
-				OptimizedDebug.Log("RegionData: incorrect data version");
+				UnityEngine.Debug.Log("RegionData: incorrect data version");
                 throw new ArgumentException();
             }
 

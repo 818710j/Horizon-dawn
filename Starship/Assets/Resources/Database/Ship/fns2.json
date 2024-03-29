@@ -1,7 +1,7 @@
 {
   "ItemType": 6,
   "Id": 70,
-  "ShipCategory": 3,
+  "ShipCategory": 1,
   "Name": "$fn_Cruiser",
   "SizeClass": 1,
   "IconImage": "fns5",

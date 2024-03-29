@@ -32,5 +32,6 @@
     <string name="SpecialityDestroyer">驱逐舰</string>
     <string name="SpecialityCruiser">巡洋舰</string>
     <string name="SpecialityBattleship">战舰</string>
+    <string name="SpecialitysubTitan">次旗舰</string>
     <string name="SpecialityTitan">旗舰</string>
 </resources>

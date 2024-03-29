@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="StarCurrency">Stars</string>
+    <string name="StarCurrency">Dawn point</string>
     <string name="TokenCurrency">Tokens</string>
     <string name="Snowflakes">Snowflakes</string>
     <string name="NoItemsInCategory">No items were found in this category</string>

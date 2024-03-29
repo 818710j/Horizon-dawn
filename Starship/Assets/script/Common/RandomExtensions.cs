@@ -19,9 +19,9 @@ public static class RandomExtension
 
     public static bool Percentage(this Random random, int value)
     {
-        if (value < 0)
+        if (value <= 0)
             return false;
-        if (value > 100)
+        if (value >= 100)
             return true;
 
         return random.Next(100) < value;

@@ -9,7 +9,7 @@ namespace Constructor.Modification
     {
         public DroneDamage(ModificationQuality quality)
         {
-            _multiplier = quality.PowerMultiplier(0.5f, 0.7f, 0.8f, 1.3f, 1.8f, 2.5f);
+            _multiplier = quality.PowerMultiplier(0.4f, 0.6f, 0.8f, 1.3f, 1.6f, 1.9f, 2.2f);
             Quality = quality;
         }
 

@@ -10,7 +10,7 @@ namespace Constructor.Modification
     {
         public ShieldPower(ModificationQuality quality)
         {
-            _multiplier = quality.PowerMultiplier(0.5f, 0.7f, 0.8f, 1.1f, 1.25f, 1.5f);
+            _multiplier = quality.PowerMultiplier(0.6f, 0.7f, 0.8f, 1.1f, 1.2f, 1.3f, 1.4f);
             Quality = quality;
         }
 

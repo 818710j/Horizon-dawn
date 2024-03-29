@@ -14,9 +14,7 @@ namespace GameDatabase.Storage
             var size = (uint)(data.Length - 1);
             byte checksumm = 0;
             for (var i = 0; i < size; ++i)
-            {
                 checksumm += data[i];
-            }
 
             if (checksumm != data[size])
                 throw new Exception($"FileDatabaseStorage: CheckSumm error - {checksumm} {data[data.Length - 1]}");
@@ -36,7 +34,6 @@ namespace GameDatabase.Storage
 
             _startIndex = index;
         }
-
         public string Name { get; }
         public string Id { get; }
         public int SchemaVersion { get; }

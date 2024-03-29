@@ -26,9 +26,9 @@ namespace Economy
             if (amount < 10000)
                 return amount.ToString();
             if (amount < 10000000)
-                return amount/1000 + "K";
+                    return amount/1000 + "K";
             else
-                return amount/1000000 + "M";
+                return amount/1000000 + "m";
         }
 
         public static Price Premium(long amount)
@@ -80,6 +80,7 @@ namespace Economy
                     return _amount > 0 ? (int)(playerResources.Tokens / _amount) : int.MaxValue;
                 case Currency.Snowflakes:
                     return _amount > 0 ? (int)(playerResources.Snowflakes / _amount) : int.MaxValue;
+                case Currency.Money:
                 case Currency.None:
                     return 1;
                 default:
@@ -123,6 +124,7 @@ namespace Economy
                         return false;
                     playerResources.Snowflakes = Clamp(snowflakes - _amount);
                     return true;
+                case Currency.Money:
                 case Currency.None:
                     return true;
                 default:
@@ -146,6 +148,7 @@ namespace Economy
                 case Currency.Snowflakes:
                     playerResources.Snowflakes = Clamp(playerResources.Snowflakes +_amount);
                     break;
+                case Currency.Money:
                 case Currency.None:
                 default:
                     throw new System.ArgumentException();
@@ -157,11 +160,11 @@ namespace Economy
             return new Product(factory.CreateCurrencyItem(Currency), Clamp(_amount));
         }
 
-        public static Price ComponentPrice(GameDatabase.DataModel.Component component, float qualityMultiplier = 1.0f)
+        public static Price ComponentPrice(GameDatabase.DataModel.Component component, float qualityMultiplier = 1f)
         {
-            var price = 50f + component.Level * 20f;
+            var price = 100f + (component.Level * 10f) ;
             if (component.Weapon != null)
-                price *= 2f;
+                price *= 1.25f;
             price *= qualityMultiplier;
 
             return new Price(UnityEngine.Mathf.RoundToInt(price), Currency.Credits);
@@ -170,26 +173,26 @@ namespace Economy
         public static Price SatellitePrice(GameDatabase.DataModel.Satellite satellite, bool premium = false)
         {
             if (premium)
-                return Price.Premium(satellite.Layout.CellCount);
+                return Price.Premium(satellite.Layout.CellCount*2);
             else
-                return Price.Common(satellite.Layout.CellCount*satellite.Layout.CellCount*20);
+                return Price.Common(satellite.Layout.CellCount*200);
         }
 
         public static Price ComponentPremiumPrice(GameDatabase.DataModel.Component component, float qualityMultiplier = 1.0f)
         {
             if (CurrencyExtensions.PremiumCurrencyAllowed)
             {
-                var price = qualityMultiplier*component.Level*0.1f;
+                var price = (qualityMultiplier + component.Level / 10f);
                 if (component.Weapon != null)
-                    price *= 1.5f;
+                    price *= 1.25f;
 
                 return new Price(1 + UnityEngine.Mathf.RoundToInt(price), Currency.Stars);
             }
             else
             {
-                var price = 100f + qualityMultiplier * component.Level * 100f;
+                var price = (qualityMultiplier + component.Level * 10f);
                 if (component.Weapon != null)
-                    price *= 1.5f;
+                    price *= 1.25f;
 
                 return new Price(1 + UnityEngine.Mathf.RoundToInt(price), Currency.Credits);
             }

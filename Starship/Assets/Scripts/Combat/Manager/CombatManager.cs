@@ -20,7 +20,6 @@ using Maths;
 using Model.Military;
 using Services.ObjectPool;
 using Services.Reources;
-using Utils;
 using Zenject;
 
 
@@ -69,7 +68,7 @@ namespace Combat.Manager
 
         public void Initialize()
         {
-            OptimizedDebug.Log("OnCombatStarted");
+            UnityEngine.Debug.Log("OnCombatStarted");
 
             var random = new System.Random();
 
@@ -89,9 +88,8 @@ namespace Combat.Manager
                     var position = _scene.FindFreePlace(20f, UnitSide.Undefined);
 
                     var weight = size * size * 5f;
-                    var powerMult = _combatModel.Rules.DisableBonusses ? 1 : powerMultiplier;
-                    var hitPoints = size * size * 100 * powerMult;
-                    var damageMultiplier = powerMult;
+                    var hitPoints = size * size * 100 * powerMultiplier;
+                    var damageMultiplier = powerMultiplier;
 
                     var velocity = Random.insideUnitCircle * 10 / size;
                     _spaceObjectFactory.CreateAsteroid(position, velocity, size, weight, hitPoints, damageMultiplier);
@@ -105,15 +103,13 @@ namespace Combat.Manager
                 var b = random.NextFloat();
                 var color = Color.Lerp(new Color(r, g, b), Color.gray, 0.5f);
 
-                var position = new Vector2(_scene.Settings.AreaWidth * random.NextFloat(),
-                    _scene.Settings.AreaHeight * random.NextFloat());
+                var position = new Vector2(_scene.Settings.AreaWidth * random.NextFloat(), _scene.Settings.AreaHeight * random.NextFloat());
                 var size = 30 + random.NextFloat() * 10;
                 _spaceObjectFactory.CreatePlanet(position, size, color);
             }
 
             if (_combatModel.Rules.InitialEnemies > 1)
-                foreach (var ship in _combatModel.EnemyFleet.Ships.Where(item => item.Status == ShipStatus.Ready)
-                             .Skip(1).Take(_combatModel.Rules.InitialEnemies - 1))
+                foreach (var ship in _combatModel.EnemyFleet.Ships.Where(item => item.Status == ShipStatus.Ready).Skip(1).Take(_combatModel.Rules.InitialEnemies - 1))
                     CreateShip(ship);
         }
 
@@ -129,12 +125,12 @@ namespace Combat.Manager
                 case UnitSide.Player:
                     _shipControlsPanel.Load(ship);
                     _messenger.Broadcast(EventType.PlayerShipCountChanged,
-                        _combatModel.PlayerFleet.CountStatus(ShipStatus.Ready));
+                        _combatModel.PlayerFleet.Ships.Count(item => item.Status == ShipStatus.Ready));
                     break;
                 case UnitSide.Enemy:
                     _radarPanel.Add(ship);
                     _messenger.Broadcast(EventType.EnemyShipCountChanged,
-                        _combatModel.EnemyFleet.CountStatus(ShipStatus.Ready));
+                        _combatModel.EnemyFleet.Ships.Count(item => item.Status == ShipStatus.Ready));
                     break;
             }
         }
@@ -143,7 +139,7 @@ namespace Combat.Manager
         {
             if (ship.Type.Class != UnitClass.Ship)
                 return;
-
+            
             CheckIfCanCallNextEnemy();
         }
 
@@ -151,19 +147,17 @@ namespace Combat.Manager
         {
             var position = _scene.FindFreePlace(40, ship.Side);
 
-            var controllerFactory = ship.Side == UnitSide.Player
-                ? (IControllerFactory)new KeyboardController.Factory(_lKeyboard)
-                : new Computer.Factory(_scene, _combatModel.EnemyFleet.Level);
+            var controllerFactory = ship.Side == UnitSide.Player ? (IControllerFactory)new KeyboardController.Factory(_lKeyboard) : new Computer.Factory(_scene, _combatModel.EnemyFleet.Level);
 
             ship.Create(_shipFactory, controllerFactory, position);
-            //OptimizedDebug.Log("CreateShip.start - " + ship.Name);
+            //UnityEngine.Debug.Log("CreateShip.start - " + ship.Name);
             //var context = new FactoryContext(_scene, _bindingManager, _soundPlayer, _objectPool, _resourceLocator, _settings);
             //var shipModel = fleet.ActivateShip(ship, position, Random.Range(0, 360), _gameSettings.ShowDamage, _playerSkills, _messenger, context, _aiManager, _database);
-            ////OptimizedDebug.Log("CreateShip.end");
+            ////UnityEngine.Debug.Log("CreateShip.end");
             //return shipModel;
         }
 
-        public bool IsGamePaused { get; private set; }
+        public bool IsGamePaused { get { return _pausedCount > 0; } }
 
         public void OnEscapeKeyPressed()
         {
@@ -179,14 +173,13 @@ namespace Combat.Manager
 
         public void Exit()
         {
-            _gameFlow.Pause(null);
+            _gameFlow.Pause();
             _exitTrigger.Fire();
         }
 
         public bool CanChangeShip()
         {
-            return _combatModel.Rules.CanSelectShips && _playerSkills.HasRescueUnit &&
-                   _combatModel.PlayerFleet.IsAnyShipLeft();
+            return _combatModel.Rules.CanSelectShips && _playerSkills.HasRescueUnit && _combatModel.PlayerFleet.IsAnyShipLeft();
         }
 
         public void ChangeShip()
@@ -195,12 +188,9 @@ namespace Combat.Manager
             if (player.Effects.All.OfType<ShipRetreatEffect>().Any())
                 return;
 
-            var chargeEffect = new ShipRetreatingEffect(player, _effectFactory, ConditionType.OnActivate,
-                ConditionType.OnDeactivate);
-            var warpEffect = new ShipWarpEffect(player, _effectFactory, _soundPlayer, _settings.ShipWarpSound,
-                ConditionType.OnDeactivate);
-            var soundEffect = new SoundLoopEffect(_soundPlayer, _settings.ShipRetreatSound, ConditionType.OnActivate,
-                ConditionType.OnDeactivate);
+            var chargeEffect = new ShipRetreatingEffect(player, _effectFactory, ConditionType.OnActivate, ConditionType.OnDeactivate);
+            var warpEffect = new ShipWarpEffect(player, _effectFactory, _soundPlayer, _settings.ShipWarpSound, ConditionType.OnDeactivate);
+            var soundEffect = new SoundLoopEffect(_soundPlayer, _settings.ShipRetreatSound, ConditionType.OnActivate, ConditionType.OnDeactivate);
             player.AddEffect(new ShipRetreatEffect(7.0f, soundEffect, warpEffect, chargeEffect));
         }
 
@@ -209,16 +199,12 @@ namespace Combat.Manager
             _combatModel.EnemyFleet.DestroyAllShips();
         }
 
-        public bool CanCallNextEnemy()
-        {
-            return _canCallNextEnemy;
-        }
+        public bool CanCallNextEnemy() { return _canCallNextEnemy; }
 
         public void CallNextEnemy()
         {
             if (!CanCallNextEnemy())
                 return;
-            _nextShipCooldown = 0;
 
             var shipInfo = _combatModel.EnemyFleet.Ships.FirstOrDefault(item => item.Status == ShipStatus.Ready);
             if (shipInfo == null)
@@ -231,8 +217,7 @@ namespace Combat.Manager
         private void CheckIfCanCallNextEnemy()
         {
             var rules = _combatModel.Rules;
-            if (rules.TimeoutBehaviour != TimeoutBehaviour.NextEnemy &&
-                rules.TimeoutBehaviour != TimeoutBehaviour.AllEnemiesThenDraw)
+            if (rules.TimeoutBehaviour != TimeoutBehaviour.NextEnemy && rules.TimeoutBehaviour != TimeoutBehaviour.AllEnemiesThenDraw)
             {
                 _canCallNextEnemy = false;
                 return;
@@ -244,9 +229,7 @@ namespace Combat.Manager
                 return;
             }
 
-            _canCallNextEnemy =
-                _combatModel.EnemyFleet.Ships.CountIsBetween(item => item.Status == ShipStatus.Active, 0, 11) &&
-                _combatModel.EnemyFleet.IsAnyShipLeft();
+            _canCallNextEnemy = _combatModel.EnemyFleet.Ships.Count(item => item.Status == ShipStatus.Active) < 12 && _combatModel.EnemyFleet.IsAnyShipLeft();
         }
 
         public void Tick()
@@ -265,15 +248,14 @@ namespace Combat.Manager
             if (!enemy.IsActive())
             {
                 _nextShipCooldown += Time.deltaTime;
-                if (_nextShipCooldown > NextShipMaxCooldown)
+                if (_nextShipCooldown > _nextShipMaxCooldown)
                 {
                     _nextShipCooldown = 0;
 
-                    var shipInfo =
-                        _combatModel.EnemyFleet.Ships.FirstOrDefault(item => item.Status == ShipStatus.Ready);
+                    var shipInfo = _combatModel.EnemyFleet.Ships.FirstOrDefault(item => item.Status == ShipStatus.Ready);
                     if (shipInfo == null)
                     {
-                        OptimizedDebug.Log("No more ships");
+                        UnityEngine.Debug.Log("No more ships");
                         Exit();
                         return;
                     }
@@ -284,13 +266,13 @@ namespace Combat.Manager
             else if (!player.IsActive())
             {
                 _nextPlayerShipCooldown += Time.deltaTime;
-                if (_nextPlayerShipCooldown > NextShipMaxCooldown)
+                if (_nextPlayerShipCooldown > _nextShipMaxCooldown)
                 {
                     _nextPlayerShipCooldown = 0;
 
                     if (!_combatModel.PlayerFleet.IsAnyShipLeft())
                     {
-                        OptimizedDebug.Log("No more ships");
+                        UnityEngine.Debug.Log("No more ships");
                         Exit();
                     }
                     else if (_combatModel.Rules.CanSelectShips)
@@ -313,10 +295,11 @@ namespace Combat.Manager
 
         private bool _canCallNextEnemy;
 
-        private float _nextShipCooldown = NextShipMaxCooldown;
-        private float _nextPlayerShipCooldown = NextShipMaxCooldown;
-        private const float NextShipMaxCooldown = 3.0f;
+        private float _nextShipCooldown = _nextShipMaxCooldown;
+        private float _nextPlayerShipCooldown = _nextShipMaxCooldown;
+        private const float _nextShipMaxCooldown = 3.0f;
 
+        private int _pausedCount;
         private readonly GameFlow _gameFlow;
         private readonly ISoundPlayer _soundPlayer;
         private readonly PlayerSkills _playerSkills;

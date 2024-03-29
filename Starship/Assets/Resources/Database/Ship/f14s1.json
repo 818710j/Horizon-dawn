@@ -1,9 +1,9 @@
 {
   "ItemType": 6,
   "Id": 112,
-  "ShipCategory": 5,
+  "ShipCategory": 1,
   "Name": "$f14_Battleship",
-  "SizeClass": 3,
+  "SizeClass": 4,
   "IconImage": "f14s1",
   "IconScale": 1.0,
   "ModelImage": "f14s1",
@@ -30,17 +30,16 @@
     {
       "Position": {
         "x": 0.81,
-        "y": 0.34
+        "y": -0.34
       },
-      "Rotation": -10.0,
-      "WeaponClass": "M"
+      "Rotation": 10.0
     },
     {
       "Position": {
         "x": 0.81,
-        "y": -0.34
+        "y": 0.34
       },
-      "Rotation": 10.0,
+      "Rotation": -10.0,
       "WeaponClass": "M"
     }
   ]

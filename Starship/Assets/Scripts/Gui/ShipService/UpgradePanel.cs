@@ -32,6 +32,8 @@ namespace Gui.ShipService
         [SerializeField] private Toggle _innerBlockToggle;
         [SerializeField] private Toggle _engineBlockToggle;
         [SerializeField] private Toggle _weaponBlockToggle;
+        [SerializeField] private Toggle _coreBlockToggle;
+        [SerializeField] private Toggle _StructureBlockToggle;
 
         [SerializeField] private AudioClip _buySound;
 
@@ -63,6 +65,8 @@ namespace Gui.ShipService
             _innerBlockToggle.isOn = false;
             _engineBlockToggle.isOn = false;
             _weaponBlockToggle.isOn = false;
+            _coreBlockToggle.isOn = false;
+            _StructureBlockToggle.isOn = false;
             UpdateControls();
         }
 
@@ -76,6 +80,10 @@ namespace Gui.ShipService
                 _selectedCellType = CellType.Engine;
             else if (toggle == _weaponBlockToggle)
                 _selectedCellType = CellType.Weapon;
+            else if (toggle == _coreBlockToggle)
+                _selectedCellType = CellType.CoreBlock;
+            else if (toggle == _StructureBlockToggle)
+                _selectedCellType = CellType.StructureBlock;
         }
 
         public void OnAddButtonClicked()
@@ -154,6 +162,8 @@ namespace Gui.ShipService
                 _innerBlockToggle.interactable = _ship.Model.LayoutModifications.IsCellValid(_selectedBlockX, _selectedBlockY, CellType.Inner);
                 _engineBlockToggle.interactable = _ship.Model.LayoutModifications.IsCellValid(_selectedBlockX, _selectedBlockY, CellType.Engine);
                 _weaponBlockToggle.interactable = _ship.Model.LayoutModifications.IsCellValid(_selectedBlockX, _selectedBlockY, CellType.Weapon);
+                _coreBlockToggle.interactable = _ship.Model.LayoutModifications.IsCellValid(_selectedBlockX, _selectedBlockY, CellType.CoreBlock);
+                _StructureBlockToggle.interactable = _ship.Model.LayoutModifications.IsCellValid(_selectedBlockX, _selectedBlockY, CellType.StructureBlock);
             }
             else
             {
@@ -190,8 +200,8 @@ namespace Gui.ShipService
 
                 var starsAllowed = CurrencyExtensions.PremiumCurrencyAllowed;
 
-                Price1 = Price.Common(starsAllowed ? (Cells + 1) * 1000 : (Cells+1)*2000);
-                Price2 = starsAllowed ? Price.Premium(1 + Cells/2) : new Price(0, Currency.Credits);
+                Price1 = Price.Common(starsAllowed ? (Cells + 1) * 100 : (Cells+1)*200);
+                Price2 = starsAllowed ? Price.Premium(1 + Cells / 2) : new Price(0, Currency.Credits);
                 ResetPrice = starsAllowed ? Price.Premium(Cells) : Price.Common(Cells*2000);
 
                 RequiredLevel = TotalCells > 0 ? 5 + Mathf.Min(5 * Cells, 95 * Cells / TotalCells) : 0;

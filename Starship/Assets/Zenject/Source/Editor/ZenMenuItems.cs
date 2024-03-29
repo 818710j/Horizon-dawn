@@ -5,7 +5,6 @@ using UnityEditor;
 using UnityEngine;
 using ModestTree;
 using UnityEditor.SceneManagement;
-using Utils;
 
 namespace Zenject
 {
@@ -52,6 +51,7 @@ namespace Zenject
         }
 
         [MenuItem("Edit/Zenject/Create Project Context")]
+        [System.Obsolete]
         public static void CreateProjectContextInDefaultLocation()
         {
             var fullDirPath = Path.Combine(Application.dataPath, "Resources");
@@ -155,6 +155,7 @@ namespace Zenject
         }
 
         [MenuItem("Assets/Create/Zenject/Project Context", false, 40)]
+        [System.Obsolete]
         public static void CreateProjectContext()
         {
             var absoluteDir = ZenUnityEditorUtil.TryGetSelectedFolderPathInProjectsTab();
@@ -180,6 +181,7 @@ namespace Zenject
             CreateProjectContextInternal(absoluteDir);
         }
 
+        [System.Obsolete]
         static void CreateProjectContextInternal(string absoluteDir)
         {
             var assetPath = ZenUnityEditorUtil.ConvertFullAbsolutePathToAssetPath(absoluteDir);
@@ -201,7 +203,7 @@ namespace Zenject
                 GameObject.DestroyImmediate(gameObject);
             }
 
-            OptimizedDebug.Log("Created new ProjectContext at '{0}'".Fmt(prefabPath));
+            Debug.Log("Created new ProjectContext at '{0}'".Fmt(prefabPath));
         }
 
         static void AddCSharpClassTemplate(

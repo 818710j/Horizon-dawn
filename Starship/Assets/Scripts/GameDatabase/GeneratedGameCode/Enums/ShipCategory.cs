@@ -12,10 +12,11 @@ namespace GameDatabase.Enums
 	{
 		Common,
 		Rare,
-		Flagship,
+		SubFlagship,
 		Special,
 		Starbase,
 		Hidden,
 		Drone,
+		Flagship,
 	}
 }

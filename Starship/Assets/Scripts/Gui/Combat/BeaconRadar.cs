@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Combat.Component.Unit;
 using Combat.Scene;
 using Combat.Unit;
@@ -19,6 +18,7 @@ namespace Gui.Combat
             _unit = unit;
 
             Initialize();
+            Update();
             gameObject.SetActive(true);
         }
 
@@ -34,8 +34,8 @@ namespace Gui.Combat
 
             var itemPosition = _unit.Body.Position;
             var position = _scene.ViewPoint.Direction(itemPosition);
-            var cameraHeight = _mainCamera.orthographicSize;
-            var cameraWidth = cameraHeight * _mainCamera.aspect;
+            var cameraHeight = Camera.main.orthographicSize;
+            var cameraWidth = cameraHeight * Camera.main.aspect;
 
             var x = position.x / cameraWidth;
             var y = position.y / cameraHeight;
@@ -93,15 +93,9 @@ namespace Gui.Combat
             RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Size * 2);
         }
 
-        private void Start()
-        {
-            _mainCamera = Camera.main;
-        }
-
         private Vector2 _screenSize;
         private RectTransform _rectTransform;
         private IUnit _unit;
         private IScene _scene;
-        private Camera _mainCamera;
     }
 }

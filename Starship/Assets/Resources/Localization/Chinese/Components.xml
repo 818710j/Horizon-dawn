@@ -324,4 +324,6 @@
     <string name="ClonningCenter_M">克隆中心</string>
     <string name="ClonningCenter_L">大型克隆中心</string>
     <string name="InfinityStone_S">无限宝石</string>
+	<string name="EnergyWave">能量波</string>
+	<string name="SpaceShockWave">空间震荡波</string>
 </resources>

@@ -64,6 +64,17 @@ namespace Gui.Constructor
             _selectedNode = _rootNode.Special;
             RefreshList();
         }
+		
+		public void Core()
+        {
+            _selectedNode = _rootNode.Core;
+            RefreshList();
+        }
+        public void Structure()
+        {
+            _selectedNode = _rootNode.Structure;
+            RefreshList();
+        }
 
         public void OnGroupSelected(GroupListItem item)
         {

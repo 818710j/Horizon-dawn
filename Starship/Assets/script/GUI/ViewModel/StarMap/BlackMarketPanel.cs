@@ -17,5 +17,10 @@ namespace ViewModel
 		    var starId = _motherShip.Position;
             _openShopTrigger.Fire(_factory.CreateBlackMarketInventory(starId), _factory.CreateBlackMarketPlayerInventory(starId));
         }
+		public void OpenNormalStore()
+		{
+		    var starId = _motherShip.Position;
+            _openShopTrigger.Fire(_factory.CreateBlackMarketInventory(starId,true), _factory.CreateBlackMarketPlayerInventory(starId,true));
+        }
 	}
 }

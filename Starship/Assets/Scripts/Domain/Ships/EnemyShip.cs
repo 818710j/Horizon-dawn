@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using GameDatabase.DataModel;
 using GameDatabase.Enums;
 using Utils;
@@ -10,13 +10,8 @@ namespace Constructor.Ships
         public EnemyShip(ShipBuild data) 
             : base(new ShipModel(data.Ship, data.BuildFaction))
         {
-
-            var components = new List<IntegratedComponent>(data.Components.Count);
-            foreach (var installedComponent in data.Components)
-            {
-                components.Add(ComponentExtensions.FromDatabase(installedComponent));
-            }
-            _components.Assign(components);
+            
+            _components.Assign(data.Components.Select<InstalledComponent,IntegratedComponent>(ComponentExtensions.FromDatabase));
             _extraThreatLevel = data.DifficultyClass;
         }
 

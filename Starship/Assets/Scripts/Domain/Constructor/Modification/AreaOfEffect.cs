@@ -9,7 +9,7 @@ namespace Constructor.Modification
     {
         public AreaOfEffect(ModificationQuality quality)
         {
-            _multiplier = quality.PowerMultiplier(0.5f, 0.7f, 0.8f, 1.25f, 1.6f, 2.0f);
+            _multiplier = quality.PowerMultiplier(0.55f, 0.7f, 0.85f, 1.15f, 1.3f, 1.45f, 1.6f);
             Quality = quality;
         }
 

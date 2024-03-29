@@ -10,7 +10,7 @@ namespace Constructor.Modification
     {
         public LowEnergyCost(ModificationQuality quality)
         {
-            _energyMultiplier = quality.PowerMultiplier(2.0f, 1.5f, 1.2f, 0.9f, 0.75f, 0.5f);
+            _energyMultiplier = quality.PowerMultiplier(1.45f, 1.3f, 1.15f, 0.85f, 0.75f, 0.65f, 0.55f);
             Quality = quality;
         }
 

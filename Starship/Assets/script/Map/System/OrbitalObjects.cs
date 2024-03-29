@@ -185,12 +185,12 @@ namespace StarSystem
 		{
 			var ships = GetComponent<FleetObjects>();
             var fleet = boss.CreateFleet();
-			var flagship = fleet.Ships.FirstOrDefault(item => item.Model.Category == ShipCategory.Flagship) ?? fleet.Ships.First();
+			var flagship = fleet.Ships.FirstOrDefault(item => item.Model.Category == ShipCategory.SubFlagship) ?? fleet.Ships.First();
 
 			var random = new System.Random(boss.GetHashCode());
 			_lastAngle += 60 + random.Next(240);
 			var position = RotationHelpers.Direction(_lastAngle)*_orbitRadius;            
-			ships.CreateShips(fleet.Ships.Where(item => item.Model.Category != ShipCategory.Flagship), position);
+			ships.CreateShips(fleet.Ships.Where(item => item.Model.Category != ShipCategory.Flagship && item.Model.Category != ShipCategory.SubFlagship), position);
 
 		    var flagshipObject = ships.CreateFlagship(_database.GetShip(flagship.Model.Id), position, random.Next(360));
 		    _objects.Add(flagshipObject.gameObject, Galaxy.StarObjectType.Boss);
@@ -206,13 +206,13 @@ namespace StarSystem
 			_objects.Add(starbase.gameObject, Galaxy.StarObjectType.Ruins);
 		}
 
-        private void CreateXmas(StarBase starBaseObject, Galaxy.StarContent.XmasTree.Facade xmas, Color color)
-        {
-            var starbase = CreateStarBase(starBaseObject, StarBaseSize, color, new System.Random(xmas.GetHashCode()));
-            GetComponent<FleetObjects>().CreateShips(xmas.CreateFleet().Ships, starbase.transform.localPosition);
+        //private void CreateXmas(StarBase starBaseObject, Galaxy.StarContent.XmasTree.Facade xmas, Color color)
+        //{
+        //    var starbase = CreateStarBase(starBaseObject, StarBaseSize, color, new System.Random(xmas.GetHashCode()));
+        //    GetComponent<FleetObjects>().CreateShips(xmas.CreateFleet().Ships, starbase.transform.localPosition);
 
-            _objects.Add(starbase.gameObject, Galaxy.StarObjectType.Xmas);
-        }
+        //    _objects.Add(starbase.gameObject, Galaxy.StarObjectType.Xmas);
+        //}
 
 		private void CreateCommonObject(StarBase starBaseObject, Galaxy.StarObjectType pointOfInterest, Color color)
 		{
@@ -272,18 +272,18 @@ namespace StarSystem
                 starBaseEnumerator.MoveNext();
                 CreateRuins(starBaseEnumerator.Current, star.Ruins, color);
             }
-            if (objects.Contain(Galaxy.StarObjectType.Xmas) && StarObjectType.Xmas.IsActive(star))
-            {
-                orbitEnumerator.MoveNext();
-                CreateOrbit(orbitEnumerator.Current);
-                starBaseEnumerator.MoveNext();
-                CreateXmas(starBaseEnumerator.Current, star.Xmas, color);
-            }
-            if (objects.Contain(Galaxy.StarObjectType.Arena) && StarObjectType.Arena.IsActive(star))
-		    {
-                starBaseEnumerator.MoveNext();
-                CreateCommonObject(starBaseEnumerator.Current, Galaxy.StarObjectType.Arena, color);
-		    }
+            //if (objects.Contain(Galaxy.StarObjectType.Xmas) && StarObjectType.Xmas.IsActive(star))
+            //{
+            //    orbitEnumerator.MoveNext();
+            //    CreateOrbit(orbitEnumerator.Current);
+            //    starBaseEnumerator.MoveNext();
+            //    CreateXmas(starBaseEnumerator.Current, star.Xmas, color);
+            //}
+      //      if (objects.Contain(Galaxy.StarObjectType.Arena) && StarObjectType.Arena.IsActive(star))
+		    //{
+      //          starBaseEnumerator.MoveNext();
+      //          CreateCommonObject(starBaseEnumerator.Current, Galaxy.StarObjectType.Arena, color);
+		    //}
 		    if (objects.Contain(Galaxy.StarObjectType.Military) && StarObjectType.Military.IsActive(star))
 		    {
                 starBaseEnumerator.MoveNext();
@@ -303,6 +303,11 @@ namespace StarSystem
 		    {
                 starBaseEnumerator.MoveNext();
                 CreateCommonObject(starBaseEnumerator.Current, Galaxy.StarObjectType.BlackMarket, color);
+		    }
+		    if (objects.Contain(Galaxy.StarObjectType.Market) && StarObjectType.Market.IsActive(star))
+		    {
+                starBaseEnumerator.MoveNext();
+                CreateCommonObject(starBaseEnumerator.Current, Galaxy.StarObjectType.Market, color);
 		    }
             if (objects.Contain(Galaxy.StarObjectType.Hive) && StarObjectType.Hive.IsActive(star))
             {

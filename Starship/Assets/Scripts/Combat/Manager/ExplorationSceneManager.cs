@@ -29,8 +29,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using Zenject;
 using IShip = Combat.Component.Ship.IShip;
-using Constructor.Ships;
-using Utils;
+
 
 namespace Combat.Manager
 {
@@ -104,7 +103,7 @@ namespace Combat.Manager
 
         private void OnPlayerDocked(int stationId)
         {
-            OptimizedDebug.Log("OnPlayerDocked - " + stationId);
+            Debug.Log("OnPlayerDocked - " + stationId);
 
             if (!_objectives.ContainsKey(stationId)) return;
             _guiManager.OpenWindow(Gui.Exploration.WindowNames.ScanningPanel, code => { if (code == WindowExitCode.Ok) OnScanCompleted(stationId); });
@@ -112,18 +111,18 @@ namespace Combat.Manager
 
         private void OnObjectiveDestroyed(int id)
         {
-            OptimizedDebug.Log("OnObjectiveDestroyed - " + id);
+            Debug.Log("OnObjectiveDestroyed - " + id);
             OnScanCompleted(id);
         }
 
         private void OnPlayerUndocked(int stationId)
         {
-            OptimizedDebug.Log("OnPlayerUndocked - " + stationId);
+            Debug.Log("OnPlayerUndocked - " + stationId);
         }
 
         private void OnScanCompleted(int stationId)
         {
-            OptimizedDebug.Log("OnScanCompleted- " + stationId);
+            Debug.Log("OnScanCompleted- " + stationId);
 
             if (!_objectives.TryGetValue(stationId, out var unit))
                 return;
@@ -191,7 +190,7 @@ namespace Combat.Manager
 
         private void CreatePlayerShip()
         {
-            var spec = _playerSkills != null ? _playerFleet.ExplorationShip.BuildSpecAndApplySkills(_playerSkills, _database.ShipSettings) : _playerFleet.ExplorationShip.CreateBuilder().Build(_database.ShipSettings);
+            var spec = _playerFleet.ExplorationShip.CreateBuilder().Build(_database.ShipSettings);
             var controllerFactory = new KeyboardController.Factory(_keyboard);
             var ship = _shipFactory.CreateShip(spec, controllerFactory, UnitSide.Player, Vector2.zero, new System.Random().Next(360));
 
@@ -228,8 +227,8 @@ namespace Combat.Manager
             Assert.IsTrue(objectives.Count < mapSize * mapSize);
 
             var random = new System.Random(seed);
-            var positions = EnumerableExtension.RandomUniqueNumbers(1, mapSize * mapSize, objectives.Count, random).Shuffle(random);
-            for (var i = 0; i < positions.Count; ++i)
+            var positions = EnumerableExtension.RandomUniqueNumbers(1, mapSize * mapSize, objectives.Count, random).ToArray();
+            for (var i = 0; i < positions.Length; ++i)
             {
                 var objective = objectives[i];
                 if (_exploration.IsCompleted(objective)) continue;

@@ -12,14 +12,15 @@ namespace Galaxy
 		Boss        = 0x0004,
 		Wormhole    = 0x0008,
 //		Multiplayer = 0x0010,
-		Arena       = 0x0020,
+//		Arena       = 0x0020,
 		Challenge   = 0x0040,
 		BlackMarket = 0x0080,
 		Ruins       = 0x0100,
         Military    = 0x0200,
         Event       = 0x0400,
-        Xmas        = 0x0800,
+        //Xmas        = 0x0800,
         Hive        = 0x1000,
+        Market      = 0x2000,
     }
 
     public static class StarObjectTypeExtensions

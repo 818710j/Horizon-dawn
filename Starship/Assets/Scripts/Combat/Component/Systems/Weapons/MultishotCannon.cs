@@ -3,28 +3,30 @@ using Combat.Component.Platform;
 using Combat.Component.Triggers;
 using GameDatabase.DataModel;
 using UnityEngine;
+using Combat.Component.Ship;
 
 namespace Combat.Component.Systems.Weapons
 {
     public class MultishotCannon : SystemBase, IWeapon
     {
-        public MultishotCannon(IWeaponPlatform platform, WeaponStats weaponStats, Factory.IBulletFactory bulletFactory, int keyBinding)
-            : base(keyBinding, weaponStats.ControlButtonIcon)
+        public MultishotCannon(IWeaponPlatform platform, WeaponStats weaponStats, Factory.IBulletFactory bulletFactory, int keyBinding,IShip ship)
+            : base(keyBinding, weaponStats.ControlButtonIcon,ship)
         {
-            MaxCooldown = weaponStats.FireRate > 0 ? 1f / weaponStats.FireRate : 0f;
+            MaxCooldown = weaponStats.FireRate >= 0 ? 1f / weaponStats.FireRate : 999999999;
+            _cooldown = MaxCooldown;
 
             _bulletFactory = bulletFactory;
             _platform = platform;
             _energyConsumption = bulletFactory.Stats.EnergyCost * weaponStats.Magazine;
             _spread = weaponStats.Spread;
             _magazine = weaponStats.Magazine;
-
+            _ship = ship;
             Info = new WeaponInfo(WeaponType.Common, _spread, bulletFactory, platform);
         }
 
-        public override float ActivationCost { get { return _energyConsumption; } }
-        public override bool CanBeActivated { get { return base.CanBeActivated && _platform.IsReady && _platform.EnergyPoints.Value >= _energyConsumption; } }
-        public override float Cooldown { get { return Mathf.Max(_platform.Cooldown, base.Cooldown); } }
+        public override float ActivationCost { get { return _energyConsumption * _ship.Stats.WeaponUpgrade.EnergyCostMultiplier; } }
+        public override bool CanBeActivated { get { return base.CanBeActivated && _platform.IsReady && _platform.EnergyPoints.Value >= _energyConsumption * _ship.Stats.WeaponUpgrade.EnergyCostMultiplier; } }
+        public override float Cooldown { get { return Mathf.Max(_platform.Cooldown / Mathf.Max(0.0000001f, _ship.Stats.WeaponUpgrade.FireRateMultiplier), base.Cooldown); } }
 
         public WeaponInfo Info { get; private set; }
         public IWeaponPlatform Platform { get { return _platform; } }
@@ -35,7 +37,7 @@ namespace Combat.Component.Systems.Weapons
 
         protected override void OnUpdatePhysics(float elapsedTime)
         {
-            if (Active && CanBeActivated && _platform.EnergyPoints.TryGet(_energyConsumption))
+            if (Active && CanBeActivated && _platform.EnergyPoints.TryGet(_energyConsumption * _ship.Stats.WeaponUpgrade.EnergyCostMultiplier))
             {
                 Shot();
                 TimeFromLastUse = 0;
@@ -47,10 +49,10 @@ namespace Combat.Component.Systems.Weapons
 
         private void Shot()
         {
-            _platform.Aim(Info);
+            _platform.Aim(Info.BulletSpeed, Info.Range, Info.IsRelativeVelocity);
 
             for (var i = 0; i < _magazine; ++i)
-                _bulletFactory.Create(Platform, _spread, 0, 0);
+                _bulletFactory.Create(Platform, _spread, 0, 0, Vector2.zero);
 
             _platform.OnShot();
         }
@@ -60,5 +62,7 @@ namespace Combat.Component.Systems.Weapons
         private readonly float _energyConsumption;
         private readonly IWeaponPlatform _platform;
         private readonly Factory.IBulletFactory _bulletFactory;
+        private readonly IShip _ship;
+        private float _cooldown;
     }
 }

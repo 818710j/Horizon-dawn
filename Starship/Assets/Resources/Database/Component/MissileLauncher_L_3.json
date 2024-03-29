@@ -4,7 +4,6 @@
   "Name": "MissileLauncher_L_4",
   "DisplayCategory": 1,
   "ComponentStatsId": 1,
-  "Faction": -1,
   "Icon": "rocket1",
   "Color": "#FF0000",
   "Layout": "110110110",

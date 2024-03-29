@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using GameModel;
 using UnityEngine;
-using Utils;
 using Zenject;
 
 namespace Galaxy
@@ -47,7 +46,7 @@ namespace Galaxy
         public bool ShowStores { get; set; }
         public bool ShowBookmarks { get; set; }
         public bool ShowArenas { get; set; }
-        public bool ShowXmas { get; set; }
+        //public bool ShowXmas { get; set; }
 
         public int GetNearestVisited(int starId, bool shoulBeSafe = false)
         {
@@ -76,7 +75,7 @@ namespace Galaxy
                 if (id >= 0) return id;
             }
 
-            OptimizedDebug.Log("max iterations reached");
+            UnityEngine.Debug.Log("max iterations reached");
             return -1;
         }
 
@@ -119,12 +118,14 @@ namespace Galaxy
             var objects = _starData.GetObjects(starId);
             if (ShowStores && objects.Contain(StarObjectType.BlackMarket))
                 return true;
-            if (ShowArenas && objects.Contain(StarObjectType.Arena))
+            if (ShowStores && objects.Contain(StarObjectType.Market))
                 return true;
+            //if (ShowArenas && objects.Contain(StarObjectType.Arena))
+            //    return true;
             if (ShowBosses && objects.Contain(StarObjectType.Boss) && !_starData.GetBoss(starId).IsDefeated)
                 return true;
-            if (ShowXmas && objects.Contain(StarObjectType.Xmas))
-                return true;
+            //if (ShowXmas && objects.Contain(StarObjectType.Xmas))
+            //    return true;
 
             return false;
         }

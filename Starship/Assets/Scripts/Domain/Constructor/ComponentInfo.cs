@@ -13,8 +13,8 @@ using GameDatabase.Extensions;
 using GameDatabase.Model;
 using Services.Localization;
 using UnityEngine;
-using Utils;
 using IComponent = Constructor.Component.IComponent;
+using Model;
 
 namespace Constructor
 {
@@ -48,13 +48,12 @@ namespace Constructor
             _level = 0;
         }
 
-        public static ComponentInfo CreateRandom(IDatabase database, int level, Faction faction, System.Random random, bool allowRare, ComponentQuality maxQuality = ComponentQuality.P3)
+        public static ComponentInfo CreateRandom(IDatabase database, int level, Faction faction, System.Random random, bool allowRare, ComponentQuality maxQuality = ComponentQuality.P4)
         {
             var maxLevel = 3*level/2;
             var components = allowRare ? database.ComponentList.CommonAndRare() : database.ComponentList.Common();
             var component = components.OfFaction(faction).LevelLessOrEqual(maxLevel).RandomElement(random);
 
-            if (component == null) throw new ValueNotFoundException("There was no components matching given filters");
             var componentLevel = Mathf.Max(10, component.Level);
             var requiredLevel = Mathf.Max(10, level);
             var componentQuality = ComponentQualityExtensions.FromLevel(requiredLevel, componentLevel).Randomize(random);
@@ -68,7 +67,7 @@ namespace Constructor
             return new ComponentInfo(component, modification, componentQuality.ToModificationQuality());
         }
 
-        public static IEnumerable<ComponentInfo> CreateRandom(IEnumerable<GameDatabase.DataModel.Component> components, int count, int level, System.Random random, ComponentQuality maxQuality = ComponentQuality.P3)
+        public static IEnumerable<ComponentInfo> CreateRandom(IEnumerable<GameDatabase.DataModel.Component> components, int count, int level, System.Random random, ComponentQuality maxQuality = ComponentQuality.P4)
         {
             foreach (var component in components.RandomElements(count, random))
             {
@@ -92,7 +91,7 @@ namespace Constructor
 
         public bool IsValidModification { get { return _modificationType == ComponentModType.Empty || _data.Create(100).SuitableModifications.Contains(_modificationType); } }
 
-        public static ComponentInfo CreateRandomModification(GameDatabase.DataModel.Component data, System.Random random, ModificationQuality minQuality = ModificationQuality.N3, ModificationQuality maxQuality = ModificationQuality.P3)
+        public static ComponentInfo CreateRandomModification(GameDatabase.DataModel.Component data, System.Random random, ModificationQuality minQuality = ModificationQuality.N3, ModificationQuality maxQuality = ModificationQuality.P4)
         {
             if (minQuality > maxQuality)
                 Generic.Swap(ref minQuality, ref maxQuality);
@@ -102,10 +101,21 @@ namespace Constructor
 
             return new ComponentInfo(data, modification, quality);
         }
-
+		/*
         public string GetName(ILocalization localization)
         {
             return _level <= 0 ? localization.GetString(Data.Name) : localization.GetString(Data.Name) + " +" + _level;
+        }
+		*/
+        public string GetName(ILocalization localization, bool showquality = false)
+        {
+            if (showquality)
+                return QualityName(localization, ItemQuality) + (_level <= 0 ? localization.GetString(Data.Name) : localization.GetString(Data.Name) + " +" + _level);
+            return _level <= 0 ? localization.GetString(Data.Name) : localization.GetString(Data.Name) + " +" + _level;
+        }
+        public string QualityName(ILocalization localization, ItemQuality quality)
+        {
+            return localization.GetString(quality.Name()) + "  ";
         }
 
         public static ComponentInfo FormString(IDatabase _database, string data)
@@ -124,36 +134,28 @@ namespace Constructor
 
         public override bool Equals(object obj)
         {
-            if (!(obj is ComponentInfo info))
+            if (obj == null || !(obj is ComponentInfo))
                 return false;
-            return Equals(info);
+            return Equals((ComponentInfo)obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = _data?.GetHashCode() ?? 0;
-                hashCode = (hashCode * 397) ^ (int)_modificationType;
-                hashCode = (hashCode * 397) ^ (int)_quality;
-                hashCode = (hashCode * 397) ^ _level;
-                return hashCode;
-            }
+            return Data.Id.GetHashCode() + (int)_quality + (int)_modificationType;
         }
 
-        
         public int SerializeToInt32Obsolete() // 30 bits used
         {
             #if UNITY_EDITOR
             if (Data.Id.Value < 0 || Data.Id.Value > 0x3fff)
             {
-                OptimizedDebug.LogError("Bad component id - " + Data.Id.Value);
-                OptimizedDebug.Break();
+                Debug.LogError("Bad component id - " + Data.Id.Value);
+                UnityEngine.Debug.Break();
             }
             if ((int)_modificationType < 0 || (int)_modificationType > 0xff)
             {
-                OptimizedDebug.LogError("Bad modification type " + _modificationType);
-                OptimizedDebug.Break();
+                Debug.LogError("Bad modification type " + _modificationType);
+                UnityEngine.Debug.Break();
             }
             #endif
 
@@ -170,11 +172,11 @@ namespace Constructor
         {
 #if UNITY_EDITOR
             if ((int)_modificationType < 0 || (int)_modificationType > 0xff)
-                OptimizedDebug.Break();
+                Debug.Break();
             if ((int)_quality < 0 || (int)_quality > 0xff)
-                OptimizedDebug.Break();
+                Debug.Break();
             if ((int)_level < 0 || (int)_level > 0xff)
-                OptimizedDebug.Break();
+                Debug.Break();
 #endif
 
             long value = Data.Id.Value;
@@ -256,7 +258,9 @@ namespace Constructor
                 switch (_quality)
                 {
                     case ModificationQuality.N1:
+                        return ItemQuality.N2;
                     case ModificationQuality.N2:
+                        return ItemQuality.N3;
                     case ModificationQuality.N3:
                         return ItemQuality.Low;
                     case ModificationQuality.P1:
@@ -265,6 +269,8 @@ namespace Constructor
                         return ItemQuality.High;
                     case ModificationQuality.P3:
                         return ItemQuality.Perfect;
+                    case ModificationQuality.P4:
+                        return ItemQuality.Extreme;
                     default:
                         throw new InvalidEnumArgumentException("_quality", (int)_quality, typeof(ModificationQuality));
                 }
@@ -280,7 +286,7 @@ namespace Constructor
                 if (_modificationType == ComponentModType.Empty)
                     return Economy.Price.ComponentPrice(Data);
 
-                return  Economy.Price.ComponentPrice(Data, _quality.PowerMultiplier(0.5f, 0.75f, 0.9f, 1.5f, 2.0f, 3f));
+                return  Economy.Price.ComponentPrice(Data, _quality.PowerMultiplier(0.5f, 0.75f,1f, 1.25f, 1.5f, 1.75f, 2f));
             }
         }
 
@@ -291,7 +297,7 @@ namespace Constructor
                 if (_modificationType == ComponentModType.Empty)
                     return Economy.Price.ComponentPremiumPrice(Data);
 
-                return Economy.Price.ComponentPremiumPrice(Data, _quality.PowerMultiplier(0.5f, 0.75f, 0.9f, 1.5f, 2.0f, 3f));
+                return Economy.Price.ComponentPremiumPrice(Data, _quality.PowerMultiplier(0.5f, 0.75f, 1f, 1.25f, 1.5f, 1.75f, 2f));
             }
         }
 
@@ -307,6 +313,8 @@ namespace Constructor
         {
             switch (itemQuality)
             {
+                case ItemQuality.Extreme:
+                    return ModificationQuality.P4;
                 case ItemQuality.Perfect:
                     return ModificationQuality.P3;
                 case ItemQuality.High:

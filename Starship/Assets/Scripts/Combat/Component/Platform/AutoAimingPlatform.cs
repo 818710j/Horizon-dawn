@@ -1,26 +1,21 @@
-﻿using System.Collections.Generic;
-using Combat.Component.Body;
-using Combat.Component.Bullet;
+﻿using Combat.Component.Body;
 using Combat.Component.Ship;
-using Combat.Component.Triggers;
 using Combat.Component.Unit;
 using Combat.Component.Unit.Classification;
 using Combat.Component.View;
 using Combat.Scene;
 using Combat.Unit.HitPoints;
-using Gui.Utils;
 using UnityEngine;
 
 namespace Combat.Component.Platform
 {
-    public sealed class AutoAimingPlatform : IWeaponPlatform, IUnitAction
+    public sealed class AutoAimingPlatform : IWeaponPlatform
     {
-        public AutoAimingPlatform(IShip ship, UnitBase parent, IScene scene, Vector2 position, float rotation, float offset, float maxAngle, float cooldown, float rotationSpeed)
+        public AutoAimingPlatform(IShip ship, IUnit parent, IScene scene, Vector2 position, float rotation, float offset, float maxAngle, float cooldown, float rotationSpeed)
         {
             _body = WeaponPlatformBody.Create(scene, parent, position, rotation, offset, maxAngle, rotationSpeed);
             _cooldown = cooldown;
             _ship = ship;
-            parent.AddTrigger(this);
         }
 
         public UnitType Type { get { return _ship.Type; } }
@@ -54,12 +49,6 @@ namespace Combat.Component.Platform
         {
             _body.UpdatePhysics(elapsedTime);
             _timeFromLastShot += elapsedTime;
-            _timeFromLastCleanup += elapsedTime;
-            if (_timeFromLastCleanup >= CleanupInterval)
-            {
-                _attachedChildren.Purge();
-                _timeFromLastCleanup = 0;
-            }
         }
 
         public void UpdateView(float elapsedTime)
@@ -72,40 +61,14 @@ namespace Combat.Component.Platform
                 _view.UpdateView(elapsedTime);
             }
         }
-        public void AddAttachedChild(IBullet bullet)
-        {
-            _attachedChildren.Add(new WeakReference<IBullet>(bullet));
-        }
 
         public void Dispose() { }
 
         private IView _view;
         private Color _color;
-        private float _timeFromLastCleanup;
-        private const float CleanupInterval = 1;
         private float _timeFromLastShot;
         private readonly float _cooldown;
         private readonly IWeaponPlatformBody _body;
         private readonly IShip _ship;
-        public ConditionType TriggerCondition => ConditionType.OnDestroy;
-        private readonly IList<WeakReference<IBullet>> _attachedChildren = new List<WeakReference<IBullet>>();
-
-        public bool TryUpdateAction(float elapsedTime)
-        {
-            return false;
-        }
-
-        public bool TryInvokeAction(ConditionType condition)
-        {
-            foreach (var child in _attachedChildren)
-            {
-                if(child.IsAlive)
-                {
-                    child.Target.Detonate();  
-                }
-            }
-
-            return true;
-        }
     }
 }

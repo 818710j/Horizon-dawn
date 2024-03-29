@@ -76,7 +76,9 @@ namespace Constructor.Modification
                 return new DroneRange(quality);
             case ComponentModType.Recoil:
                 return new Recoil(quality);
-            default:
+            case ComponentModType.Fortified2:
+                return new Fortified2(quality);
+                default:
                 return null;
             }
         }

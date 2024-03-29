@@ -46,7 +46,7 @@ namespace Combat.Factory
             _owner = owner;
 
             _prefab = new Lazy<GameObject>(() => _prefabCache.GetBulletPrefab(_ammunition.Body.BulletPrefab));
-            _stats = new BulletStats(ammunition, statModifier);
+            _stats = new BulletStats(ammunition, statModifier, owner);
         }
 
         public IBulletStats Stats
@@ -54,7 +54,7 @@ namespace Combat.Factory
             get { return _stats; }
         }
 
-        public IBullet Create(IWeaponPlatform parent, float spread, float rotation, float offset)
+        public IBullet Create(IWeaponPlatform parent, float spread, float rotation, float offset,Vector2 deviation)
         {
             var bulletGameObject = new GameObjectHolder(_prefab, _objectPool);
             bulletGameObject.IsActive = true;
@@ -62,7 +62,7 @@ namespace Combat.Factory
             var bulletSpeed = _stats.GetBulletSpeed();
 
             var body = ConfigureBody(bulletGameObject.GetComponent<IBodyComponent>(), parent, bulletSpeed, spread,
-                rotation, offset);
+                rotation, offset,deviation);
             var view = ConfigureView(bulletGameObject.GetComponent<IView>(), _stats.Color);
 
             var bullet = CreateUnit(body, view, bulletGameObject);
@@ -74,10 +74,6 @@ namespace Combat.Factory
             bullet.CanBeDisarmed = _ammunition.Body.CanBeDisarmed;
             BulletTriggerBuilder.Build(this, bullet, collisionBehaviour);
 
-            if (_ammunition.Body.Type == GameDatabase.Enums.BulletType.Continuous && !parent.IsTemporary)
-            {
-                parent.AddAttachedChild(bullet);
-            }
             _scene.AddUnit(bullet);
             bullet.UpdateView(0);
 
@@ -142,7 +138,7 @@ namespace Combat.Factory
         }
 
         private IBody ConfigureBody(IBodyComponent body, IWeaponPlatform parent, float bulletSpeed, float spread,
-            float deltaAngle, float offset)
+            float deltaAngle, float offset, Vector2 deviation)
         {
             IBody parentBody = null;
             var position = Vector2.zero;
@@ -151,20 +147,18 @@ namespace Combat.Factory
             var angularVelocity = 0f;
             var weight = _stats.Weight;
             var scale = _stats.BodySize;
-            var frozen = false;
 
             if (_ammunition.Body.Type == GameDatabase.Enums.BulletType.Continuous && !parent.IsTemporary)
             {
                 parentBody = parent.Body;
                 position = new Vector2(offset, 0);
-                frozen = true;
             }
             else
             {
                 rotation = parent.Body.WorldRotation() + (UnityEngine.Random.value - 0.5f) * spread + deltaAngle;
                 position = parent.Body.WorldPosition() + RotationHelpers.Direction(rotation) * offset;
             }
-
+            position += deviation;
             if (_ammunition.Body.Type != GameDatabase.Enums.BulletType.Continuous)
             {
                 velocity = RotationHelpers.Direction(rotation) * bulletSpeed;
@@ -176,7 +170,7 @@ namespace Combat.Factory
                     velocity += parent.Body.WorldVelocity();
             }
 
-            body.Initialize(parentBody, position, rotation, scale, velocity, angularVelocity, weight, frozen);
+            body.Initialize(parentBody, position, rotation, scale, velocity, angularVelocity, weight);
             return body;
         }
 
@@ -341,8 +335,9 @@ namespace Combat.Factory
 
             public Result Create(BulletTrigger_PlaySfx trigger)
             {
-                CreateSoundEffect(_bullet, trigger.AudioClip, _condition);
-                CreateVisualEffect(_bullet, _collisionBehaviour, _condition, trigger);
+                var condition = FromTriggerCondition(trigger.Condition);
+                CreateSoundEffect(_bullet, trigger.AudioClip, condition);
+                CreateVisualEffect(_bullet, _collisionBehaviour, condition, trigger);
                 return Result.Ok;
             }
 
@@ -355,7 +350,7 @@ namespace Combat.Factory
 
                 var factory = CreateFactory(trigger.Ammunition, trigger);
                 var magazine = Math.Max(trigger.Quantity, 1);
-                _bullet.AddAction(new SpawnBulletsAction(factory, magazine, factory._stats.BodySize / 2, trigger.Cooldown,
+                _bullet.AddAction(new SpawnBulletsAction(factory, magazine, UnityEngine.Random.Range(trigger.RandomFactor_Body, 1) * factory._stats.BodySize / 2 * trigger.Offset_multiple, trigger.Cooldown,
                     _bullet, factory._soundPlayer, trigger.AudioClip, _condition));
 
                 return Result.Ok;
@@ -363,7 +358,8 @@ namespace Combat.Factory
 
             public Result Create(BulletTrigger_Detonate content)
             {
-                _bullet.AddAction(new DetonateAction(_condition));
+                var condition = FromTriggerCondition(content.Condition);
+                _bullet.AddAction(new DetonateAction(condition));
                 return Result.Ok;
             }
 

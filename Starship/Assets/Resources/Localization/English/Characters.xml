@@ -32,5 +32,13 @@
     <string name="SpecialityDestroyer">Destroyers</string>
     <string name="SpecialityCruiser">Cruisers</string>
     <string name="SpecialityBattleship">Battleships</string>
-    <string name="SpecialityTitan">Capital Ships</string>
+    <string name="SpecialitysubTitan">subTitan</string>
+	<string name="QualityLow1">Waste</string>
+	<string name="QualityLow2">Poor</string>
+	<string name="QualityLow3">Low</string>
+	<string name="QualityCommon">Common</string>
+	<string name="QualityMedium">Medium</string>
+	<string name="QualityHigh">High</string>
+	<string name="QualityPerfect">Perfect</string>
+	<string name="QualityEpic">Limit</string>
 </resources>

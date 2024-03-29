@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-using Utils;
 
 public class CustomSpritePacker : UnityEditor.Sprites.IPackerPolicy
 {
@@ -39,7 +38,7 @@ public class CustomSpritePacker : UnityEditor.Sprites.IPackerPolicy
             return true;
         if (fmt >= TextureFormat.ETC2_RGB && fmt <= TextureFormat.ETC2_RGBA8)
             return true;
-        if (fmt >= TextureFormat.ASTC_RGB_4x4 && fmt <= TextureFormat.ASTC_RGBA_12x12)
+        if (fmt >= TextureFormat.ASTC_4x4 && fmt <= TextureFormat.ASTC_12x12)
             return true;
         if (fmt >= TextureFormat.DXT1Crunched && fmt <= TextureFormat.DXT5Crunched)
             return true;
@@ -116,11 +115,11 @@ public class CustomSpritePacker : UnityEditor.Sprites.IPackerPolicy
             foreach (var settingsGroup in settingsGroups)
             {
                 var key = settingsGroup.Key;
-                OptimizedDebug.Log("settings group " + page);
-                OptimizedDebug.Log("format = " + key.format);
-                OptimizedDebug.Log("compressionQuality = " + key.compressionQuality);
-                OptimizedDebug.Log("generateMipMaps = " + key.generateMipMaps);
-                OptimizedDebug.Log("allowsAlphaSplitting = " + key.allowsAlphaSplitting);
+                UnityEngine.Debug.Log("settings group " + page);
+                UnityEngine.Debug.Log("format = " + key.format);
+                UnityEngine.Debug.Log("compressionQuality = " + key.compressionQuality);
+                UnityEngine.Debug.Log("generateMipMaps = " + key.generateMipMaps);
+                UnityEngine.Debug.Log("allowsAlphaSplitting = " + key.allowsAlphaSplitting);
 
                 string atlasName = atlasGroup.Key;
                 if (settingsGroups.Count() > 1)

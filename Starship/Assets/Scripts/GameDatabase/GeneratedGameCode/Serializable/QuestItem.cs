@@ -20,5 +20,8 @@ namespace GameDatabase.Serializable
 		public string Icon;
 		public string Color;
 		public int Price;
-	}
+		public bool InMarket;
+        public int MinAmount;
+        public int MaxAmount;
+    }
 }

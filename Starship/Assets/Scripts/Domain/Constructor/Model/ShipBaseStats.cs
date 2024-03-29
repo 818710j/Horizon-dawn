@@ -10,6 +10,7 @@ namespace Constructor.Model
         public StatMultiplier EnergyResistanceMultiplier;
         public StatMultiplier HeatResistanceMultiplier;
         public StatMultiplier KineticResistanceMultiplier;
+        public StatMultiplier StructureResistanceMultiplier;
         public float RegenerationRate;
         public bool AutoTargeting;
         public Layout Layout;

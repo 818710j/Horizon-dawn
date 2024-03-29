@@ -8,13 +8,13 @@ namespace Constructor.Model
 {
     public interface IShipStats
     {
-        ShipBonuses Bonuses { get; set; }
         ColorScheme ShipColor { get; }
         ColorScheme TurretColor { get; }
 
         StatMultiplier DamageMultiplier { get; }
         StatMultiplier ArmorMultiplier { get; }
         StatMultiplier ShieldMultiplier { get; }
+        StatMultiplier StructureMultiplier { get; }
 
         float ArmorPoints { get; }
         float EnergyPoints { get; }
@@ -23,6 +23,8 @@ namespace Constructor.Model
         float EnergyRechargeRate { get; }
         float ShieldRechargeRate { get; }
         float ArmorRepairRate { get; }
+        float StructurePoints { get; }
+        float StructureRepairRate { get; }
 
         Layout Layout { get; }
         float Weight { get; }
@@ -44,17 +46,20 @@ namespace Constructor.Model
         float RammingDamageMultiplier { get; }
 
         float ArmorRepairCooldown { get; }
+        float StructureRepairCooldown { get; }
         float EnergyRechargeCooldown { get; }
         float ShieldRechargeCooldown { get; }
 
         float EnergyResistance { get; }
         float KineticResistance { get; }
         float ThermalResistance { get; }
+        float StructureResistance { get; }
 
         float EnergyAbsorptionPercentage { get; }
         float KineticResistancePercentage { get; }
         float EnergyResistancePercentage { get; }
         float ThermalResistancePercentage { get; }
+        float StructureResistancePercentage { get; }
 
         bool Autopilot { get; }
         bool TargetingSystem { get; }
@@ -68,8 +73,6 @@ namespace Constructor.Model
         Color EngineColor { get; }
         ShipCategory ShipCategory { get; }
         IEnumerable<Engine> Engines { get; }
-
-        IShipStats CopyWithBonuses(ShipBonuses bonuses);
     }
 
     public class ShipStatsCalculator : IShipStats
@@ -84,7 +87,7 @@ namespace Constructor.Model
 
         public ShipBaseStats BaseStats;
         public ShipEquipmentStats EquipmentStats;
-        public ShipBonuses Bonuses { get; set; }
+        public ShipBonuses Bonuses;
 
         public ColorScheme ShipColor { get; set; }
         public ColorScheme TurretColor { get; set; }
@@ -92,6 +95,7 @@ namespace Constructor.Model
         public StatMultiplier DamageMultiplier => Bonuses.DamageMultiplier;
         public StatMultiplier ArmorMultiplier => Bonuses.ArmorPointsMultiplier;
         public StatMultiplier ShieldMultiplier => Bonuses.ShieldPointsMultiplier;
+        public StatMultiplier StructureMultiplier => Bonuses.StructurePointsMultiplier;
 
         public Layout Layout => BaseStats.Layout;
 
@@ -112,10 +116,11 @@ namespace Constructor.Model
         }
 
         public float EnergyPoints => (ShipSettings.BaseEnergyPoints + EquipmentStats.EnergyPoints) * Bonuses.EnergyMultiplier.Value;
-        public float ShieldPoints => EquipmentStats.ShieldPoints * Bonuses.ShieldPointsMultiplier.Value;
-
         public float EnergyRechargeRate => EquipmentStats.EnergyRechargeRate + ShipSettings.BaseEnergyRechargeRate;
+        public float ShieldPoints => EquipmentStats.ShieldPoints * Bonuses.ShieldPointsMultiplier.Value;
         public float ShieldRechargeRate => (EquipmentStats.ShieldRechargeRate + ShipSettings.BaseShieldRechargeRate) * Bonuses.ShieldPointsMultiplier.Value * Bonuses.ShieldRechargeMultiplier.Value;
+        public float StructurePoints => (EquipmentStats.StructurePoints + ShipSettings.BaseStructurePoints * CellCount) * Bonuses.StructurePointsMultiplier.Value;
+        public float StructureRepairRate => (EquipmentStats.StructureRepairRate + ShipSettings.BaseStructureRepairRate) * Bonuses.StructurePointsMultiplier.Value;
 
         public float ArmorRepairRate
         {
@@ -152,8 +157,17 @@ namespace Constructor.Model
                 return resistance * Bonuses.ArmorPointsMultiplier.Value * BaseStats.HeatResistanceMultiplier.Value;
             }
         }
+        public float StructureResistance
+        {
+            get
+            {
+                var resistance = EquipmentStats.StructureResistance + (_ship.StructureResistance + Bonuses.ExtraStructureResistance) * (StructurePoints + EquipmentStats.StructureResistance);
+                return resistance * Bonuses.StructurePointsMultiplier.Value * BaseStats.StructureResistanceMultiplier.Value;
+            }
+        }
 
         public float ArmorRepairCooldown => (EquipmentStats.ArmorRepairBaseCooldown + ShipSettings.ArmorRepairCooldown) * Mathf.Max(EquipmentStats.ArmorRepairCooldownMultiplier.Value, 0);
+        public float StructureRepairCooldown => (EquipmentStats.StructureRepairBaseCooldown + ShipSettings.StructureRepairCooldown) * Mathf.Max(EquipmentStats.StructureRepairCooldownMultiplier.Value, 0);
         public float EnergyRechargeCooldown => (EquipmentStats.EnergyRechargeBaseCooldown + ShipSettings.EnergyRechargeCooldown) * Mathf.Max(EquipmentStats.EnergyRechargeCooldownMultiplier.Value, 0);
         public float ShieldRechargeCooldown => (EquipmentStats.ShieldRechargeBaseCooldown + ShipSettings.ShieldRechargeCooldown) * Mathf.Max(EquipmentStats.ShieldRechargeCooldownMultiplier.Value, 0);
 
@@ -161,6 +175,7 @@ namespace Constructor.Model
         public float KineticResistancePercentage => KineticResistance / (ArmorPoints + KineticResistance);
         public float EnergyResistancePercentage => EnergyResistance / (ArmorPoints + EnergyResistance);
         public float ThermalResistancePercentage => ThermalResistance / (ArmorPoints + ThermalResistance);
+        public float StructureResistancePercentage => StructureResistance / (StructurePoints + StructureResistance);
 
         public float Weight
         {
@@ -203,7 +218,7 @@ namespace Constructor.Model
         public StatMultiplier DroneSpeedMultiplier => EquipmentStats.DroneSpeedMultiplier;
         public StatMultiplier DroneRangeMultiplier => EquipmentStats.DroneRangeMultiplier;
 
-        public float RammingDamage => EquipmentStats.RammingDamage * Bonuses.ArmorPointsMultiplier.Value;
+        public float RammingDamage => EquipmentStats.RammingDamage;
         public float EnergyAbsorption => EquipmentStats.EnergyAbsorption * Bonuses.ArmorPointsMultiplier.Value;
 
         public float RammingDamageMultiplier
@@ -211,8 +226,8 @@ namespace Constructor.Model
             get
             {
                 var armorPoints = ArmorPoints;
-                var rammingDamage = RammingDamage;
-                return EquipmentStats.RammingDamageMultiplier.Value * Bonuses.ArmorPointsMultiplier.Value * (1.0f + rammingDamage / (rammingDamage + armorPoints));
+                var rammingDamage = EquipmentStats.RammingDamage;
+                return EquipmentStats.RammingDamageMultiplier.Value * Bonuses.RammingDamageMultiplier.Value * (5f + rammingDamage / (rammingDamage + armorPoints) * 5f );
             }
         }
 
@@ -240,17 +255,6 @@ namespace Constructor.Model
         public Color EngineColor => _ship.EngineColor;
         public ShipCategory ShipCategory => _ship.ShipCategory;
         public IEnumerable<Engine> Engines => _ship.Engines;
-        public IShipStats CopyWithBonuses(ShipBonuses bonuses)
-        {
-            return new ShipStatsCalculator(_ship, ShipSettings)
-            {
-                ShipColor = ShipColor,
-                TurretColor = TurretColor,
-                BaseStats = BaseStats,
-                EquipmentStats = EquipmentStats,
-                Bonuses = bonuses
-            };
-        }
 
         private readonly Ship _ship;
     }

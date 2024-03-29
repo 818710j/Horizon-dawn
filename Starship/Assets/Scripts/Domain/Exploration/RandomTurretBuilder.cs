@@ -57,6 +57,8 @@ namespace Game.Exploration
 
             foreach (var item in _database.ComponentList.Available().Where(item => item.Stats.ArmorPoints > 0 && item.Level <= componentLevel).RandomElements(5, random))
                 yield return Create(item);
+            foreach (var item in _database.ComponentList.Available().Where(item => item.Stats.StructurePoints > 0 && item.Level <= componentLevel).RandomElements(5, random))
+                yield return Create(item);
 
             var weapon = _database.ComponentList.Available().Where(item => IsSuitableWeapon(item, componentLevel)).RandomElement(random) ?? _database.GetComponent(new ItemId<Component>(85)); // default - ProjectileCannon_L
             yield return Create(weapon, 0);
@@ -65,7 +67,7 @@ namespace Game.Exploration
         private static bool IsSuitableWeapon(Component component, int level)
         {
             if (component.Ammunition == null && component.AmmunitionObsolete == null) return false;
-            if (component.WeaponSlotType != (char) WeaponSlotType.Cannon) return false;
+            if (component.WeaponSlotType != WeaponSlotType.Cannon) return false;
             if (component.Level > level) return false;
             if (component.Layout.CellCount < 3) return false;
 

@@ -28,5 +28,9 @@ namespace GameDatabase.Serializable
 		public float BaseDroneReconstructionSpeed;
 		public float MaxVelocity;
 		public float MaxTurnRate;
-	}
+
+        public float BaseStructurePoints;
+		public float BaseStructureRepairRate;
+        public float StructureRepairCooldown;
+    }
 }

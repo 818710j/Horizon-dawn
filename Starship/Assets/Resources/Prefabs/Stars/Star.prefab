@@ -72,12 +72,15 @@ MonoBehaviour:
     type: 3}
   BlackMarketIconPrefab: {fileID: 157414, guid: 728f25ebe152b444f9b3dee608619a68,
     type: 3}
+  MarketIconPrefab: {fileID: 157414, guid: 14aa0034057a1b94ab4766095588fbca, type: 3}
   QuestObjective: {fileID: 1983751949384124, guid: 14b8bdbfd17478641844c3c65c137c60,
     type: 3}
   StarInfo: {fileID: 158774, guid: bde29830f998ff6499d590a92391012c, type: 3}
   MiniBossIcon: {fileID: 1000013651314478, guid: df7e9ab96e8d47948a5104f64c5ebf42,
     type: 3}
   MiniShopIcon: {fileID: 1000012415260514, guid: 68b8b7c8eb8a55c41a2c40c6ff31ed20,
+    type: 3}
+  MiniMarketIcon: {fileID: 1000012415260514, guid: c79fe48b46bc6534db9f5aabd30290f7,
     type: 3}
   MiniArenaIcon: {fileID: 1000010971585852, guid: af29b75dca02fae428c5087eead0fe30,
     type: 3}
@@ -134,7 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86dfa391c4b1a2246af1a8e7c49d1ac8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Size: 1
+  Size: 1.2
   Color: {r: 1, g: 1, b: 1, a: 1}
   Texture: {fileID: 2800000, guid: d43dd7a1575c2cb44ba51c858b39f261, type: 3}
   Material: {fileID: 2100000, guid: f2d90f57e5fae094fb300c219858f560, type: 2}

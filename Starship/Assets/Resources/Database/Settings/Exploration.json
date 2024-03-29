@@ -3,5 +3,171 @@
   "OutpostShip": 101,
   "TurretShip": 100,
   "InfectedPlanetFaction": 16,
-  "HiveShipBuild": 275
+  "HiveShipBuild": 275,
+  "ExplorationResource": [
+    {
+      "ExplorationLoot": [
+        {
+          "ItemId": 5,
+          "Chance": 2,
+          "MaxAmount": 15
+        },
+        {
+          "ItemId": 6,
+          "Chance": 5,
+          "MaxAmount": 30
+        }
+      ]
+    },
+    {
+      "Type": 1,
+      "ExplorationLoot": [
+        {
+          "ItemId": 14,
+          "Chance": 2,
+          "MaxAmount": 10
+        },
+        {
+          "ItemId": 11,
+          "Chance": 1,
+          "MaxAmount": 30
+        },
+        {
+          "ItemId": 12,
+          "Chance": 1,
+          "MaxAmount": 5
+        }
+      ]
+    },
+    {
+      "Type": 2,
+      "ExplorationLoot": [
+        {
+          "ItemId": 12,
+          "Chance": 1,
+          "MaxAmount": 5
+        },
+        {
+          "ItemId": 11,
+          "Chance": 1,
+          "MaxAmount": 40
+        },
+        {
+          "ItemId": 14,
+          "Chance": 1,
+          "MaxAmount": 30
+        }
+      ]
+    },
+    {
+      "Type": 3,
+      "ExplorationLoot": [
+        {
+          "ItemId": 5,
+          "Chance": 1,
+          "MaxAmount": 20
+        },
+        {
+          "ItemId": 6,
+          "Chance": 1,
+          "MaxAmount": 20
+        },
+        {
+          "ItemId": 16,
+          "Chance": 1,
+          "MaxAmount": 5
+        },
+        {
+          "ItemId": 7,
+          "Chance": 1,
+          "MaxAmount": 30
+        },
+        {
+          "ItemId": 12,
+          "Chance": 1,
+          "MaxAmount": 10
+        },
+        {
+          "ItemId": 14,
+          "Chance": 1,
+          "MaxAmount": 10
+        },
+        {
+          "ItemId": 13,
+          "Chance": 1,
+          "MaxAmount": 30
+        }
+      ]
+    },
+    {
+      "Type": 4,
+      "ExplorationLoot": [
+        {
+          "ItemId": 14,
+          "Chance": 1,
+          "MaxAmount": 10
+        },
+        {
+          "ItemId": 5,
+          "Chance": 1,
+          "MaxAmount": 20
+        },
+        {
+          "ItemId": 6,
+          "Chance": 1,
+          "MaxAmount": 20
+        },
+        {
+          "ItemId": 16,
+          "Chance": 1,
+          "MaxAmount": 5
+        },
+        {
+          "ItemId": 13,
+          "Chance": 1,
+          "MaxAmount": 50
+        }
+      ]
+    },
+    {
+      "Type": 5,
+      "ExplorationLoot": [
+        {
+          "ItemId": 6,
+          "Chance": 1,
+          "MaxAmount": 20
+        },
+        {
+          "ItemId": 5,
+          "Chance": 1,
+          "MaxAmount": 20
+        },
+        {
+          "ItemId": 13,
+          "Chance": 1,
+          "MaxAmount": 30
+        },
+        {
+          "ItemId": 7,
+          "Chance": 1,
+          "MaxAmount": 30
+        }
+      ]
+    },
+    {
+      "Type": 6,
+      "ExplorationLoot": [
+        {
+          "ItemId": 6,
+          "Chance": 1,
+          "MaxAmount": 30
+        },
+        {
+          "ItemId": 5,
+          "Chance": 1,
+          "MaxAmount": 30
+        }
+      ]
+    }
+  ]
 }

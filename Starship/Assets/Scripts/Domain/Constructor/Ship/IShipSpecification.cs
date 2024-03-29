@@ -13,11 +13,9 @@ namespace Constructor
 		IEnumerable<IWeaponPlatformData> Platforms { get; }
 		IEnumerable<IDeviceData> Devices { get; }
 		IEnumerable<IDroneBayData> DroneBays { get; }
-
-		IShipSpecification CopyWithStats(Model.IShipStats stats);
 	}
 
-	public struct ShipType
+    public struct ShipType
     {
         public ShipType(ItemId<Ship> id, DifficultyClass shipClass, int level, int size)
         {

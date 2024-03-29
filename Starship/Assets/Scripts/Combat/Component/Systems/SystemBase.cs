@@ -5,17 +5,19 @@ using Combat.Component.Triggers;
 using Combat.Unit;
 using GameDatabase.Model;
 using UnityEngine;
+using Combat.Component.Ship;
 
 namespace Combat.Component.Systems
 {
     public abstract class SystemBase : ISystem
     {
-        protected SystemBase(int keyBinding, SpriteId controlButtonIcon)
+        protected SystemBase(int keyBinding, SpriteId controlButtonIcon,IShip ship)
         {
             _controlButtonIcon = controlButtonIcon;
             _keyBinding = keyBinding;
             Enabled = true;
             TimeFromLastUse = 60f;
+            _ship = ship;
         }
 
         public bool Enabled { get; set; }
@@ -30,6 +32,7 @@ namespace Combat.Component.Systems
 
         public virtual IEngineModification EngineModification { get { return null; } }
         public virtual IFeaturesModification FeaturesModification { get { return null; } }
+        public virtual IStatsWeaponModification StatsWeaponModification { get { return null; } }
         public virtual ISystemsModification SystemsModification { get { return null; } }
         public virtual IStatsModification StatsModification { get { return null; } }
         public virtual IUnitAction UnitAction { get { return null; } }
@@ -80,5 +83,7 @@ namespace Combat.Component.Systems
         private readonly int _keyBinding;
         private readonly SpriteId _controlButtonIcon;
         private readonly UnitTriggers _triggers = new UnitTriggers();
+
+        private readonly IShip _ship;
     }
 }

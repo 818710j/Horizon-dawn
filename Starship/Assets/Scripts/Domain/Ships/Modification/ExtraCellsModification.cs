@@ -60,6 +60,6 @@ namespace Constructor.Ships.Modification
 
         public int Seed { get; }
 
-        private static bool IsSuitableCell(char cell) { return cell == (char)CellType.Inner || cell == (char)CellType.Outer || cell == (char)CellType.InnerOuter; }
+        private static bool IsSuitableCell(char cell) { return cell == (char)CellType.Inner || cell == (char)CellType.Outer || cell == (char)CellType.InnerOuter || cell == (char)CellType.CoreBlock || cell == (char)CellType.StructureBlock; }
     }
 }

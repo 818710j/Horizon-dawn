@@ -10,7 +10,7 @@ namespace Constructor.Modification
     {
         public ExtraHitPoints(ModificationQuality quality)
         {
-            _hitPoints = quality.PowerMultiplier(-3, -2, -1, 1, 3, 5);
+            _hitPoints = quality.PowerMultiplier(-3, -2, -1, 1, 3, 5, 7);
             Quality = quality;
         }
 

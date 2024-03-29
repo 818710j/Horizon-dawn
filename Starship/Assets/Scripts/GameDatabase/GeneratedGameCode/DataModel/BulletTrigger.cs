@@ -118,9 +118,11 @@ namespace GameDatabase.DataModel
 			Quantity = UnityEngine.Mathf.Clamp(serializable.Quantity, 0, 1000);
 			Size = UnityEngine.Mathf.Clamp(serializable.Size, 0f, 100f);
 			Cooldown = UnityEngine.Mathf.Clamp(serializable.Cooldown, 0f, 1000f);
-			RandomFactor = UnityEngine.Mathf.Clamp(serializable.RandomFactor, 0f, 3.402823E+38f);
-			PowerMultiplier = UnityEngine.Mathf.Clamp(serializable.PowerMultiplier, 0f, 3.402823E+38f);
+			RandomFactor = UnityEngine.Mathf.Clamp(serializable.RandomFactor, 0f, 1f);
+			PowerMultiplier = UnityEngine.Mathf.Clamp(serializable.PowerMultiplier, 0f, 1000f);
 			MaxNestingLevel = UnityEngine.Mathf.Clamp(serializable.MaxNestingLevel, 0, 100);
+			RandomFactor_Body = UnityEngine.Mathf.Clamp(serializable.RandomFactor_Body, 0f, 1f);
+			Offset_multiple = UnityEngine.Mathf.Clamp(serializable.Offset_multiple, 0f, 1000f);
 
             OnDataDeserialized(serializable, loader);
         }
@@ -140,6 +142,8 @@ namespace GameDatabase.DataModel
 		public float RandomFactor { get; private set; }
 		public float PowerMultiplier { get; private set; }
 		public int MaxNestingLevel { get; private set; }
+		public float RandomFactor_Body { get; private set; }
+		public float Offset_multiple { get; private set; }
     }
     public partial class BulletTrigger_Detonate : BulletTrigger
     {

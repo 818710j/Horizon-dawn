@@ -48,7 +48,7 @@ namespace Gui.Exploration
 
         private static bool IsShipAllowed(IShip ship)
         {
-            if (ship.Model.SizeClass == SizeClass.Frigate) return true;
+            if (ship.Model.SizeClass == SizeClass.Frigate||ship.Model.SizeClass == SizeClass.Destroyer) return true;
             //if (ship.Id.Value == 103) return true; // wormship
             //if (ship.Id.Value == 78) return true; // scavenger
 

@@ -34,7 +34,7 @@ namespace Combat.Factory
             switch (stats.DeviceClass)
             {
                 case DeviceClass.ClonningCenter:
-                    device = new ClonningDevice(ship, stats, _shipFactory, shipSpec, _effectFactory, deviceData.KeyBinding);
+                    device = new ClonningDevice(ship, stats, _shipFactory, shipSpec, _effectFactory, deviceData.KeyBinding,ship);
                     break;
                 case DeviceClass.TimeMachine:
                     {
@@ -72,7 +72,7 @@ namespace Combat.Factory
                     {
                         var pointDefense = new PointDefenseSystem(ship, stats, deviceData.KeyBinding);
                         device = pointDefense;
-                        device.AddTrigger(new PointDefenseAction(ship, pointDefense, stats.Size + ship.Body.Scale/2f, 
+                        device.AddTrigger(new PointDefenseAction(ship, pointDefense, stats.Size + ship.Body.Scale + 0.05f, 
                             stats.Power*shipSpec.Stats.DamageMultiplier.Value, stats.EnergyConsumption, stats.Cooldown, stats.Color, _satelliteFactory, stats.Sound));
                         soundEffectCondition = ConditionType.None;
                     }
@@ -122,11 +122,17 @@ namespace Combat.Factory
                     device = new FortificationDevice(ship, stats, deviceData.KeyBinding);
                     break;
                 case DeviceClass.ToxicWaste:
-                    device = new ToxicWaste(ship, stats, _spaceObjectFactory, shipSpec.Stats.DamageMultiplier.Value);
+                    device = new ToxicWaste(ship, stats, _spaceObjectFactory, shipSpec.Stats.DamageMultiplier.Value,ship);
                     break;
                 case DeviceClass.WormTail:
-                    device = new WormTailDevice(ship, stats, _spaceObjectFactory.CreateWormTail(ship, Mathf.FloorToInt(stats.Size), 0.1f,
-                        ship.Stats.Armor.MaxValue * stats.Power, stats.ObjectPrefab, stats.Offset.x, stats.Offset.y, 0.15f, shipSpec.Stats.ShipColor));
+                    device = new WormTailDevice(stats, _spaceObjectFactory.CreateWormTail(ship, Mathf.FloorToInt(stats.Size), 0.1f,
+                        ship.Stats.Armor.MaxValue * stats.Power, stats.ObjectPrefab, stats.Offset.x, stats.Offset.y, 0.15f, stats.UseMyIcon, stats.ObjectIconImage, stats.SecondObjectIconImage, shipSpec.Stats.ShipColor), ship);
+                    break;
+                case DeviceClass.FireAssault:
+                    device = new FireAssault(ship, stats, deviceData.KeyBinding);
+                    break;
+                case DeviceClass.StructureShield:
+                    device = new StructureShield(ship, stats, deviceData.KeyBinding);
                     break;
                 default:
                     return null;

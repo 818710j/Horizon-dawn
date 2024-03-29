@@ -6,9 +6,9 @@
   "InitialPosition": {
     "x": 0.5
   },
-  "Damage": 3.0,
+  "Damage": 4.0,
   "Range": 15.0,
-  "Velocity": 15.0,
+  "Velocity": 22.0,
   "LifeTime": 1.0,
   "EnergyCost": 1.0,
   "Color": "#C2FFBD",

@@ -29,6 +29,7 @@ namespace Constructor.Ships
 
             builder.Bonuses.ArmorPointsMultiplier *= _powerMultiplier;
             builder.Bonuses.ShieldPointsMultiplier *= _powerMultiplier;
+            builder.Bonuses.StructurePointsMultiplier *= _powerMultiplier;
             builder.Bonuses.DamageMultiplier *= _powerMultiplier;
             builder.Bonuses.RammingDamageMultiplier *= _powerMultiplier;
 

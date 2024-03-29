@@ -2,6 +2,7 @@
 using GameDatabase.DataModel;
 using GameDatabase.Enums;
 using UnityEngine;
+using Combat.Component.Ship;
 
 namespace Combat.Factory
 {
@@ -33,11 +34,11 @@ namespace Combat.Factory
 
     public class BulletStats : IBulletStats
     {
-        public BulletStats(Ammunition ammunition, WeaponStatModifier statModifier)
+        public BulletStats(Ammunition ammunition, WeaponStatModifier statModifier, IShip ship)
         {
             _ammunition = ammunition;
             _statModifier = statModifier;
-
+            _ship = ship;
             PowerLevel = 1.0f;
             RandomFactor = 0.0f;
             HitPointsMultiplier = 1.0f;
@@ -84,7 +85,7 @@ namespace Combat.Factory
 
         public float BulletHitRange { get { return _ammunition.Body.Type == BulletType.Continuous ? Range : Range + BodySize; } }
         public float BulletSpeed { get { return _ammunition.Body.Velocity * _statModifier.VelocityMultiplier.Value; } }
-        public float EnergyCost { get { return _ammunition.Body.EnergyCost * _statModifier.EnergyCostMultiplier.Value; } }
+        public float EnergyCost { get { return _ammunition.Body.EnergyCost * _statModifier.EnergyCostMultiplier.Value * _ship.Stats.WeaponUpgrade.EnergyCostMultiplier; } }
         public bool IgnoresShipSpeed { get { return _ammunition.Body.Type == BulletType.Static; } }
 
         public float Recoil
@@ -115,7 +116,7 @@ namespace Combat.Factory
 
         public float Range { get { return _ammunition.Body.Range * RangeMultiplier; } }
         public float HitPoints { get { return _ammunition.Body.HitPoints * HitPointsMultiplier; } }
-        public float DamageMultiplier { get { return PowerLevel * _statModifier.DamageMultiplier.Value; } }
+        public float DamageMultiplier { get { return PowerLevel * _statModifier.DamageMultiplier.Value * _ship.Stats.WeaponUpgrade.DamageMultiplier; } }
 
         //public float Lifetime
         //{
@@ -168,22 +169,23 @@ namespace Combat.Factory
         private bool IsAoe { get { return (_ammunition.ImpactType == BulletImpactType.DamageOverTime || _ammunition.ImpactType == BulletImpactType.HitAllTargets) && _ammunition.Effects.Count > 0; } }
 
         private float VelocityMultiplier { get { return _statModifier.VelocityMultiplier.Value; } }
-        private float RangeMultiplier { get { return PowerLevel > 0.1f ? PowerLevel * _statModifier.RangeMultiplier.Value : 0f; } }
+        private float RangeMultiplier { get { return PowerLevel > 0.1f ? PowerLevel * _statModifier.RangeMultiplier.Value * _ship.Stats.WeaponUpgrade.RangeMultiplier : 0f; } }
         private float LifetimeMultiplier { get { return 0.5f + PowerLevel * 0.5f; } }
         private float SizeMultiplier { get { return 0.5f + PowerLevel * 0.5f; } }
 
         private readonly Ammunition _ammunition;
         private readonly WeaponStatModifier _statModifier;
+        private readonly IShip _ship;
     }
 
     public class BulletStatsObsolete : IBulletStats
     {
-        public BulletStatsObsolete(AmmunitionObsoleteStats ammunition)
+        public BulletStatsObsolete(AmmunitionObsoleteStats ammunition, IShip ship)
         {
             _stats = ammunition;
             Type = ammunition.AmmunitionClass.GetBulletType();
             EffectType = ammunition.AmmunitionClass.GetEffectType();
-
+            _ship = ship;
             PowerLevel = 1.0f;
             RandomFactor = 0.0f;
             HitPointsMultiplier = 1.0f;
@@ -205,15 +207,15 @@ namespace Combat.Factory
         public float Recoil { get { return _stats.Recoil * SizeMultiplier; } }
         public float AreaOfEffect { get { return _stats.AreaOfEffect * SizeMultiplier; } }
         public float Velocity { get { return _stats.Velocity; } }
-        public float EnergyCost { get { return _stats.EnergyCost; } }
+        public float EnergyCost { get { return _stats.EnergyCost * _ship.Stats.WeaponUpgrade.EnergyCostMultiplier; } }
         public bool IgnoresShipSpeed { get { return _stats.IgnoresShipVelocity; } }
 
         public float BulletSpeed { get { return Velocity; } }
         public float BulletHitRange { get { return Mathf.Max(Range, AreaOfEffect); } }
 
-        private float RangeMultiplier { get { return PowerLevel > 0.1f ? PowerLevel : 0f; } }
+        private float RangeMultiplier { get { return PowerLevel > 0.1f ? PowerLevel * _ship.Stats.WeaponUpgrade.RangeMultiplier : 0f; } }
         private float LifetimeMultiplier { get { return 0.5f + PowerLevel * 0.5f; } }
-        private float DamageMultiplier { get { return PowerLevel; } }
+        private float DamageMultiplier { get { return PowerLevel * _ship.Stats.WeaponUpgrade.DamageMultiplier; } }
         private float SizeMultiplier { get { return 0.5f + PowerLevel * 0.5f; } }
 
         public float PowerLevel { get; set; }
@@ -221,5 +223,6 @@ namespace Combat.Factory
         public float HitPointsMultiplier { get; set; }
 
         private readonly AmmunitionObsoleteStats _stats;
+        private readonly IShip _ship;
     }
 }

@@ -5,7 +5,6 @@ using Session;
 using GameServices.Database;
 using Services.Messenger;
 using GameModel.Skills;
-using Utils;
 using Zenject;
 
 namespace GameServices.Player
@@ -72,7 +71,7 @@ namespace GameServices.Player
                 return false;
 
             var level = GetSkillLevels()[info.Type];
-            OptimizedDebug.Log(info.Type + ": " + level + " -> " + (level + info.Multilpler));
+            UnityEngine.Debug.Log(info.Type + ": " + level + " -> " + (level + info.Multilpler));
             GetSkillLevels()[info.Type] = level + info.Multilpler;
 
             _session.Upgrades.AddSkill(id);
@@ -123,7 +122,7 @@ namespace GameServices.Player
         public int CraftingLevelModifier { get { return -GetSkillLevels()[SkillType.CraftingLevel]*5; } }
         public float CraftingPriceScale { get { return 1f - GetSkillLevels()[SkillType.CraftingPrice] * 0.05f; } }
 
-        public long MaxShipExperience { get { return GetSkillLevels()[SkillType.ExceedTheLimits] > 0 ? Maths.Experience.MaxPlayerExperience2 : Maths.Experience.MaxPlayerExperience; } }
+        public long MaxShipExperience { get { return GetSkillLevels()[SkillType.ExceedTheLimits] > 0 ? Maths.Experience.MaxPlayerExperience2 : Maths.Experience.MaxPlayerExperience1; } }
 
         public int GetAvailableHangarSlots(GameDatabase.Enums.SizeClass size)
         {
@@ -147,8 +146,10 @@ namespace GameServices.Player
                     return GetSkillLevels()[SkillType.HangarSlot3];
                 case GameDatabase.Enums.SizeClass.Battleship:
                     return GetSkillLevels()[SkillType.HangarSlot4];
-                case GameDatabase.Enums.SizeClass.Titan:
+                case GameDatabase.Enums.SizeClass.subTitan:
                     return GetSkillLevels()[SkillType.HangarSlot5];
+                case GameDatabase.Enums.SizeClass.Titan:
+                    return GetSkillLevels()[SkillType.HangarSlot6];
                 default:
                     return 0;
             }

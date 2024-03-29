@@ -4,7 +4,6 @@ using System.Linq;
 using GameDatabase;
 using GameDatabase.DataModel;
 using GameModel.Skills;
-using ModestTree;
 using Session;
 using UnityEngine;
 using Zenject;
@@ -54,9 +53,20 @@ namespace GameServices.Database
                 return _session.Fleet.Ships.Any(item => item.Experience >= Maths.Experience.MaxPlayerExperience);
             }
 
+            if (type == SkillType.RequierementMaxLevel2)
+            {
+                return _session.Fleet.Ships.Any(item => item.Experience >= Maths.Experience.MaxPlayerExperience1);
+            }
+
+            if (type == SkillType.RequierementMaxLevel3)
+            {
+                return _session.Fleet.Ships.Any(item => item.Experience >= Maths.Experience.MaxPlayerExperience2);
+            }
+
             if (type == SkillType.RequierementBeatAllEnemies)
             {
-                var factions = _database.FactionList.Where(item => !item.Hidden && item != Faction.Neutral).Select(item => item.Id.Value).ToHashSet();
+                HashSet<int> factions;
+                    factions = _database.FactionList.Where(item => !item.Hidden && item != Faction.Neutral).Select(item => item.Id.Value).ToHashSet();
 
                 foreach (var faction in _session.Regions.GetCapturedFactions())
                     factions.Remove(faction.Value);

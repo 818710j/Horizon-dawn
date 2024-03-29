@@ -20,7 +20,7 @@ namespace Combat.Component.DamageHandler
             if (parent == null)
                 return CollisionEffect.None;
 
-            var damage = impact.GetTotalDamage(Resistance.Empty);
+            var damage = impact.GetEnergyShieldDamage();
 
             if (parent.Stats.Energy.TryGet(damage*_energyConsumption))
             {
@@ -30,7 +30,7 @@ namespace Combat.Component.DamageHandler
             {
                 var energy = parent.Stats.Energy.Value;
                 parent.Stats.Energy.Get(energy);
-                impact.RemoveDamage(energy / _energyConsumption, Resistance.Empty);
+                impact.RemoveDamage(energy / _energyConsumption);
                 _shield.Enabled = false;
             }
 

@@ -30,6 +30,7 @@ namespace GameDatabase.Serializable
 		public float EnergyResistance;
 		public float KineticResistance;
 		public float HeatResistance;
+		public float StructureResistance;
 		public bool Regeneration;
 		public float BaseWeightModifier;
 		public int[] BuiltinDevices;

@@ -4,5 +4,8 @@
   "Name": "$Commodity_Polymers",
   "Icon": "tubes",
   "Color": "#C2C0A2",
-  "Price": 20
+  "Price": 20,
+  "InMarket": true,
+  "MinAmount": 20,
+  "MaxAmount": 3000
 }

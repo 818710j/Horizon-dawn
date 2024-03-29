@@ -4,7 +4,6 @@
   "Name": "$VampiricRay_M",
   "DisplayCategory": 1,
   "ComponentStatsId": 1,
-  "Faction": -1,
   "Icon": "energybeam2",
   "Color": "#FF0000",
   "Layout": "010010010",

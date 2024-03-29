@@ -61,7 +61,7 @@ namespace GameModel
                         var components = _database.ComponentList.LevelLessOrEqual(_level + 50).CommonAndRare().RandomUniqueElements(componentCount, random);
                         foreach (var item in components)
                         {
-                            var component = ComponentInfo.CreateRandomModification(item, random, ModificationQuality.P2);
+                            var component = ComponentInfo.CreateRandomModification(item, random, ModificationQuality.P3);
                             var itemType = _itemTypeFactory.CreateComponentItem(component, true);
                             var price = new Price(CurrencyExtensions.PremiumCurrencyAllowed ? itemType.Price.Amount : 1 + itemType.Price.Amount / 500, Currency.Snowflakes);
 

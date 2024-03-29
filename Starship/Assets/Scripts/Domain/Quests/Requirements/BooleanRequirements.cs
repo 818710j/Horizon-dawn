@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿﻿using System.Collections.Generic;
 using System.Text;
 using Services.Localization;
 
@@ -41,6 +41,8 @@ namespace Domain.Quests
                         return false;
                 }
 
+                if (_operation == Operation.Any) return false;
+
                 return true;
             }
         }
@@ -60,6 +62,8 @@ namespace Domain.Quests
                 if (!isMet && _operation == Operation.All)
                     return false;
             }
+
+            if (_operation == Operation.Any) return false;
 
             return true;
         }

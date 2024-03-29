@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="Credits_GameDesign">游戏设计</string>
-    <string name="Credits_Program">程序设计</string>
-    <string name="Credits_Graphics">图像设计</string>
-    <string name="Credits_Localization">本地化翻译</string>
-    <string name="Credits_Music">游戏音乐</string>
+    <string name="COPYRIGHT:PAVEL ZINCHENKO">版权所属:PAVEL ZINCHENKO</string>
+    <string name="HORIZON-DAWN">视界线-黎明</string>
+    <string name="VERSION MAKING:TIAN STUDIO">版本制作:窄涧居仙</string>
+    <string name="PROCEDURE">程序</string>
+    <string name="BROKEN TIME">破碎时光</string>
     <string name="Credits_Sound">音响效果</string>
     <string name="Credits_Thanks">特别感谢</string>
 </resources>

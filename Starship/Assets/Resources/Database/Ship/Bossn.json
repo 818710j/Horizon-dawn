@@ -1,9 +1,9 @@
 {
   "ItemType": 6,
   "Id": 95,
-  "ShipCategory": 2,
+  "ShipCategory": 7,
   "Name": "$fn_Flagship",
-  "SizeClass": 4,
+  "SizeClass": 5,
   "IconImage": "flagshipn",
   "IconScale": 1.3,
   "ModelImage": "flagshipn",

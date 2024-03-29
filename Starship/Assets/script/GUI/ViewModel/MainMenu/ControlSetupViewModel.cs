@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
-using Utils;
 using Zenject;
 
 namespace ViewModel
@@ -162,7 +161,7 @@ namespace ViewModel
 				ButtonLayoutViewModel item;
 				if (!buttons.TryGetValue(id, out item))
 				{
-                    OptimizedDebug.Log("Button not found: " + id);
+                    UnityEngine.Debug.Log("Button not found: " + id);
                     continue;
                 }
 

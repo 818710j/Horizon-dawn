@@ -324,4 +324,6 @@
   <string name="ClonningCenter_M">Clonning Center</string>
   <string name="ClonningCenter_L">Large Clonning Center</string>
   <string name="InfinityStone_S">Infinity Stone</string>
+  <string name="EnergyWave">EnergyWave</string>
+  <string name="SpaceShockWave">SpaceShockWave</string>
 </resources>

@@ -1,9 +1,10 @@
 {
   "ItemType": 6,
   "Id": 123,
+  "ShipCategory": 2,
   "Name": "$f16_Battleship",
   "Faction": 16,
-  "SizeClass": 3,
+  "SizeClass": 4,
   "IconScale": 1.0,
   "ModelImage": "devourer",
   "ModelScale": 5.0,

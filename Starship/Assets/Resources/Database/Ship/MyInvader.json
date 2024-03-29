@@ -1,9 +1,9 @@
 {
   "ItemType": 6,
   "Id": 84,
-  "ShipCategory": 3,
+  "ShipCategory": 5,
   "Name": "Space Invader",
-  "SizeClass": 3,
+  "SizeClass": 4,
   "IconImage": "unknown_ship",
   "IconScale": 0.5,
   "ModelImage": "space_invader",
@@ -22,14 +22,14 @@
     {
       "Position": {
         "x": 0.4,
-        "y": 0.9
+        "y": -0.9
       },
       "PlatformType": 3
     },
     {
       "Position": {
         "x": 0.4,
-        "y": -0.9
+        "y": 0.9
       },
       "PlatformType": 3
     },

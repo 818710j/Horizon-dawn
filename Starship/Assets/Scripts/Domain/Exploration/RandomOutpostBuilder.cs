@@ -74,6 +74,8 @@ namespace Game.Exploration
 
             foreach (var item in _database.ComponentList.Available().Where(item => item.Stats.ArmorPoints > 0 && item.Level <= componentLevel).RandomElements(10, random))
                 yield return Create(item);
+            foreach (var item in _database.ComponentList.Available().Where(item => item.Stats.StructurePoints > 0 && item.Level <= componentLevel).RandomElements(10, random))
+                yield return Create(item);
 
             var dronebayCount = 3;
             var dronebays = _database.ComponentList.Available().Where(item => item.DroneBay != null && item.Level < componentLevel).RandomElements(dronebayCount, random).ToArray();

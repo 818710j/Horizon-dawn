@@ -64,7 +64,7 @@ namespace Combat.Ai
 		{
 			_ship.Controls.Throttle = 0;
 			_ship.Controls.Course = null;
-			_ship.Controls.SystemsState.SetAll(false);
+			_ship.Controls.SystemsState = 0;
 		}
 
 		private IStrategy GetStrategy()
@@ -80,7 +80,7 @@ namespace Combat.Ai
 			_strategy = StrategySelector./*BestAvailable*/Random(_ship, _enemy, _level, new System.Random(), _scene);
 			_strategyUpdateCooldown = StrategyUpdateInterval;
 
-			//OptimizedDebug.Log("Strategy: " + _strategy.GetType().Name);
+			//UnityEngine.Debug.Log("Strategy: " + _strategy.GetType().Name);
 			return _strategy;
 		}
 

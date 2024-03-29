@@ -111,14 +111,6 @@ public class Cheats
         }
         #endif
 
-		if (command.StartsWith("000"))
-		{
-			var shipId = command.Substring(3);
-			var ship = this._database.GetShip(new ItemId<Ship>(int.Parse(shipId)));
-			_playerFleet.Ships.Add(new CommonShip(ship, Enumerable.Empty<IntegratedComponent>()));
-			return true;
-		}
-
         if (command == "000")
         {
             if (_account.Status != Status.Connected)
@@ -137,7 +129,7 @@ public class Cheats
             break;
 		case 1:
             var center = _motherShip.CurrentStar.Position;
-            var stars = _starMap.GetVisibleStars(center - Vector2.one * 20f, center + Vector2.one * 20f);
+            var stars = _starMap.GetVisibleStars(center - Vector2.one * 200f, center + Vector2.one * 200f);
             foreach (var item in stars)
                 item.SetVisited();
             break;
@@ -191,7 +183,7 @@ public class Cheats
             _sesionCreatedTrigger.Fire();
 			break;
 		case 12:
-		    _playerResources.Stars += 100000000;
+		    _playerResources.Stars += 2100000000;
 			break;
 		case 13:
 			foreach (var ship in _playerFleet.ActiveShipGroup.Ships)

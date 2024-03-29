@@ -59,35 +59,36 @@ namespace Economy.ItemType
 
         private IEnumerable<IProduct> Loot(System.Random random)
         {
-            const int holyCannonId = 213;
-            const int santaSmallDronebayId = 219;
-            const int santaMediumDronebayId = 220;
-            const int santaLargeDronebayId = 215;
-            const int fireworkId = 96;
-
-            if (!_holidayManager.IsChristmas)
                 yield break;
+            //const int holyCannonId = 213;
+            //const int santaSmallDronebayId = 219;
+            //const int santaMediumDronebayId = 220;
+            //const int santaLargeDronebayId = 215;
+            //const int fireworkId = 96;
 
-            var items = new List<Component>();
+            //if (!_holidayManager.IsChristmas)
+            //    yield break;
 
-            var value = random.Next(100);
-            if (value < 5)
-                items.Add(_database.GetComponent(new ItemId<Component>(santaLargeDronebayId)));
-            if (value < 15)
-                items.Add(_database.GetComponent(new ItemId<Component>(santaMediumDronebayId)));
-            if (value < 30)
-                items.Add(_database.GetComponent(new ItemId<Component>(holyCannonId)));
-            else if (value < 45)
-                items.Add(_database.GetComponent(new ItemId<Component>(santaSmallDronebayId)));
-            else if (value < 60)
-                items.Add(_database.GetComponent(new ItemId<Component>(fireworkId)));
+            //var items = new List<Component>();
 
-            items.AddRange(_database.ComponentList.CommonAndRare().RandomUniqueElements(value / 25, random));
+            //var value = random.Next(100);
+            //if (value < 5)
+            //    items.Add(_database.GetComponent(new ItemId<Component>(santaLargeDronebayId)));
+            //if (value < 15)
+            //    items.Add(_database.GetComponent(new ItemId<Component>(santaMediumDronebayId)));
+            //if (value < 30)
+            //    items.Add(_database.GetComponent(new ItemId<Component>(holyCannonId)));
+            //else if (value < 45)
+            //    items.Add(_database.GetComponent(new ItemId<Component>(santaSmallDronebayId)));
+            //else if (value < 60)
+            //    items.Add(_database.GetComponent(new ItemId<Component>(fireworkId)));
 
-            foreach (var item in items)
-                yield return new Product(_itemTypeFactory.CreateComponentItem(ComponentInfo.CreateRandomModification(item, random, ModificationQuality.P2)));
+            //items.AddRange(_database.ComponentList.CommonAndRare().RandomUniqueElements(value / 25, random));
 
-            yield return new Product(_itemTypeFactory.CreateCurrencyItem(Currency.Snowflakes), random.Range(15, 25));
+            //foreach (var item in items)
+            //    yield return new Product(_itemTypeFactory.CreateComponentItem(ComponentInfo.CreateRandomModification(item, random, ModificationQuality.P2)));
+
+            //yield return new Product(_itemTypeFactory.CreateCurrencyItem(Currency.Snowflakes), random.Range(15, 25));
         }
 
         private readonly int _seed;

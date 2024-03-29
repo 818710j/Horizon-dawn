@@ -25,4 +25,11 @@
     <string name="AddShipCell">Create an extra cell</string>
     <string name="RemoveShipCells">Reset ship layout</string>
     <string name="RemoveShipCellsWarning">Are you sure you want to remove all extra cells from your ship?</string>
+	<string name="A short introduction">A short introduction</string>
+	<string name="The main content of the current game is basically completed, and subsequent updates will be in the form of MOD adapted to this version.">The main content of the current game is basically completed, and subsequent updates will be in the form of MOD adapted to this version.</string>
+	<string name="Friendly guidance">Friendly guidance</string>
+	<string name="Special Thanks">Special Thanks</string>
+	<string name="Material shopping mall">Material shopping mall</string>
+	<string name="PROCEDURE">PROCEDURE</string>
+	<string name="ObjectMarket">Material shopping mall</string>
 </resources>

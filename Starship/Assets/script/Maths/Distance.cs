@@ -30,7 +30,7 @@ namespace Maths
 		public static int CombatTime(int distance) { return Math.Max(40, 100 - distance); }
 		public static int AiLevel(int distance) { return distance*2; }
 		public static int ComponentLevel(int distance) { return Math.Max(distance, 1); }
-        public static int Credits(int distance) { return 100 + Math.Max(distance, 1) * 2; }
+        public static int Credits(int distance) { return 200 + Math.Max(distance, 1) * 3; }
         public static DifficultyClass MaxShipClass(int distance) { return (DifficultyClass)(distance/25); }
 		public static DifficultyClass MinShipClass(int distance) { return distance < 50 ? DifficultyClass.Default : DifficultyClass.Class1; }
 		public static DifficultyClass CompanionClass(int distance) { return (DifficultyClass)((distance+10)/20); }

@@ -4,7 +4,7 @@
   "DeviceClass": 6,
   "EnergyConsumption": 1.0,
   "PassiveEnergyConsumption": 3.0,
-  "Power": 3.0,
+  "Power": 2.0,
   "Size": 3.0,
   "Cooldown": 0.3,
   "Lifetime": 0.1,

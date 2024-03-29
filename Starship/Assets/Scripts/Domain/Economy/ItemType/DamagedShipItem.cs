@@ -40,7 +40,7 @@ namespace Economy.ItemType
 
             return LimitBySize(_build.Components.
                 Select(item => { var component = ComponentExtensions.FromDatabase(item); component.Locked = false; return component; }).
-                RandomElements(random.Next(freespace / 5), random), freespace);
+                RandomElements(1, random.Next(freespace / 5), random), freespace);
         }
 
         public void Consume(int amount)

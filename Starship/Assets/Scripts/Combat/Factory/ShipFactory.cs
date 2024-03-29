@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Collider2DOptimization;
 using Combat.Ai;
 using Combat.Component.Body;
 using Combat.Component.Collider;
@@ -9,10 +8,8 @@ using Combat.Component.Physics;
 using Combat.Component.Platform;
 using Combat.Component.Stats;
 using Combat.Component.Systems.DroneBays;
-using Combat.Component.Systems.Weapons;
 using Combat.Component.Unit.Classification;
 using Combat.Component.Triggers;
-using Combat.Component.Unit;
 using Combat.Component.View;
 using Combat.Helpers;
 using Combat.Scene;
@@ -20,12 +17,10 @@ using Constructor;
 using Constructor.Model;
 using GameDatabase;
 using GameDatabase.Enums;
-using GameServices.Settings;
 using Services.Audio;
 using Services.ObjectPool;
 using Services.Reources;
 using UnityEngine;
-using Utils;
 using Zenject;
 using IShip = Combat.Component.Ship.IShip;
 using Ship = Combat.Component.Ship.Ship;
@@ -46,7 +41,6 @@ namespace Combat.Factory
         [Inject] private readonly SatelliteFactory _satelliteFactory;
         [Inject] private readonly EffectFactory _effectFactory;
         [Inject] private readonly PrefabCache _prefabCache;
-        [Inject] private readonly GameSettings _gameSettings;
 
         public ShipFactory(Settings settings)
         {
@@ -62,7 +56,7 @@ namespace Combat.Factory
             UnitSide unitSide,
             bool createShadow)
         {
-            OptimizedDebug.Log("CreateShip: " + spec.Type.Id);
+            UnityEngine.Debug.Log("CreateShip: " + spec.Type.Id);
 
             bool isDrone = motherShip != null;
 
@@ -81,10 +75,11 @@ namespace Combat.Factory
 
             ship.AddResource(shipGameObject);
 
-            if (_gameSettings.ShowDamage && !isDrone)
+            if (!_settings.NoDamageIndicator && !isDrone)
                 shipStats.DamageIndicator = new DamageIndicator(ship, _effectFactory, unitSide == UnitSide.Player ? 0.75f : 0.5f);
 
             ship.Engine = CreateEngine(stats);
+            ship.Controls = new CommonControls();
 
             CreateEngineEffect(ship, stats, isDrone ? "DroneTrail" : "ShipTrail");
 
@@ -110,27 +105,16 @@ namespace Combat.Factory
                 var platform = CreatePlatform(ship, item, 0.04f, spec.Stats.TurretColor);
                 ship.AddPlatform(platform);
 
-                var aimed = false;
                 foreach (var weaponSpec in item.Weapons)
                 {
                     var weapon = _weaponFactory.Create(weaponSpec, platform, spec.Stats.ArmorMultiplier.Value, ship);
                     ship.AddSystem(weapon);
-                    if (!aimed && weapon is IWeapon wep)
-                    {
-                        platform.Aim(wep.Info);
-                        aimed = true;
-                    }
                 }
 
                 foreach (var weaponSpec in item.WeaponsObsolete)
                 {
                     var weapon = _weaponFactory.Create(weaponSpec, platform, spec.Stats.ArmorMultiplier.Value, ship);
                     ship.AddSystem(weapon);
-                    if (!aimed && weapon is IWeapon wep)
-                    {
-                        platform.Aim(wep.Info);
-                        aimed = true;
-                    }
                 }
             }
 
@@ -153,7 +137,7 @@ namespace Combat.Factory
                 }
 
                 var platformBody = SimpleBody.Create(ship.Body, Vector2.zero, 0f, 1.0f, 0, 0);
-                var droneBayPlatform = new FixedPlatform(ship, platformBody, _droneBayPlatformCooldown, ship);
+                var droneBayPlatform = new FixedPlatform(ship, platformBody, _droneBayPlatformCooldown);
                 ship.AddPlatform(droneBayPlatform);
 
                 foreach (var item in spec.DroneBays)
@@ -163,7 +147,6 @@ namespace Combat.Factory
                 }
             }
 
-            ship.Controls = new CommonControls(ship);
             shipGameObject.IsActive = true;
 
             _scene.AddUnit(ship);
@@ -227,11 +210,7 @@ namespace Combat.Factory
                 if (stats.ShipCategory == ShipCategory.Drone)
                     gameObject.AddComponent<CircleCollider2D>();
                 else
-                {
-                    var collider = gameObject.AddComponent<PolygonCollider2D>();
-                    // TODO: make this constant into a mod option
-                    collider.Optimize(0.02f);
-                }
+                    gameObject.AddComponent<PolygonCollider2D>();
             }
 
             if (colorScheme.IsHsv)
@@ -322,7 +301,7 @@ namespace Combat.Factory
 
         private IWeaponPlatform CreatePlatform(Ship ship, IWeaponPlatformData data, float cooldown, ColorScheme color)
         {
-            var parent = data.Companion == null ? ship : _satelliteFactory.CreateSatellite(ship, data, cooldown) as UnitBase;
+            var parent = data.Companion == null ? ship : _satelliteFactory.CreateSatellite(ship, data, cooldown);
             var position = data.Position*0.5f;
             var rotation = data.Rotation;
             var offset = (data.Offset + data.Size)*0.5f;
@@ -337,7 +316,7 @@ namespace Combat.Factory
             else
             {
                 var body = SimpleBody.Create(parent.Body, position, rotation, 1f/parent.Body.Scale, 0, offset);
-                platform = new FixedPlatform(ship, body, cooldown, ship);
+                platform = new FixedPlatform(ship, body, cooldown);
             }
 
             if (isTurret)
@@ -367,6 +346,7 @@ namespace Combat.Factory
         {
             public bool Shadows;
             public bool StaticWrecks;
+            public bool NoDamageIndicator;
         }
     }
 }

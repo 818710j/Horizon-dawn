@@ -1,5 +1,4 @@
-﻿using System;
-using Combat.Collision;
+﻿using Combat.Collision;
 using Combat.Collision.Behaviour;
 using Combat.Collision.Manager;
 using Combat.Component.Features;
@@ -18,7 +17,6 @@ using Combat.Component.Unit.Classification;
 using Combat.Component.Triggers;
 using Combat.Unit;
 using Constructor;
-using UnityEngine;
 
 namespace Combat.Component.Ship
 {
@@ -37,10 +35,7 @@ namespace Combat.Component.Ship
         protected Ship(IShipSpecification spec, UnitType type, IBody body, IView view, IStats stats, ICollider collider, PhysicsManager physics)
             : base(type, body, view, collider, physics)
         {
-            // TODO: make them moddable? or constants?
-            body.SetVelocityLimit(50f);
-            // 7 rotations per second
-            body.SetAngularVelocityLimit(360 * 7);
+            body.SetVelocityLimit(50f); // TODO
             AddResource(_systems = new ShipSystems(this));
             AddResource(_effects = new ShipEffects(this));
             AddResource(_collisionBehaviour = new DefaultCollisionBehaviour(spec.Stats.RammingDamageMultiplier));
@@ -57,6 +52,7 @@ namespace Combat.Component.Ship
         public IEngine Engine { get; set; }
         public IControls Controls { get; set; }
         public IFeatures Features { get { return _features; } }
+        public IFeatures Weapon { get { return _features; } }
         public IShipSystems Systems { get { return _systems; } }
         public IShipEffects Effects { get { return _effects; } }
 
@@ -127,6 +123,10 @@ namespace Combat.Component.Ship
             if (appearanceModification != null)
                 Features.Modifications.Add(appearanceModification);
 
+            var StatsWeaponModification = system.StatsWeaponModification;
+            if (StatsWeaponModification != null)
+                Stats.WeaponModifications.Add(StatsWeaponModification);
+
             var systemsModification = system.SystemsModification;
             if (systemsModification != null)
                 Systems.Modifications.Add(systemsModification);
@@ -152,6 +152,10 @@ namespace Combat.Component.Ship
             var appearanceModification = shipEffect.FeaturesModification;
             if (appearanceModification != null)
                 Features.Modifications.Add(appearanceModification);
+
+            var StatsWeaponModification = shipEffect.StatsWeaponModification;
+            if (StatsWeaponModification != null)
+                Stats.WeaponModifications.Add(StatsWeaponModification);
 
             var systemsModification = shipEffect.SystemsModification;
             if (systemsModification != null)

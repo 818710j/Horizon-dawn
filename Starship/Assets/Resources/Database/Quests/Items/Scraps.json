@@ -4,5 +4,8 @@
   "Name": "$Commodity_Scraps",
   "Icon": "stone",
   "Color": "#A0806A",
-  "Price": 10
+  "Price": 10,
+  "InMarket": true,
+  "MinAmount": 1,
+  "MaxAmount": 10000
 }

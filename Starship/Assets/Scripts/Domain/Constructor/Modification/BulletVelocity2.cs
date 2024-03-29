@@ -9,8 +9,8 @@ namespace Constructor.Modification
 	{
 		public BulletVelocity2(ModificationQuality quality)
 		{
-			_velocityMultiplier = quality.PowerMultiplier(0.7f, 0.8f, 0.9f, 1.2f, 1.5f, 2.0f);
-			_damageMultiplier = quality.PowerMultiplier(0.8f, 0.85f, 0.9f, 0.9f, 0.8f, 0.75f);
+			_velocityMultiplier = quality.PowerMultiplier(0.55f, 0.7f, 0.85f, 1.3f, 1.60f, 1.9f, 2.2f);
+			_energyMultiplier = quality.PowerMultiplier(0.8f, 0.85f, 0.9f, 1.15f, 1.3f, 1.45f, 1.6f);
 			Quality = quality;
 		}
 
@@ -19,7 +19,7 @@ namespace Constructor.Modification
 			return localization.GetString(
 				"$BulletVelocityMod2",
 				Maths.Format.SignedPercent(_velocityMultiplier - 1.0f),
-				Maths.Format.SignedPercent(_damageMultiplier - 1.0f)); 
+				Maths.Format.SignedPercent(_energyMultiplier - 1.0f)); 
 		}
 
 		public ModificationQuality Quality { get; private set; }
@@ -31,16 +31,17 @@ namespace Constructor.Modification
         public void Apply(ref WeaponStats weapon, ref AmmunitionObsoleteStats ammunition)
         {
             ammunition.Velocity *= _velocityMultiplier;
-            ammunition.Damage *= _damageMultiplier;
-        }
+
+			if (ammunition.EnergyCost > 0)
+				ammunition.EnergyCost *= _energyMultiplier;
+		}
 
 	    public void Apply(ref WeaponStatModifier statModifier)
 	    {
 	        statModifier.VelocityMultiplier *= _velocityMultiplier;
-	        statModifier.DamageMultiplier *= _damageMultiplier;
 	    }
 
         private readonly float _velocityMultiplier;
-		private readonly float _damageMultiplier;
+		private readonly float _energyMultiplier;
 	}
 }

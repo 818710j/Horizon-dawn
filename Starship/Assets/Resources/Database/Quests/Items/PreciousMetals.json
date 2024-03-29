@@ -4,5 +4,8 @@
   "Name": "$Commodity_PreciousMetals",
   "Icon": "stone",
   "Color": "#EADA82",
-  "Price": 100
+  "Price": 100,
+  "InMarket": true,
+  "MinAmount": 10,
+  "MaxAmount": 200
 }

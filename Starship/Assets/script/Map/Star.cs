@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using System.Collections.Generic;
 using Galaxy;
@@ -6,7 +5,6 @@ using GameServices.Player;
 using Services.Localization;
 using Services.ObjectPool;
 using Zenject;
-using Random = UnityEngine.Random;
 
 public class Star : MonoBehaviour
 {
@@ -32,10 +30,12 @@ public class Star : MonoBehaviour
 	public GameObject GuardianIconPrefab;
 	public GameObject PassiveGuardianIconPrefab;
 	public GameObject BlackMarketIconPrefab;
+	public GameObject MarketIconPrefab;
     public GameObject QuestObjective;
 	public GameObject StarInfo;
     public GameObject MiniBossIcon;
     public GameObject MiniShopIcon;
+    public GameObject MiniMarketIcon;
     public GameObject MiniArenaIcon;
     public GameObject MiniQuestObjective;
     public GameObject MiniXmasIcon;
@@ -137,28 +137,28 @@ public class Star : MonoBehaviour
 			{
 				AddIcon(RuinsIconPrefab);
 			}
-            else if (objects.Contain(StarObjectType.Xmas))
-            {
-                AddIcon(XmasIconPrefab);
-                if (_starMap.ShowXmas)
-                {
-                    AddIcon(MiniXmasIcon);
-                    _showMiniStarOnGalaxyMap = false;
-                }
-            }
+            //else if (objects.Contain(StarObjectType.Xmas))
+            //{
+            //    AddIcon(XmasIconPrefab);
+            //    if (_starMap.ShowXmas)
+            //    {
+            //        AddIcon(MiniXmasIcon);
+            //        _showMiniStarOnGalaxyMap = false;
+            //    }
+            //}
             else if (objects.Contain(StarObjectType.Wormhole))
 			{
 				AddIcon(WormholeIconPrefab);
 			}
-			else if (objects.Contain(StarObjectType.Arena))
-			{
-				AddIcon(ArenaIconPrefab);
-                if (_starMap.ShowArenas)
-                {
-                    AddIcon(MiniArenaIcon).GetComponent<StarIcon>().SetColor(Color.Lerp(color, Color.white, 0.3f));
-                    _showMiniStarOnGalaxyMap = false;
-                }
-            }
+			//else if (objects.Contain(StarObjectType.Arena))
+			//{
+			//	AddIcon(ArenaIconPrefab);
+   //             if (_starMap.ShowArenas)
+   //             {
+   //                 AddIcon(MiniArenaIcon).GetComponent<StarIcon>().SetColor(Color.Lerp(color, Color.white, 0.3f));
+   //                 _showMiniStarOnGalaxyMap = false;
+   //             }
+   //         }
             else if (objects.Contain(StarObjectType.Challenge) && !star.Challenge.IsCompleted)
 			{
 				AddIcon(ChallengeIconPrefab);
@@ -184,6 +184,15 @@ public class Star : MonoBehaviour
 			        _showMiniStarOnGalaxyMap = false;
 			    }
 			}
+			else if (objects.Contain(StarObjectType.Market))
+			{
+				AddIcon(MarketIconPrefab);
+			    if (_starMap.ShowStores)
+			    {
+			        AddIcon(MiniMarketIcon);
+			        _showMiniStarOnGalaxyMap = false;
+			    }
+			}
 		}
 
 		OnStateChanged();
@@ -206,7 +215,7 @@ public class Star : MonoBehaviour
 
 	void Update()
 	{
-		var size = _mainCamera.orthographicSize;
+		var size = Camera.main.orthographicSize;
 
 	    State state;
 		if (size >= SwitchToGalaxyDistance)
@@ -351,16 +360,10 @@ public class Star : MonoBehaviour
 		return color;
 	}
 
-	private void Start()
-	{
-		_mainCamera = Camera.main;
-	}
-
-	private bool _showMiniStarOnGalaxyMap;
+    private bool _showMiniStarOnGalaxyMap;
     private Vector3 _miniObjectScale;
     private int _starId;
 	private float _scale;
 	private float _blinkSpeed;
 	private State _state;
-	private Camera _mainCamera;
 }

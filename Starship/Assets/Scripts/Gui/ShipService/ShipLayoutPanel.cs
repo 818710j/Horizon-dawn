@@ -21,6 +21,9 @@ namespace Gui.ShipService
         public BlockViewModel InnerBlock;
         public BlockViewModel OuterBlock;
         public BlockViewModel IoBlock;
+        public BlockViewModel CoreBlock;
+        public BlockViewModel Core2Block;
+        public BlockViewModel StructureBlock;
         public BlockViewModel EngineBlock;
         public BlockViewModel CustomBlock;
         public BlockViewModel Selection;
@@ -84,6 +87,9 @@ namespace Gui.ShipService
             IoBlock.gameObject.SetActive(false);
             EngineBlock.gameObject.SetActive(false);
             CustomBlock.gameObject.SetActive(false);
+            CoreBlock.gameObject.SetActive(false);
+            Core2Block.gameObject.SetActive(false);
+            StructureBlock.gameObject.SetActive(false);
             Cleanup();
         }
 
@@ -130,6 +136,12 @@ namespace Gui.ShipService
                     return item;
                 case CellType.Engine:
                     return GameObject.Instantiate<BlockViewModel>(EngineBlock);
+                case CellType.CoreBlock:
+                    return GameObject.Instantiate<BlockViewModel>(CoreBlock);
+                case CellType.Core2Block:
+                    return GameObject.Instantiate<BlockViewModel>(Core2Block);
+                case CellType.StructureBlock:
+                    return GameObject.Instantiate<BlockViewModel>(StructureBlock);
                 case CellType.Custom:
                     return GameObject.Instantiate<BlockViewModel>(CustomBlock);
             }
@@ -158,6 +170,9 @@ namespace Gui.ShipService
                     child == IoBlock.transform ||
                     child == CustomBlock.transform ||
                     child == Selection.transform ||
+                    child == CoreBlock.transform ||
+                    child == Core2Block.transform ||
+                    child == StructureBlock.transform ||
                     child == BackgroundImage.transform)
                     continue;
 

@@ -26,6 +26,7 @@ namespace Combat.Component.Systems
 
         IEngineModification EngineModification { get; }
         IFeaturesModification FeaturesModification { get; }
+        IStatsWeaponModification StatsWeaponModification { get; }
         ISystemsModification SystemsModification { get; }
         IStatsModification StatsModification { get; }
         IUnitAction UnitAction { get; }

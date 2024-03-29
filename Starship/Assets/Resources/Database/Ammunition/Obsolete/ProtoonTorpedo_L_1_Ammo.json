@@ -9,7 +9,7 @@
   "AreaOfEffect": 5.0,
   "Damage": 15.0,
   "Range": 30.0,
-  "Velocity": 15.0,
+  "Velocity": 22.0,
   "LifeTime": 2.0,
   "EnergyCost": 5.0,
   "Color": "#C0C0FF",

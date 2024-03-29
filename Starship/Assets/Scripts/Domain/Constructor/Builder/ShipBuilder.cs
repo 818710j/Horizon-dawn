@@ -22,6 +22,7 @@ namespace Constructor
 			Bonuses.DamageMultiplier *= boost;
 			Bonuses.ArmorPointsMultiplier *= boost;
             Bonuses.ShieldPointsMultiplier *= boost;
+            Bonuses.StructurePointsMultiplier *= boost;
 		    //Bonuses.RammingDamageMultiplier *= boost;
             _shipClass = ship.DifficultyClass;
 		}
@@ -276,9 +277,9 @@ namespace Constructor
 		            case PlatformType.AutoTarget:
 		                return 360;
 		            case PlatformType.AutoTargetFrontal:
-		                return 80;
+		                return 90;
 		            case PlatformType.TargetingUnit:
-		                return 20;
+		                return 25;
 		            case PlatformType.Common:
 		            default:
 		                return 0;
@@ -426,35 +427,15 @@ namespace Constructor
 		
 		public class ShipBuilderResult : IShipSpecification
 		{
-			private ShipBuilderResult(List<WeaponPlatform> platforms, List<DeviceData> devices, List<DroneBayData> droneBays)
-			{
-				_platforms = platforms;
-				_devices = devices;
-				_droneBays = droneBays;
-			}
-
-			public ShipBuilderResult() : this(new List<WeaponPlatform>(), new List<DeviceData>(),
-				new List<DroneBayData>())
-			{
-			}
-
-			public ShipType Type { get; set; }
+		    public ShipType Type { get; set; }
 			public IShipStats Stats { get; set; }
             public IEnumerable<IWeaponPlatformData> Platforms { get { return _platforms.Cast<IWeaponPlatformData>(); } }
 			public IEnumerable<IDeviceData> Devices { get { return _devices.Cast<IDeviceData>(); } }
 			public IEnumerable<IDroneBayData> DroneBays { get { return _droneBays.Cast<IDroneBayData>(); } }
-			public IShipSpecification CopyWithStats(IShipStats stats)
-			{
-				return new ShipBuilderResult(_platforms, _devices, _droneBays)
-				{
-					Type = Type,
-					Stats = stats
-				};
-			}
-
-			public readonly List<WeaponPlatform> _platforms;
-			public readonly List<DeviceData> _devices;
-			public readonly List<DroneBayData> _droneBays;
+			
+			public readonly List<WeaponPlatform> _platforms = new List<WeaponPlatform>();
+			public readonly List<DeviceData> _devices = new List<DeviceData>();
+			public readonly List<DroneBayData> _droneBays = new List<DroneBayData>();
 		}
 		
 		public class CompanionSpec : ICompanionData

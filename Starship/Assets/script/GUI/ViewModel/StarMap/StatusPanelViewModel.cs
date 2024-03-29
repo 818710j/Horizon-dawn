@@ -74,17 +74,17 @@ namespace ViewModel
 	        get { return _snowflakes; }
 	        set
 	        {
-	            if (!_holidayManager.IsChristmas)
-	            {
+	            //if (!_holidayManager.IsChristmas)
+	            //{
 	                _snowflakes = 0;
 	                SnowflakesPanel.gameObject.SetActive(false);
-	            }
-	            else if (_snowflakes != value)
-	            {
-	                _snowflakes = value;
-	                SnowflakesPanel.gameObject.SetActive(true);
-	                SnowflakesText.text = _snowflakes.ToString();
-	            }
+	            //}
+	            //else if (_snowflakes != value)
+	            //{
+	            //    _snowflakes = value;
+	            //    SnowflakesPanel.gameObject.SetActive(true);
+	            //    SnowflakesText.text = _snowflakes.ToString();
+	            //}
 	        }
 	    }
 

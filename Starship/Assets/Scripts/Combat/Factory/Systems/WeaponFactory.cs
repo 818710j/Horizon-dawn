@@ -30,23 +30,23 @@ namespace Combat.Factory
             bulletFactory.Stats.HitPointsMultiplier = hitPointsMultiplier;
             var stats = weaponData.Weapon.Stats;
             stats.FireRate *= weaponData.Stats.FireRateMultiplier.Value;
-            return Create(stats, weaponData.KeyBinding, bulletFactory, platform);
+            return Create(stats, weaponData.KeyBinding, bulletFactory, platform,owner);
         }
 
         public ISystem Create(IWeaponDataObsolete weaponData, IWeaponPlatform platform, float hitPointsMultiplier, IShip owner)
         {
             var bulletFactory = new BulletFactoryObsolete(weaponData.Ammunition, _scene, _soundPlayer, _objectPool, _prefabCache, _spaceObjectFactory, _effectFactory, owner);
             bulletFactory.Stats.HitPointsMultiplier = hitPointsMultiplier;
-            return Create(weaponData.Weapon, weaponData.KeyBinding, bulletFactory, platform);
+            return Create(weaponData.Weapon, weaponData.KeyBinding, bulletFactory, platform,owner);
         }
 
-        private ISystem Create(WeaponStats weaponStats, int keyBinding, IBulletFactory bulletFactory, IWeaponPlatform platform)
+        private ISystem Create(WeaponStats weaponStats, int keyBinding, IBulletFactory bulletFactory, IWeaponPlatform platform,IShip owner)
         {
             switch (weaponStats.WeaponClass)
             {
                 case WeaponClass.Manageable:
                     {
-                        var weapon = new ManageableCannon(platform, weaponStats, bulletFactory, keyBinding);
+                        var weapon = new ManageableCannon(platform, weaponStats, bulletFactory, keyBinding,owner);
                         if (weaponStats.ShotSound)
                             weapon.AddTrigger(new SoundEffect(_soundPlayer, weaponStats.ShotSound, ConditionType.OnActivate, ConditionType.OnDeactivate));
                         if (weaponStats.ShotEffectPrefab)
@@ -55,7 +55,7 @@ namespace Combat.Factory
                     }
                 case WeaponClass.Continuous:
                     {
-                        var weapon = new ContinuousCannon(platform, weaponStats, bulletFactory, keyBinding);
+                        var weapon = new ContinuousCannon(platform, weaponStats, bulletFactory, keyBinding, owner);
                         if (weaponStats.ShotSound)
                             weapon.AddTrigger(new SoundEffect(_soundPlayer, weaponStats.ShotSound, ConditionType.OnActivate, ConditionType.OnDeactivate));
                         if (weaponStats.ShotEffectPrefab)
@@ -65,7 +65,7 @@ namespace Combat.Factory
                 case WeaponClass.MashineGun:
                     {
                         bulletFactory.Stats.RandomFactor = 0.2f;
-                        var weapon = new MachineGun(platform, weaponStats, bulletFactory, keyBinding);
+                        var weapon = new MachineGun(platform, weaponStats, bulletFactory, keyBinding, owner);
                         if (weaponStats.ShotSound)
                             weapon.AddTrigger(new SoundEffect(_soundPlayer, weaponStats.ShotSound, ConditionType.OnActivate));
                         if (weaponStats.ShotEffectPrefab)
@@ -75,7 +75,7 @@ namespace Combat.Factory
                 case WeaponClass.MultiShot:
                     {
                         bulletFactory.Stats.RandomFactor = 0.3f;
-                        var weapon = new MultishotCannon(platform, weaponStats, bulletFactory, keyBinding);
+                        var weapon = new MultishotCannon(platform, weaponStats, bulletFactory, keyBinding, owner);
                         if (weaponStats.ShotSound)
                             weapon.AddTrigger(new SoundEffect(_soundPlayer, weaponStats.ShotSound, ConditionType.OnActivate));
                         if (weaponStats.ShotEffectPrefab)
@@ -84,7 +84,7 @@ namespace Combat.Factory
                     }
                 case WeaponClass.RequiredCharging:
                     {
-                        var weapon = new ChargeableCannon(platform, weaponStats, bulletFactory, keyBinding);
+                        var weapon = new ChargeableCannon(platform, weaponStats, bulletFactory, keyBinding, owner);
                         if (weaponStats.ShotEffectPrefab)
                             weapon.AddTrigger(CreatePowerLevelEffect(weapon, weaponStats, bulletFactory));
                         if (weaponStats.ShotSound)
@@ -95,7 +95,7 @@ namespace Combat.Factory
                     }
                 case WeaponClass.Common:
                     {
-                        var weapon = new CommonCannon(platform, weaponStats, bulletFactory, keyBinding);
+                        var weapon = new CommonCannon(platform, weaponStats, bulletFactory, keyBinding, owner);
                         if (weaponStats.ShotSound)
                             weapon.AddTrigger(new SoundEffect(_soundPlayer, weaponStats.ShotSound, ConditionType.OnActivate));
                         if (weaponStats.ShotEffectPrefab)

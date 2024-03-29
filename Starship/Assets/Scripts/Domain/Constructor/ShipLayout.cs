@@ -5,7 +5,6 @@ using Diagnostics;
 using GameDatabase.DataModel;
 using GameDatabase.Enums;
 using GameDatabase.Model;
-using Utils;
 
 namespace Constructor
 {
@@ -46,7 +45,7 @@ namespace Constructor
 				}
 				catch (Exception e)
 				{
-					OptimizedDebug.LogException(e);
+				    UnityEngine.Debug.LogException(e);
                 }
 			}
 		}
@@ -168,7 +167,7 @@ namespace Constructor
 				return false;
 			
 			if (element.Type == CellType.Weapon && component.CellType == CellType.Weapon)
-				return string.IsNullOrEmpty(element.WeaponClass) || component.WeaponSlotType == (char) WeaponSlotType.Default || element.WeaponClass.Contains(component.WeaponSlotType);
+				return string.IsNullOrEmpty(element.WeaponClass) || component.WeaponSlotType == GameDatabase.Enums.WeaponSlotType.Default || element.WeaponClass.Contains((char)component.WeaponSlotType);
 			
 			return component.CellType.CompatibleWith(element.Type);
 		}

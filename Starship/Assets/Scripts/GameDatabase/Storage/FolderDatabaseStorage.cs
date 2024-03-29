@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using Utils;
 
 namespace GameDatabase.Storage
 {
@@ -83,7 +82,7 @@ namespace GameDatabase.Storage
             }
             catch (Exception e)
             {
-                OptimizedDebug.LogError(e.Message);
+                Debug.LogError(e.Message);
             }
         }
 

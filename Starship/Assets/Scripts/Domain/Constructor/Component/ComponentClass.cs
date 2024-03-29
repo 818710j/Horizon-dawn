@@ -30,12 +30,14 @@ namespace Constructor
                     case DeviceClass.Detonator:
                     case DeviceClass.Accelerator:
                     case DeviceClass.ToxicWaste:
+                    case DeviceClass.FireAssault:
                         return component.Device.Stats.DeviceClass.ToString();
                     case DeviceClass.Stealth:
                     case DeviceClass.SuperStealth:
                         return DeviceClass.Stealth.ToString();
                     case DeviceClass.EnergyShield:
                     case DeviceClass.PartialShield:
+                    case DeviceClass.StructureShield:
                         return DeviceClass.EnergyShield.ToString();
                     case DeviceClass.WormTail:
                         return DeviceClass.WormTail.ToString();

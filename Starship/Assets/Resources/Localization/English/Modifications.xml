@@ -12,7 +12,8 @@
     <string name="RepairRateMod">Repair Rate $1</string>
     <string name="EnginePowerMod">Engine Power $1</string>
     <string name="EnergyRechargeMod">Energy Recharge Rate $1</string>
-    <string name="BulletVelocityMod2">Projectile Speed $1, Damage $2</string>
+    <string name="BulletVelocityMod2">Projectile Speed $1,Energy Cost $2</string>
+	<string name="Fortified2">Defense $1,Weight $2</string>
     <string name="AreaOfEffectMod">Area of Effect Range $1</string>
     <string name="ShieldPowerMod">Shield Power $1</string>
     <string name="DamageMod2">Damage $1\nCooldown Time $2</string>
@@ -26,4 +27,7 @@
     <string name="Ship_ExtraBlueCells">Extra equipment slots</string>
     <string name="Ship_Lightweight">Ship base weight reduced by $1%</string>
     <string name="Ship_Infected">$1% less armor, regenerates $2% / sec</string>
+	<string name="HitPointsRepairCooldown">HitPointsRepairCooldown</string>
+	<string name="RechargeRateCooldown">RechargeRateCooldown</string>
+	<string name="ShieldRechargeRateCooldown">ShieldRechargeRateCooldown</string>
 </resources>

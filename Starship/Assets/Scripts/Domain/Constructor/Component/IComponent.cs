@@ -22,8 +22,9 @@ namespace Constructor.Component
         IEnumerable<DeviceStats> Devices { get; }
         ActivationType ActivationType { get; }
 		bool IsSuitable(IShipModel ship);
+        GameDatabase.DataModel.Component GetComponent();
 
-	    int UpgradeLevel { get; set; }
+        int UpgradeLevel { get; set; }
 	    IModification Modification { get; set; }
 	    IEnumerable<ComponentModType> SuitableModifications { get; }
 	}

@@ -48,8 +48,8 @@ namespace GameDatabase
                     }
                     catch (Exception e)
                     {
-                        OptimizedDebug.LogError("invalid mod file - " + fileInfo.FullName);
-                        OptimizedDebug.LogException(e);
+                        Debug.LogError("invalid mod file - " + fileInfo.FullName);
+                        Debug.LogException(e);
                     }
                 }
 
@@ -62,14 +62,14 @@ namespace GameDatabase
                     }
                     catch (Exception e)
                     {
-                        OptimizedDebug.LogError("invalid database - " + directoryInfo.FullName);
-                        OptimizedDebug.LogException(e);
+                        Debug.LogError("invalid database - " + directoryInfo.FullName);
+                        Debug.LogException(e);
                     }
                 }
             }
             catch (Exception e)
             {
-                OptimizedDebug.LogError("Error loading mods - " + e.Message);
+                Debug.LogError("Error loading mods - " + e.Message);
             }
         }
 
@@ -81,7 +81,7 @@ namespace GameDatabase
             }
             catch (Exception e)
             {
-                OptimizedDebug.LogException(e);
+                Debug.LogException(e);
             }
         }
 
@@ -117,7 +117,7 @@ namespace GameDatabase
             }
             catch (Exception e)
             {
-                OptimizedDebug.LogError("Database.TryLoad() Error: " + e.Message);
+                UnityEngine.Debug.LogError("Database.TryLoad() Error: " + e.Message);
                 error = e.Message;
                 return false;
             }
@@ -153,7 +153,7 @@ namespace GameDatabase
             var serializedBuild = _content.GetShipBuild(id.Value);
             if (serializedBuild == null)
             {
-                OptimizedDebug.LogError("SaveShipBuild: not found " + id);
+                Debug.LogError("SaveShipBuild: not found " + id);
                 return;
             }
 
@@ -167,7 +167,7 @@ namespace GameDatabase
             var serializedBuild = _content.GetSatelliteBuild(id.Value);
             if (serializedBuild == null)
             {
-                OptimizedDebug.LogError("SaveSatelliteBuild: not found " + id);
+                Debug.LogError("SaveSatelliteBuild: not found " + id);
                 return;
             }
 

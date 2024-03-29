@@ -23,7 +23,8 @@
     <string name="UpgradeHangarSlotDesc1">Make the slot suitable for destroyers</string>
     <string name="UpgradeHangarSlotDesc2">Make the slot suitable for cruisers</string>
     <string name="UpgradeHangarSlotDesc3">Make the slot suitable for battleships</string>
-    <string name="UpgradeHangarSlotDesc4">Make the slot suitable for capital ships</string>
+    <string name="UpgradeHangarSlotDesc4">Make the slot suitable for subTitan</string>
+    <string name="UpgradeHangarSlotDesc5">Make the slot suitable for Titan</string>
     <string name="PlanetaryScannerNode">Improved planetary scanners</string>
     <string name="PlanetaryScannerDesc">Increases chances of finding valuable items by $1%</string>
     <string name="HeatDefenseNode">Heat resistant hull</string>
@@ -47,5 +48,5 @@
     <string name="ShieldRechargeNode">Accelerated Shields</string>
     <string name="ShieldRechargeDesc">Energy shields recharge $1% faster</string>
     <string name="ExceedTheLimitsNode">Exceed the limits</string>
-    <string name="ExceedTheLimitsDesc">The level of your ships is not limited to 100 anymore</string>
+    <string name="ExceedTheLimitsDesc">The level of your ships is not limited to 150 anymore</string>
 </resources>

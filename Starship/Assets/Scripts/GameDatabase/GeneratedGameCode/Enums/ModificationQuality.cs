@@ -16,5 +16,6 @@ namespace GameDatabase.Enums
 		P1 = 3,
 		P2 = 4,
 		P3 = 5,
+		P4 = 6,
 	}
 }

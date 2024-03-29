@@ -64,6 +64,7 @@ namespace Constructor.Ships
             var scale = Experience.PowerMultiplier;
             builder.Bonuses.ArmorPointsMultiplier *= scale;
             builder.Bonuses.ShieldPointsMultiplier *= scale;
+            builder.Bonuses.StructurePointsMultiplier *= scale;
             builder.Bonuses.DamageMultiplier *= scale;
             builder.Bonuses.RammingDamageMultiplier *= scale;
 

@@ -20,6 +20,7 @@ using GameModel;
 using GameServices.Player;
 using Zenject;
 using Component = GameDatabase.DataModel.Component;
+using Domain.Quests;
 
 namespace GameServices.Economy
 {
@@ -38,15 +39,21 @@ namespace GameServices.Economy
         {
             var random = _random.CreateRandom(seed);
 
-            var scraps = 0;
-            var money = 0;
-
+            var scraps = 1;
+            var money = 1;
+            var stars = 0;
             var moduleLevel = Maths.Distance.ComponentLevel(distance);
+            var factor = Mathf.Clamp((distance / 100), 1, 5);
+
+            var QuestItemCount = 0;//额外奖励的数量
 
             foreach (var ship in ships)
             {
                 scraps += ship.Scraps();
-                money += ship.Price()/20;
+                money += (ship.Price() / 50) * factor;
+                stars += (ship.Price() / 6000) * factor;
+
+                QuestItemCount += ship.Model.Layout.CellCount;//完全根据船的格子数累加
 
                 if (ship.Model.Category == ShipCategory.Flagship)
                 {
@@ -57,7 +64,34 @@ namespace GameServices.Economy
                     if (ship.ExtraThreatLevel >= DifficultyClass.Class2)
                     {
                         yield return Price.Premium(1).GetProduct(_factory);
-                        foreach (var item in RandomComponents(moduleLevel + 75, random.Next(1, 3), bossFaction, random, false))
+                        foreach (var item in RandomComponents(moduleLevel + 75, random.Next(2, 3), bossFaction, random, false))
+                            yield return new Product(item);
+                    }
+
+                    if (ship.ExtraThreatLevel >= DifficultyClass.Class3)
+                    {
+                        yield return Price.Premium(1).GetProduct(_factory);
+                        foreach (var item in RandomComponents(moduleLevel + 115, random.Next(3, 4), bossFaction, random, false))
+                            yield return new Product(item);
+                    }
+                }
+                else if (ship.Model.Category == ShipCategory.SubFlagship)
+                {
+                    var bossFaction = ship.Model.Faction;
+                    foreach (var item in RandomComponents(moduleLevel + 25, random.Next(1), bossFaction, random, false))
+                        yield return new Product(item);
+
+                    if (ship.ExtraThreatLevel >= DifficultyClass.Class2)
+                    {
+                        yield return Price.Premium(1).GetProduct(_factory);
+                        foreach (var item in RandomComponents(moduleLevel + 65, random.Next(2), bossFaction, random, false))
+                            yield return new Product(item);
+                    }
+
+                    if (ship.ExtraThreatLevel >= DifficultyClass.Class3)
+                    {
+                        yield return Price.Premium(1).GetProduct(_factory);
+                        foreach (var item in RandomComponents(moduleLevel + 105, random.Next(3), bossFaction, random, false))
                             yield return new Product(item);
                     }
                 }
@@ -71,13 +105,47 @@ namespace GameServices.Economy
             if (money > 0)
                 yield return Price.Common(money).GetProduct(_factory);
 
-            var toxicWaste = random.Next2(scraps/2);
+            if (stars > 0)
+                yield return Price.Premium(stars).GetProduct(_factory);
+
+            //var toxicWaste =random.Next2(scraps/2);
+            var toxicWaste = scraps / 2 + random.Next2(scraps / 2);
             if (toxicWaste > 0)
                 yield return new Product(CreateArtifact(CommodityType.ToxicWaste), toxicWaste);
 
             scraps -= toxicWaste;
             if (scraps > 0)
                 yield return new Product(CreateArtifact(CommodityType.Scraps), scraps);
+
+            bool v = (QuestItemCount > 0);
+            {
+                var ResourceList = _database.QuestItemList.Where(i => i.Price > 0 && i.Price <= 10);
+                var sum = ResourceList.Sum(i => 1.0f / i.Price);
+                List<KeyValuePair<QuestItem, float>> QuestItemValuePairs = new List<KeyValuePair<QuestItem, float>>();
+                var index = 0.0f;
+                foreach (var QuestItem in ResourceList)
+                {
+                    index += 1f / QuestItem.Price / sum;
+                    QuestItemValuePairs.Add(new KeyValuePair<QuestItem, float>(QuestItem, index));
+                }
+                var result = random.Next(0, 100) * 1.0f / 100;
+                var min = 2f;
+                var item = ResourceList.First();
+                foreach (var QuestItemValuePair in QuestItemValuePairs)
+                {
+                    if (result <= QuestItemValuePair.Value)
+                    {
+                        if (QuestItemValuePair.Value < min)
+                        {
+                            item = QuestItemValuePair.Key;
+                            min = QuestItemValuePair.Value;
+                        }
+                    }
+                    else
+                        continue;
+                }
+                yield return new Product(_factory.CreateArtifactItem(item), QuestItemCount);
+            }
 
             foreach (var item in GetHolidayLoot(random))
                 yield return item;
@@ -105,23 +173,32 @@ namespace GameServices.Economy
         public IEnumerable<IProduct> GetMeteoriteLoot(Faction faction, int level, int seed)
         {
             var random = new System.Random(seed);
-            var quality = Mathf.RoundToInt(_playerSkills.PlanetaryScanner*100);
+            var quality = Mathf.RoundToInt(_playerSkills.PlanetaryScanner*150);
 
             yield return new Product(CreateArtifact(CommodityType.Minerals), 1 + random.Next2(20*quality/100));
             if (random.Percentage(5))
                 yield return new Product(CreateArtifact(CommodityType.Gems), 1 + random.Next2(5 * quality / 100));
             if (random.Percentage(5))
                 yield return new Product(CreateArtifact(CommodityType.PreciousMetals), 1 + random.Next2(5 * quality / 100));
+
+            var resources = _database.ExplorationSettings.ExplorationResource.Where(item => item.Type == ExplorationType.Meteorite);
+            if (resources != null)
+            {
+                var resource = resources.RandomElement(random);
+                foreach (var item in resource.ExplorationLoot)
+                    if (random.Percentage(item.Chance))
+                        yield return new Product(_factory.CreateArtifactItem(item.QuestItem), 1 + random.Next2(item.MaxAmount));
+            }
         }
 
         public IEnumerable<IProduct> GetOutpostLoot(Faction faction, int level, int seed)
         {
             var random = new System.Random(seed);
-            var quality = Mathf.RoundToInt(_playerSkills.PlanetaryScanner * 100);
+            var quality = Mathf.RoundToInt(_playerSkills.PlanetaryScanner * 150);
 
             yield return new Product(CreateArtifact(CommodityType.Scraps), 1 + random.Next2(20 * quality / 100));
 
-            if (random.Percentage(quality/5))
+            if (random.Percentage(quality/10))
             {
                 var tech = _research.GetAvailableTechs(faction).Where(item => item.Hidden || item.Price <= 10).RandomElement(random);
                 if (tech != null)
@@ -131,16 +208,27 @@ namespace GameServices.Economy
             for (var i = 0; i < random.Next(quality/40); ++i)
                 yield return new Product(RandomComponent(level, faction, random, true));
 
+            yield return new Product(_factory.CreateCurrencyItem(Currency.Credits), Maths.Distance.Credits(level) + random.Next2(Maths.Distance.Credits(level) * quality));
+
             if (random.Percentage(quality/5))
                 yield return new Product(_factory.CreateResearchItem(faction));
 
-            yield return Price.Premium(1 + random.Next(2 + quality + level) / 100).GetProduct(_factory);
+            var resources = _database.ExplorationSettings.ExplorationResource.Where(item => item.Type == ExplorationType.Outpost);
+            if (resources != null)
+            {
+                var resource = resources.RandomElement(random);
+                foreach (var item in resource.ExplorationLoot)
+                    if (random.Percentage(item.Chance))
+                        yield return new Product(_factory.CreateArtifactItem(item.QuestItem), 1 + random.Next2(item.MaxAmount));
+            }
+
+            yield return Price.Premium(1 + random.Next(2 + quality + level) / 50).GetProduct(_factory);
         }
 
         public IEnumerable<IProduct> GetHiveLoot(int level, int seed)
         {
             var random = new System.Random(seed);
-            var quality = Mathf.RoundToInt(_playerSkills.PlanetaryScanner * 100);
+            var quality = Mathf.RoundToInt(_playerSkills.PlanetaryScanner * 150);
 
             yield return new Product(CreateArtifact(CommodityType.Artifacts), 1 + random.Next2(5 * quality / 100));
             if (random.Percentage(20 + quality / 10))
@@ -153,26 +241,46 @@ namespace GameServices.Economy
             if (random.Percentage(quality/5))
                 yield return new Product(RandomFactionShip(level, _database.ExplorationSettings.InfectedPlanetFaction, random));
 
-            if (random.Percentage(quality/5))
+            yield return new Product(_factory.CreateCurrencyItem(Currency.Credits), Maths.Distance.Credits(level) + random.Next2(Maths.Distance.Credits(level) * quality / 3 ));
+
+            if (random.Percentage(quality/10))
             {
                 var tech = _research.GetAvailableTechs((_database.ExplorationSettings.InfectedPlanetFaction)).Where(item => item.Hidden || item.Price <= 10).RandomElement(random);
                 if (tech != null)
                     yield return new Product(_factory.CreateBlueprintItem(tech));
             }
 
-            yield return Price.Premium(1 + random.Next(2 + quality + level) / 100).GetProduct(_factory);
+            yield return Price.Premium(1 + random.Next(2 + quality + level) / 60).GetProduct(_factory);
+
+            var resources = _database.ExplorationSettings.ExplorationResource.Where(item => item.Type == ExplorationType.Hive);
+            if (resources != null)
+            {
+                var resource = resources.RandomElement(random);
+                foreach (var item in resource.ExplorationLoot)
+                    if (random.Percentage(item.Chance))
+                        yield return new Product(_factory.CreateArtifactItem(item.QuestItem), 1 + random.Next2(item.MaxAmount));
+            }
         }
 
         public IEnumerable<IProduct> GetPlanetResources(PlanetType planetType, Faction faction, int level, int seed)
         {
             var random = new System.Random(seed);
-            var quality = Mathf.RoundToInt(_playerSkills.PlanetaryScanner * 100);
+            var quality = Mathf.RoundToInt(_playerSkills.PlanetaryScanner * 150);
 
             if (planetType == PlanetType.Gas)
             {
                 yield return new Product(CreateArtifact(CommodityType.ToxicWaste), 1 + random.Next2(100 * quality / 100));
                 if (random.Percentage(30))
                     yield return new Product(_factory.CreateFuelItem(), 1 + random.Next2(5 * quality / 100));
+
+                var resources = _database.ExplorationSettings.ExplorationResource.Where(item => item.Type == ExplorationType.Gas);
+                if (resources != null)
+                {
+                    var resource = resources.RandomElement(random);
+                    foreach (var item in resource.ExplorationLoot)
+                        if (random.Percentage(item.Chance))
+                            yield return new Product(_factory.CreateArtifactItem(item.QuestItem), 1 + random.Next2(item.MaxAmount));
+                }
             }
             else
             {
@@ -181,7 +289,17 @@ namespace GameServices.Economy
                     yield return new Product(CreateArtifact(CommodityType.Gems), 1 + random.Next2(5 * quality / 100));
                 if (random.Percentage(5))
                     yield return new Product(CreateArtifact(CommodityType.PreciousMetals), 1 + random.Next2(5 * quality / 100));
+
+                var resources = _database.ExplorationSettings.ExplorationResource.Where(item => item.Type == ExplorationType.Minerals);
+                if (resources != null)
+                {
+                    var resource = resources.RandomElement(random);
+                    foreach (var item in resource.ExplorationLoot)
+                        if (random.Percentage(item.Chance))
+                            yield return new Product(_factory.CreateArtifactItem(item.QuestItem), 1 + random.Next2(item.MaxAmount));
+                }
             }
+
         }
 
         public IEnumerable<IProduct> GetPlanetRareResources(PlanetType planetType, Faction faction, int level, int seed)
@@ -192,9 +310,11 @@ namespace GameServices.Economy
         public IEnumerable<IProduct> GetContainerLoot(Faction faction, int level, int seed)
         {
             var random = new System.Random(seed);
-            var quality = Mathf.RoundToInt(_playerSkills.PlanetaryScanner * 100);
+            var quality = Mathf.RoundToInt(_playerSkills.PlanetaryScanner * 150);
 
-            yield return new Product(_factory.CreateCurrencyItem(Currency.Credits), Maths.Distance.Credits(level)/2 + random.Next2(Maths.Distance.Credits(level)*quality/200));
+            yield return new Product(_factory.CreateCurrencyItem(Currency.Credits), Maths.Distance.Credits(level) + random.Next2(Maths.Distance.Credits(level)*quality / 6 ));
+
+            yield return Price.Premium(1 + random.Next(2 + quality + level) / 80).GetProduct(_factory);
 
             if (random.Percentage(30))
                 yield return new Product(CreateArtifact(CommodityType.Alloys), 1 + random.Next2(20 * quality / 100));
@@ -205,12 +325,28 @@ namespace GameServices.Economy
 
             for (var i = 0; i < random.Next(quality/50); ++i)
                 yield return new Product(RandomComponent(level, faction, random, true));
+
+            var resources = _database.ExplorationSettings.ExplorationResource.Where(item => item.Type == ExplorationType.Container);
+            if (resources != null)
+            {
+                var resource = resources.RandomElement(random);
+                foreach (var item in resource.ExplorationLoot)
+                    if (random.Percentage(item.Chance))
+                        yield return new Product(_factory.CreateArtifactItem(item.QuestItem), 1 + random.Next2(item.MaxAmount));
+            }
+
+            if (random.Percentage(quality / 20))
+            {
+                var tech = _research.GetAvailableTechs(faction).Where(item => item.Hidden || item.Price <= 10).RandomElement(random);
+                if (tech != null)
+                    yield return new Product(_factory.CreateBlueprintItem(tech));
+            }
         }
 
         public IEnumerable<IProduct> GetShipWreckLoot(Faction faction, int level, int seed)
         {
             var random = new System.Random(seed);
-            var quality = Mathf.RoundToInt(_playerSkills.PlanetaryScanner * 100);
+            var quality = Mathf.RoundToInt(_playerSkills.PlanetaryScanner * 150);
 
             yield return new Product(CreateArtifact(CommodityType.Scraps), 1 + random.Next2(50*quality/100));
 
@@ -224,8 +360,28 @@ namespace GameServices.Economy
             if (random.Percentage(quality/5))
                 yield return new Product(_factory.CreateResearchItem(faction));
 
+            yield return new Product(_factory.CreateCurrencyItem(Currency.Credits), Maths.Distance.Credits(level) + random.Next2(Maths.Distance.Credits(level) * quality / 6 ));
+
+            yield return Price.Premium(1 + random.Next(2 + quality + level) / 80).GetProduct(_factory);
+
             for (var i = 0; i < random.Next(quality / 50); ++i)
                 yield return new Product(RandomComponent(level, faction, random, true));
+
+            var resources = _database.ExplorationSettings.ExplorationResource.Where(item => item.Type == ExplorationType.ShipWreck);
+            if (resources != null)
+            {
+                var resource = resources.RandomElement(random);
+                foreach (var item in resource.ExplorationLoot)
+                    if (random.Percentage(item.Chance))
+                        yield return new Product(_factory.CreateArtifactItem(item.QuestItem), 1 + random.Next2(item.MaxAmount));
+            }
+
+            if (random.Percentage(quality / 15))
+            {
+                var tech = _research.GetAvailableTechs(faction).Where(item => item.Hidden || item.Price <= 10).RandomElement(random);
+                if (tech != null)
+                    yield return new Product(_factory.CreateBlueprintItem(tech));
+            }
         }
 
         public IEnumerable<IProduct> GetStarBaseSpecialReward(Region region)
@@ -285,7 +441,7 @@ namespace GameServices.Economy
             var random = _random.CreateRandom(seed);
 
             yield return Price.Common(5 * Maths.Distance.Credits(level)).GetProduct(_factory);
-            yield return new Product(_factory.CreateFuelItem(), random.Next(5,15));
+            yield return new Product(_factory.CreateFuelItem(), random.Next(1,2));
 
             if (random.Next(3) == 0)
             {
@@ -295,7 +451,7 @@ namespace GameServices.Economy
                     yield return new Product(_factory.CreateSatelliteItem(item));
             }
 
-            foreach (var item in RandomComponents(Maths.Distance.ComponentLevel(level) + 35, random.Next(1, 3), Faction.Undefined, random, false))
+            foreach (var item in RandomComponents(Maths.Distance.ComponentLevel(level) + 35, random.Next(1, 5), Faction.Undefined, random, false))
                 yield return new Product(item);
 
             var quantity = random.Next(3);
@@ -313,7 +469,7 @@ namespace GameServices.Economy
 
             var items = _database.ComponentList.CommonAndRare().LevelLessOrEqual(level + 50)
                 .RandomElements(random.Range(5, 10), random).Select(item =>
-                    ComponentInfo.CreateRandomModification(item, random, ModificationQuality.P2));
+                    ComponentInfo.CreateRandomModification(item, random, ModificationQuality.P3));
 
             if (random.Percentage(10))
                 yield return new Product(_factory.CreateComponentItem(new ComponentInfo(_database.GetComponent(new ItemId<Component>(96))))); // xmas bomb
@@ -335,18 +491,20 @@ namespace GameServices.Economy
             if (day <= 0)
                 yield break;
 
-            yield return new Price(Mathf.Min(day*100, 1000), Currency.Credits).GetProduct(_factory);
+            yield return new Price(Mathf.Min(day*1000, 10000), Currency.Credits).GetProduct(_factory);
+
+            yield return new Price(Mathf.Min(day*10, 100), Currency.Stars).GetProduct(_factory);
 
             if (day % 2 == 0)
                 yield return new Product(_factory.CreateFuelItem(), Mathf.Min(30, 10*day/2));
             else if (day % 3 == 0)
-                yield return new Product(_factory.CreateResearchItem(_database.FactionList.Visible().AtDistance(level).RandomElement(new System.Random(seed))), Mathf.Min(5,day/3));
+                yield return new Product(_factory.CreateResearchItem(_database.FactionList.Visible().AtDistance(level).RandomElement(new System.Random(seed))), Mathf.Min(5,day/4));
             else if (day % 5 == 0)
                 yield return Price.Premium(Mathf.Min(5,day/5)).GetProduct(_factory);
 
             if (day > 3)
             {
-                var quality = (ComponentQuality)Mathf.Min(day/3, (int)ComponentQuality.P3);
+                var quality = (ComponentQuality)Mathf.Min(day/3, (int)ComponentQuality.P4);
                 var component = ComponentInfo.CreateRandom(_database, level, Faction.Undefined, _random.CreateRandom(seed), false, quality);
                 yield return new Product(_factory.CreateComponentItem(component));
             }
@@ -358,7 +516,7 @@ namespace GameServices.Economy
             return RandomComponent(distance, faction, random, allowRare);
         }
 
-        public IEnumerable<IItemType> GetRandomComponents(int distance, int count, Faction faction, int seed, bool allowRare, ComponentQuality maxQuality = ComponentQuality.P3)
+        public IEnumerable<IItemType> GetRandomComponents(int distance, int count, Faction faction, int seed, bool allowRare, ComponentQuality maxQuality = ComponentQuality.P4)
         {
             var random = _random.CreateRandom(seed);
             return RandomComponents(distance, count, faction, random, allowRare, maxQuality);
@@ -387,13 +545,13 @@ namespace GameServices.Economy
             return ships.Length > 0 ? _factory.CreateShipItem(new CommonShip(ships[random.Next(ships.Length)])) : null;
         }
 
-        private IEnumerable<IItemType> RandomComponents(int distance, int count, Faction faction, System.Random random, bool allowRare, ComponentQuality maxQuality = ComponentQuality.P3)
+        private IEnumerable<IItemType> RandomComponents(int distance, int count, Faction faction, System.Random random, bool allowRare, ComponentQuality maxQuality = ComponentQuality.P4)
         {
             for (var i = 0; i < count; ++i)
                 yield return _factory.CreateComponentItem(ComponentInfo.CreateRandom(_database, distance, faction, random, allowRare, maxQuality));
         }
 
-        private IItemType RandomComponent(int distance, Faction faction, System.Random random, bool allowRare, ComponentQuality maxQuality = ComponentQuality.P3)
+        private IItemType RandomComponent(int distance, Faction faction, System.Random random, bool allowRare, ComponentQuality maxQuality = ComponentQuality.P4)
         {
             return _factory.CreateComponentItem(ComponentInfo.CreateRandom(_database, distance, faction, random, allowRare, maxQuality));
         }

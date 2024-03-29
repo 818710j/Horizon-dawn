@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Combat.Component.Ship;
 using Combat.Component.Unit.Classification;
 using Combat.Scene;
@@ -18,6 +17,7 @@ namespace Gui.Combat
         [SerializeField] private Color AllyColor;
         [SerializeField] private Color NormalColor;
         [SerializeField] private Color BossColor;
+        [SerializeField] private Color BossColor1;
         [SerializeField] private Color StarbaseColor;
 
         public void Open(IShip ship, IScene scene, IResourceLocator resourceLocator)
@@ -26,6 +26,7 @@ namespace Gui.Combat
             _ship = ship;
 
             Initialize(resourceLocator);
+            Update();
             gameObject.SetActive(true);
         }
 
@@ -39,8 +40,8 @@ namespace Gui.Combat
 
             var itemPosition = _ship.Body.Position;
             var position = _scene.ViewPoint.Direction(itemPosition);
-            var cameraHeight = MainCamera.orthographicSize;
-            var cameraWidth = cameraHeight*MainCamera.aspect;
+            var cameraHeight = Camera.main.orthographicSize;
+            var cameraWidth = cameraHeight*Camera.main.aspect;
 
             var x = position.x/cameraWidth;
             var y = position.y/cameraHeight;
@@ -96,10 +97,14 @@ namespace Gui.Combat
             switch (model.ShipCategory)
             {
                 case ShipCategory.Starbase:
-                    _offset = Size*1.8f;
+                    _offset = Size*2.1f;
                     Background.color = StarbaseColor;
                     break;
                 case ShipCategory.Flagship:
+                    _offset = Size*1.8f;
+                    Background.color = isAlly ? AllyColor : BossColor1;
+                    break;
+                case ShipCategory.SubFlagship:
                     _offset = Size*1.5f;
                     Background.color = isAlly ? AllyColor : BossColor;
                     break;
@@ -122,9 +127,5 @@ namespace Gui.Combat
         private RectTransform _rectTransform;
         private IShip _ship;
         private IScene _scene;
-        private Camera _mainCamera;
-
-        // ReSharper disable once Unity.NoNullCoalescing
-        private Camera MainCamera => _mainCamera ?? (_mainCamera = Camera.main);
     }
 }

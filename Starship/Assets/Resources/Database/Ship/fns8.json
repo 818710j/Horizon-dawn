@@ -1,8 +1,8 @@
 {
   "ItemType": 6,
   "Id": 77,
-  "ShipCategory": 5,
   "Name": "$fn_Xmas",
+  "SizeClass": 1,
   "IconImage": "fns2",
   "IconScale": 1.0,
   "ModelImage": "fns2",
@@ -17,8 +17,7 @@
     {
       "Position": {
         "x": 1.0
-      },
-      "WeaponClass": "C"
+      }
     }
   ]
 }

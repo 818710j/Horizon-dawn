@@ -29,6 +29,9 @@ namespace GameDatabase.Serializable
 		public string Sound;
 		public string EffectPrefab;
 		public string ObjectPrefab;
+		public bool UseMyIcon;
+		public string ObjectIconImage;
+		public string SecondObjectIconImage;
 		public string ControlButtonIcon;
 	}
 }

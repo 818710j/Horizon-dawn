@@ -7,7 +7,6 @@ using GameDatabase.DataModel;
 using GameDatabase.Enums;
 using GameDatabase.Model;
 using Session.Content;
-using Utils;
 using Helpers = GameModel.Serialization.Helpers;
 
 namespace Constructor
@@ -41,18 +40,12 @@ namespace Constructor
     {
         public static IEnumerable<IntegratedComponent> FromShipComponentsData(this ShipComponentsData data, IDatabase database)
         {
-            return FromComponentsData(data.Components, database);
-        }
-
-        public static IEnumerable<IntegratedComponent> FromComponentsData(
-            this IEnumerable<ShipComponentsData.Component> data, IDatabase database)
-        {
-            foreach (var item in data)
+            foreach (var item in data.Components)
             {
                 var component = database.GetComponent(new ItemId<GameDatabase.DataModel.Component>(item.Id));
                 if (component == null)
                 {
-                    OptimizedDebug.LogException(new ArgumentException("Unknown component - " + item.Id));
+                    UnityEngine.Debug.LogException(new ArgumentException("Unknown component - " + item.Id));
                     continue;
                 }
 

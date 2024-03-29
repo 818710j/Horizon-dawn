@@ -6,7 +6,7 @@
   "Size": 2.0,
   "Damage": 30.0,
   "Range": 5.0,
-  "Velocity": 5.0,
+  "Velocity": 10.0,
   "LifeTime": 1.0,
   "EnergyCost": 1.0,
   "Color": "#80FFE2BA",

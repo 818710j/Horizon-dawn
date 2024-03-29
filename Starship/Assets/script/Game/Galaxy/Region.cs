@@ -4,13 +4,12 @@ using GameDatabase.DataModel;
 using GameDatabase.Extensions;
 using Session;
 using UnityEngine;
-using Utils;
 
 namespace GameModel
 {
 	public class Region
 	{
-		private Region(int id, bool isPirateBase, ISessionData session, IDatabase database, BaseCapturedSignal.Trigger baseCapturedTrigger, RegionFleetDefeatedSignal.Trigger regionFleetDefeatedTrigger)
+		public Region(int id, bool isPirateBase, ISessionData session, IDatabase database, BaseCapturedSignal.Trigger baseCapturedTrigger, RegionFleetDefeatedSignal.Trigger regionFleetDefeatedTrigger)
         {
             _session = session;
             _database = database;
@@ -22,36 +21,24 @@ namespace GameModel
 
 			if (Id == 0 || Id == PlayerHomeRegionId || isPirateBase)
 			{
-				_faction = Faction.Neutral;
+				if (_database.GalaxySettings.InitialStarbaseFaction != null && !isPirateBase)
+					_faction = _database.GalaxySettings.InitialStarbaseFaction;
+				else
+					_faction = Faction.Neutral;
 			    Size = 0;
 			}
 			else
 			{
 				Size = RegionLayout.RegionFourthSize*2 - 1;// Game.Data.RandomInt(id, 1, RegionLayout.RegionMaxSize);
 			}
-			
-			// If session have data about faction ID stored, we clear any faction that might've been set during initialization
-			if (_session.Regions.GetRegionFactionId(Id) != Faction.Undefined.Id)
-			{
-				_faction = Faction.Undefined;
-			}
 
 			_defeatedFleetCount = _session.Regions.GetDefeatedFleetCount(Id);
 			_isCaptured = Id == PlayerHomeRegionId || _session.Regions.IsRegionCaptured(Id);
 		}
 
-		public static Region TryCreate(int id, bool isPirateBase, ISessionData session, IDatabase database,
-			BaseCapturedSignal.Trigger baseCapturedTrigger,
-			RegionFleetDefeatedSignal.Trigger regionFleetDefeatedTrigger)
-		{
-			var region = new Region(id, isPirateBase, session, database, baseCapturedTrigger,
-				regionFleetDefeatedTrigger);
-			return region.Faction == Faction.Undefined ? Empty : region;
-		}
-
 		public void OnFleetDefeated()
 		{
-			OptimizedDebug.Log("RegionFleetDefeated: " + Id);
+			UnityEngine.Debug.Log("RegionFleetDefeated: " + Id);
 
 			if (Id == UnoccupiedRegionId)
 				return;
@@ -121,12 +108,12 @@ namespace GameModel
 			    if (factionId != Faction.Undefined.Id)
 			    {
 			        var faction = _database.GetFaction(factionId);
-			        if (faction != Faction.Undefined)
+			        if (faction != Faction.Undefined && !faction.Hidden)
 			            return _faction = faction;
 			    }
 
-			    _faction = _database.FactionList.Visible().AtDistance(MilitaryPower).Where(item => item != Faction.Neutral).RandomElement(new System.Random(HomeStar + _session.Game.Seed)) ?? Faction.Undefined;
-				_session.Regions.SetRegionFactionId(Id, _faction.Id);
+			    _faction = _database.FactionList.Visible().AtDistance(MilitaryPower).Where(item => item != Faction.Neutral).RandomElement(new System.Random(HomeStar + _session.Game.Seed));
+			    _session.Regions.SetRegionFactionId(Id, _faction.Id);
 
                 return _faction;
 			}

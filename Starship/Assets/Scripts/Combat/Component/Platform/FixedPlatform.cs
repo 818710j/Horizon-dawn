@@ -1,26 +1,20 @@
-﻿using System.Collections.Generic;
-using Combat.Component.Body;
-using Combat.Component.Bullet;
+﻿using Combat.Component.Body;
 using Combat.Component.Ship;
-using Combat.Component.Triggers;
-using Combat.Component.Unit;
 using Combat.Component.Unit.Classification;
 using Combat.Component.View;
 using Combat.Unit.HitPoints;
-using Gui.Utils;
 using UnityEngine;
 
 namespace Combat.Component.Platform
 {
-    public sealed class FixedPlatform : IWeaponPlatform, IUnitAction
+    public sealed class FixedPlatform : IWeaponPlatform
     {
-        public FixedPlatform(IShip ship, IBody body, float cooldown, UnitBase parent, IAimingSystem aimingSystem = null)
+        public FixedPlatform(IShip ship, IBody body, float cooldown, IAimingSystem aimingSystem = null)
         {
             _body = body;
             _ship = ship;
             _cooldown = cooldown;
             _aimingSystem = aimingSystem;
-            parent.AddTrigger(this);
         }
 
         public UnitType Type { get { return _ship.Type; } }
@@ -54,11 +48,6 @@ namespace Combat.Component.Platform
         public void UpdatePhysics(float elapsedTime)
         {
             _timeFromLastShot += elapsedTime;
-            if (_timeFromLastCleanup >= CleanupInterval)
-            {
-                _attachedChildren.Purge();
-                _timeFromLastCleanup = 0;
-            }
         }
 
         public void UpdateView(float elapsedTime)
@@ -70,42 +59,14 @@ namespace Combat.Component.Platform
             }
         }
 
-        public void AddAttachedChild(IBullet bullet)
-        {
-            _attachedChildren.Add(new WeakReference<IBullet>(bullet));
-        }
-
         public void Dispose() {}
 
         private IView _view;
         private Color _color;
-        private float _timeFromLastCleanup;
-        private const float CleanupInterval = 1;
         private float _timeFromLastShot;
         private readonly IShip _ship;
         private readonly float _cooldown;
         private readonly IBody _body;
         private readonly IAimingSystem _aimingSystem;
-        private readonly IList<WeakReference<IBullet>> _attachedChildren = new List<WeakReference<IBullet>>();
-
-        public ConditionType TriggerCondition => ConditionType.OnDestroy;
-
-        public bool TryUpdateAction(float elapsedTime)
-        {
-            return false;
-        }
-
-        public bool TryInvokeAction(ConditionType condition)
-        {
-            foreach (var child in _attachedChildren)
-            {
-                if(child.IsAlive)
-                {
-                  child.Target.Detonate();  
-                }
-            }
-
-            return true;
-        }
     }
 }

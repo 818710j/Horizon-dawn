@@ -8,4 +8,7 @@
     <string name="InternalError">Internal error</string>
     <string name="CommonConfirmation">Are you sure you want to do this?</string>
     <string name="LoginFailedText">Could not log in to the server. Please try again later</string>
+    <string name="HORIZON-DAWN">HORIZON-DAWN</string>
+    <string name="COPYRIGHT:PAVEL ZINCHENKO">COPYRIGHT:PAVEL ZINCHENKO</string>
+    <string name="VERSION MAKING:TIAN STUDIO">VERSION MAKING:TIAN STUDIO</string>
 </resources>

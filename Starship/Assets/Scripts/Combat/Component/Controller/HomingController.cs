@@ -40,7 +40,7 @@ namespace Combat.Component.Controller
                 var target = RotationHelpers.Angle(direction);
                 var rotation = _unit.Body.WorldRotation();
                 var delta = Mathf.DeltaAngle(rotation, target);
-                requiredAngularVelocity = delta > 5 ? _maxAngularVelocity : delta < -5 ? -_maxAngularVelocity : 0f;
+                requiredAngularVelocity = delta > 7 ? _maxAngularVelocity : delta < -7 ? -_maxAngularVelocity : 0f;
             }
             _unit.Body.ApplyAngularAcceleration(requiredAngularVelocity - _unit.Body.AngularVelocity);
 

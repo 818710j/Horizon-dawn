@@ -5,13 +5,13 @@
   "DisplayCategory": 2,
   "Availability": 1,
   "ComponentStatsId": 180,
-  "Faction": -1,
   "Level": 50,
   "Icon": "shield_capacitor2",
   "Layout": "1111",
   "CellType": "1",
   "PossibleModifications": [
     1,
-    3
+    3,
+    22
   ]
 }

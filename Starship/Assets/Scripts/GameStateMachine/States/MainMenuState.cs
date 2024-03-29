@@ -35,9 +35,14 @@ namespace GameStateMachine.States
             OpenEhopediaSignal openEhopediaSignal,
             CombatModelBuilder.Factory combatModelBuilderFactory,
             MotherShip motherShip,
+            DailyReward dailyReward,
+            DailyRewardAwailableSignal dailyRewardAwailableSignal,
             ExitSignal exitSignal)
             : base(stateMachine, stateFactory, levelLoader)
         {
+            _dailyReward = dailyReward;
+            _dailyRewardAwailableSignal = dailyRewardAwailableSignal;
+            _dailyRewardAwailableSignal.Event += CheckDailyReward;
 
             _motherShip = motherShip;
             _session = session;
@@ -64,8 +69,21 @@ namespace GameStateMachine.States
 
         protected override void OnActivate()
         {
+#if UNITY_STANDALONE
+#else
+            CheckDailyReward();
+#endif
         }
-        
+
+        private void CheckDailyReward()
+        {
+            if (!IsActive)
+                return;
+
+            if (_dailyReward.IsRewardExists())
+                StateMachine.LoadAdditionalState(StateFactory.CreateDaylyRewardState());
+        }
+
         private void OnStartGame()
         {
             if (!IsActive)
@@ -95,8 +113,12 @@ namespace GameStateMachine.States
             var random = new System.Random();
             var fleet1 = _database.ShipBuildList.RandomUniqueElements(12, random);
             var fleet2 = _database.ShipBuildList.RandomUniqueElements(12, random);
-            
+
+#if UNITY_EDITOR
+            if (testShip != null)
+#else
             if (_database.IsEditable && testShip != null)
+#endif
             {
                 var playerFleet = Enumerable.Repeat(testShip, 1).Concat(fleet1);
                 var enemyFleet = testShipId.Contains('*') ? Enumerable.Repeat(testShip,1) : Enumerable.Repeat(testShip,1).Concat(fleet2);
@@ -185,6 +207,8 @@ namespace GameStateMachine.States
         private readonly MotherShip _motherShip;
         private readonly IDatabase _database;
         private readonly CombatModelBuilder.Factory _combatModelBuilderFactory;
+        private readonly DailyReward _dailyReward;
+        private readonly DailyRewardAwailableSignal _dailyRewardAwailableSignal;
 
         public class Factory : Factory<MainMenuState> { }
     }

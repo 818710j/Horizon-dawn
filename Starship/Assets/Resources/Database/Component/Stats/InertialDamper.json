@@ -1,6 +1,7 @@
 {
   "ItemType": 11,
   "Id": 69,
-  "EnergyRechargeRate": -1.0,
-  "Weight": -300.0
+  "Type": 1,
+  "EnergyRechargeRate": -2.0,
+  "Weight": -400.0
 }

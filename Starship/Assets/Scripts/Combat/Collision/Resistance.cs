@@ -7,6 +7,7 @@ namespace Combat.Collision
         public float Kinetic;
         public float Energy;
         public float Heat;
+        public float Structure;
         public float EnergyDrain;
 
         public float MinResistance { get { return Mathf.Min(Mathf.Min(Kinetic, Energy), Heat); } }

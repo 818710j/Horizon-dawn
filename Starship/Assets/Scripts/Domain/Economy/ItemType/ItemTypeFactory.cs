@@ -24,9 +24,9 @@ namespace Economy.ItemType
             return _container.Instantiate<EmptyShipItem>(new object[] { ship });
         }
 
-        public IItemType CreateShipItem(IShip ship, bool premium = false, bool fuzzy = false)
+        public IItemType CreateShipItem(IShip ship, bool premium = false)
         {
-            return _container.Instantiate<ShipItem>(new object[] { this, ship, premium, fuzzy });
+            return _container.Instantiate<ShipItem>(new object[] { ship, premium });
         }
 
         public IItemType CreateDamagedShipItem(ShipBuild build, int seed)
@@ -105,6 +105,25 @@ namespace Economy.ItemType
         public IItemType CreateResearchItem(Faction faction)
         {
             return _container.Instantiate<ResearchItem>(new object[] { faction });
+        }
+        public IItemType CreatePurchasedStarsItem()
+        {
+            return _container.Instantiate<PurchasedStarsItem>();
+        }
+
+        public IItemType CreateSupporterPackItem()
+        {
+            return _container.Instantiate<SupporterPackItem>();
+        }
+
+        public IItemType CreateRewardedAdItem()
+        {
+            return _container.Instantiate<RewardedAdItem>();
+        }
+
+        public IItemType CreateRewardedFacebookPostItem()
+        {
+            return _container.Instantiate<RewardedFacebookPostItem>();
         }
 
         public IItemType CreateXmasBoxItem(int seed = -1)

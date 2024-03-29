@@ -40,9 +40,9 @@ namespace GameDatabase.DataModel
 		public DeviceStats(DeviceSerializable serializable, Database.Loader loader)
 		{
 			DeviceClass = serializable.DeviceClass;
-			EnergyConsumption = UnityEngine.Mathf.Clamp(serializable.EnergyConsumption, 0f, 3.402823E+38f);
-			PassiveEnergyConsumption = UnityEngine.Mathf.Clamp(serializable.PassiveEnergyConsumption, 0f, 3.402823E+38f);
-			Power = UnityEngine.Mathf.Clamp(serializable.Power, 0f, 3.402823E+38f);
+			EnergyConsumption = UnityEngine.Mathf.Clamp(serializable.EnergyConsumption, 0f, 1E+09f);
+			PassiveEnergyConsumption = UnityEngine.Mathf.Clamp(serializable.PassiveEnergyConsumption, 0f, 1E+09f);
+			Power = UnityEngine.Mathf.Clamp(serializable.Power, 0f, 1000f);
 			Range = UnityEngine.Mathf.Clamp(serializable.Range, 0f, 1000f);
 			Size = UnityEngine.Mathf.Clamp(serializable.Size, 0f, 1000f);
 			Cooldown = UnityEngine.Mathf.Clamp(serializable.Cooldown, 0f, 1000f);
@@ -53,6 +53,9 @@ namespace GameDatabase.DataModel
 			Sound = new AudioClipId(serializable.Sound);
 			EffectPrefab = new PrefabId(serializable.EffectPrefab, PrefabId.Type.Effect);
 			ObjectPrefab = new PrefabId(serializable.ObjectPrefab, PrefabId.Type.Object);
+			UseMyIcon = serializable.UseMyIcon;
+			ObjectIconImage = new SpriteId(serializable.ObjectIconImage, SpriteId.Type.Default);
+			SecondObjectIconImage = new SpriteId(serializable.SecondObjectIconImage, SpriteId.Type.Default);
 			ControlButtonIcon = new SpriteId(serializable.ControlButtonIcon, SpriteId.Type.ActionButton);
 
 			OnDataDeserialized(serializable, loader);
@@ -72,6 +75,9 @@ namespace GameDatabase.DataModel
 		public AudioClipId Sound;
 		public PrefabId EffectPrefab;
 		public PrefabId ObjectPrefab;
+		public bool UseMyIcon;
+		public SpriteId ObjectIconImage;
+		public SpriteId SecondObjectIconImage;
 		public SpriteId ControlButtonIcon;
 	}
 }

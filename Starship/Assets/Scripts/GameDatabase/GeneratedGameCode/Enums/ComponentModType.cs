@@ -32,5 +32,6 @@ namespace GameDatabase.Enums
 		DroneSpeed,
 		DroneRange,
 		Recoil,
+		Fortified2,
 	}
 }

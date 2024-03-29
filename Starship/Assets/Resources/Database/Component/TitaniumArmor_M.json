@@ -5,13 +5,13 @@
   "DisplayCategory": 2,
   "Availability": 1,
   "ComponentStatsId": 11,
-  "Faction": -1,
   "Level": 20,
   "Icon": "armor12",
   "Layout": "1111",
   "CellType": "1",
   "PossibleModifications": [
     1,
-    3
+    3,
+    22
   ]
 }

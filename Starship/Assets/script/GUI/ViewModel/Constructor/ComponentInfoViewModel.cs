@@ -113,8 +113,7 @@ namespace ViewModel
 
 			if (_activeLayout == null)
 				throw new System.InvalidOperationException("layout not selected");
-			var id = _componentId;
-			var component = _activeLayout.Ship.GetComponent(id);
+			var component = _activeLayout.Ship.GetComponent(_componentId);
 			var price = component.Info.Price*2;
             _guiHelper.ShowConfirmation(_localization.GetString("$UnlockConfirmation"), price, () => 
             {
@@ -123,8 +122,8 @@ namespace ViewModel
 
 			    if (!price.TryWithdraw(_playerResources))
                     return;
-				_activeLayout.UnlockComponent(id);
-				SetComponent(_activeLayout, id);
+				_activeLayout.UnlockComponent(_componentId);
+				SetComponent(_activeLayout, _componentId);
 			});
 		}
 
@@ -247,9 +246,18 @@ namespace ViewModel
 			case CellType.Engine:
 				RequiredCellIcon.color = ColorList[5];
 				break;
+			case CellType.CoreBlock:
+				RequiredCellIcon.color = ColorList[6];
+				break;
+			case CellType.Core2Block:
+				RequiredCellIcon.color = ColorList[7];
+				break;
+			case CellType.StructureBlock:
+					RequiredCellIcon.color = ColorList[8];
+				break;
 			}
 
-			RequiredCellText.text = _component.Data.CellType == CellType.Weapon ? _component.Data.WeaponSlotType.ToString() : string.Empty;
+			RequiredCellText.text = _component.Data.CellType == CellType.Weapon ? ((char)_component.Data.WeaponSlotType).ToString() : string.Empty;
 
 			var stats = new ShipEquipmentStats();
 			component.UpdateStats(ref stats);

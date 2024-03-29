@@ -1,10 +1,10 @@
 {
   "ItemType": 6,
   "Id": 8,
-  "ShipCategory": 2,
+  "ShipCategory": 7,
   "Name": "$f7_Flagship",
   "Faction": 8,
-  "SizeClass": 4,
+  "SizeClass": 5,
   "IconImage": "flagship7",
   "IconScale": 1.2,
   "ModelImage": "flagship7",
@@ -18,13 +18,13 @@
   "Barrels": [
     {
       "Position": {
-        "y": 0.9
+        "y": -0.9
       },
       "WeaponClass": "M"
     },
     {
       "Position": {
-        "y": -0.9
+        "y": 0.9
       },
       "WeaponClass": "M"
     },

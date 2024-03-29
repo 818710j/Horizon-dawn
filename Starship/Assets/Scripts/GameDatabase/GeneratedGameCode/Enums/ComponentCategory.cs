@@ -17,5 +17,7 @@ namespace GameDatabase.Enums
 		Engine,
 		Drones,
 		Special,
+		Core,
+		Structure,
 	}
 }

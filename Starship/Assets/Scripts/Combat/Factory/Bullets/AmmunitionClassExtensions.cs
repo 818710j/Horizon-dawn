@@ -78,6 +78,7 @@ namespace Combat.Factory
                 case AmmunitionClassObsolete.Aura:
                 case AmmunitionClassObsolete.DamageOverTime:
                 case AmmunitionClassObsolete.BlackHole:
+                case AmmunitionClassObsolete.EnergyWave:
                     return true;
                 default:
                     return false;
@@ -103,6 +104,7 @@ namespace Combat.Factory
                 case AmmunitionClassObsolete.Acid:
                 case AmmunitionClassObsolete.DamageOverTime:
                 case AmmunitionClassObsolete.Explosion:
+                case AmmunitionClassObsolete.EnergyWave:
                     return true;
                 default:
                     return false;
@@ -111,8 +113,17 @@ namespace Combat.Factory
 
         public static bool HasDirectImpulse(this AmmunitionClassObsolete ammunition)
         {
-            var type = GetBulletType(ammunition);
-            return type != BulletType.Direct && type != BulletType.AreaOfEffect && !IsDot(ammunition);
+            switch (ammunition)
+            {
+                case AmmunitionClassObsolete.Common:
+                case AmmunitionClassObsolete.Fragment:
+                case AmmunitionClassObsolete.Singularity:
+                case AmmunitionClassObsolete.AcidRocket:
+                case AmmunitionClassObsolete.EmpMissile:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         public static bool HasDirectDamage(this AmmunitionClassObsolete ammunition, AmmunitionObsoleteStats stats)

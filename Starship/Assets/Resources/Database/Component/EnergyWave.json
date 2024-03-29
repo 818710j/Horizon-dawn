@@ -1,0 +1,25 @@
+{
+  "ItemType": 1,
+  "Id": 263,
+  "Name": "$EnergyWave",
+  "DisplayCategory": 1,
+  "Availability": 1,
+  "ComponentStatsId": 1,
+  "Level": 100,
+  "Icon": "energy_wave",
+  "Layout": "010111000",
+  "CellType": "4",
+  "WeaponId": 120,
+  "AmmunitionId": 120,
+  "WeaponSlotType": "S",
+  "PossibleModifications": [
+    13,
+    8,
+    6,
+    16,
+    5,
+    2,
+    7,
+    1
+  ]
+}

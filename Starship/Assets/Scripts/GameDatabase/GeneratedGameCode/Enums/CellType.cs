@@ -16,6 +16,9 @@ namespace GameDatabase.Enums
 		Inner = '2',
 		InnerOuter = '3',
 		Engine = '5',
+		CoreBlock = '6',
+		Core2Block = '7',
+		StructureBlock = '8',
 		Custom = '*',
 	}
 }

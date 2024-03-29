@@ -80,7 +80,6 @@ namespace Combat.Unit.HitPoints
 		
 		public bool TryGet(float how)
 		{
-			if (how == 0) return true;
 			ThreadSafe.Function<float> func = (ref float value) =>
 			{
 				if (value > 0 && value*MaxValue >= how && MaxValue > 0)
@@ -102,7 +101,6 @@ namespace Combat.Unit.HitPoints
 
 		public void Get(float how)
 		{
-			if (how == 0) return;
             if (MaxValue > 0)
 			    ThreadSafe.AddClamp(ref _value, -how/MaxValue, 0, 1);
 
@@ -159,18 +157,7 @@ namespace Combat.Unit.HitPoints
 		
 		public bool TryGet(float how)
 		{
-			if (how == 0) return true;
-			ThreadSafe.Function<float> func = (ref float value) =>
-			{
-				if (value > 0 && value*MaxValue >= how && MaxValue > 0)
-				{
-					value -= how/MaxValue;
-					return true;
-				}
-				return false;
-			};
-
-			return ThreadSafe.ChangeValue(ref _value, func);
+			throw new System.NotImplementedException();
 		}
 
 		//public IEnumerable<byte> Serialize() { return Helpers.Serialize(_value); }

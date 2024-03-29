@@ -1,10 +1,10 @@
 {
   "ItemType": 6,
   "Id": 102,
-  "ShipCategory": 2,
+  "ShipCategory": 7,
   "Name": "$f12_Flagship",
   "Faction": 12,
-  "SizeClass": 4,
+  "SizeClass": 5,
   "IconImage": "worm_head2",
   "IconScale": 1.4,
   "ModelImage": "worm_head2",

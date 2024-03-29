@@ -49,12 +49,12 @@ namespace Maths
 
 		public static float LevelToPowerMultiplier(int level)
 		{
-			return (float)Math.Pow(11, (0.01*level));
+			return (float)Math.Pow(10, (0.01*level));
 		}
 
         public static long TotalExpForShip(IShip ship)
         {
-            return (1L + (long)Math.Pow(ship.Experience.Level + 1, 1.2)) * (long)Math.Pow(ship.Model.Layout.CellCount, 1.2) * (1 + (int)ship.ExtraThreatLevel);
+            return (1L + (long)Math.Pow(ship.Experience.Level + 1, 1.1)) * (long)Math.Pow(ship.Model.Layout.CellCount, 1.1) * (1 + (int)ship.ExtraThreatLevel);
         }
 
         public static implicit operator Experience(long value)
@@ -78,11 +78,13 @@ namespace Maths
 
 		private readonly ObscuredLong _value;
 
-		public const int MaxRank = 300;
+		public const int MaxRank = 500;
         public const long MaxExperience = 100L * MaxRank * MaxRank * MaxRank;
-	    public const int MaxPlayerRank = 100;
-	    public const int MaxPlayerRank2 = 200;
-	    public const long MaxPlayerExperience = 100L * MaxPlayerRank * MaxPlayerRank * MaxPlayerRank;
-	    public const long MaxPlayerExperience2 = 100L * MaxPlayerRank2 * MaxPlayerRank2 * MaxPlayerRank2;
+	    public const int MaxPlayerRank = 150;
+	    public const int MaxPlayerRank1 = 75;
+	    public const int MaxPlayerRank2 = 300;
+	    public const long MaxPlayerExperience = 100L * 75 * 75 * 75;
+	    public const long MaxPlayerExperience1 = 100L * 150 * 150 * 150;
+	    public const long MaxPlayerExperience2 = 100L * 300 * 300 * 300;
     }
 }

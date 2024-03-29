@@ -17,6 +17,7 @@ namespace Gui.Combat
         [Inject] private readonly IResourceLocator _resourceLocator;
 
         [SerializeField] private ProgressBar _armorPoints;
+        [SerializeField] private ProgressBar _structurePoints;
         [SerializeField] private ProgressBar _shieldPoints;
         [SerializeField] private ProgressBar _energyPoints;
         [SerializeField] private Image _icon;
@@ -24,9 +25,11 @@ namespace Gui.Combat
         [SerializeField] private GameObject _fireResistIcon;
         [SerializeField] private GameObject _energyResistIcon;
         [SerializeField] private GameObject _kineticResistIcon;
+        [SerializeField] private GameObject _structureResistIcon;
         [SerializeField] private Text _fireResistText;
         [SerializeField] private Text _energyResistText;
         [SerializeField] private Text _kineticResistText;
+        [SerializeField] private Text _structureResistText;
 
         public void Close()
         {
@@ -55,9 +58,11 @@ namespace Gui.Combat
 
             _hasShield = _ship.Stats.Shield.Exists;
             _hasArmor = _ship.Stats.Armor.Exists;
+            _hasStructure = _ship.Stats.Structure.Exists;
 
             _shieldPoints.gameObject.SetActive(_hasShield);
             _armorPoints.gameObject.SetActive(_hasArmor);
+            _structurePoints.gameObject.SetActive(_hasStructure);
         }
 
         private void UpdateResistance()
@@ -90,6 +95,15 @@ namespace Gui.Combat
                 if (active)
                     _kineticResistText.text = Mathf.RoundToInt(resistance.Kinetic * 100) + "%";
             }
+
+            if (_structureResistIcon != null)
+            {
+                var active = resistance.Structure > 0.01f;
+                _structureResistIcon.gameObject.SetActive(active);
+                _structureResistText.gameObject.SetActive(active);
+                if (active)
+                    _structureResistText.text = Mathf.RoundToInt(resistance.Structure * 100) + "%";
+            }
         }
 
         private void Update()
@@ -108,29 +122,37 @@ namespace Gui.Combat
             }
 
             var total = 0f;
+            if (_hasStructure) total += _ship.Stats.Structure.MaxValue;
             if (_hasArmor) total += _ship.Stats.Armor.MaxValue;
             if (_hasShield) total += _ship.Stats.Shield.MaxValue;
 
+            var structure = _structurePoints ? _ship.Stats.Structure.Value : 0;
             var armor = _hasArmor ? _ship.Stats.Armor.Value : 0;
             var shield = _hasShield ? _ship.Stats.Shield.Value : 0;
 
+            if (_hasStructure)
+            {
+                _structurePoints.X0 = 0;
+                _structurePoints.X1 = structure / total;
+                _structurePoints.SetAllDirty();
+            }
             if (_hasArmor)
             {
-                _armorPoints.Y0 = 0;
-                _armorPoints.Y1 = armor / total;
+                _armorPoints.X0 = structure / total;
+                _armorPoints.X1 = (armor + structure) / total;
                 _armorPoints.SetAllDirty();
             }
             if (_hasShield)
             {
-                _shieldPoints.Y0 = armor / total;
-                _shieldPoints.Y1 = (armor + shield) / total;
+                _shieldPoints.X0 = (armor + structure) / total;
+                _shieldPoints.X1 = (armor + structure + shield) / total;
                 _shieldPoints.SetAllDirty();
             }
 
             var energy = _ship.Stats.Energy.Percentage;
-            if (!Mathf.Approximately(_energyPoints.Y1, energy))
+            if (!Mathf.Approximately(_energyPoints.X1, energy))
             {
-                _energyPoints.Y1 = energy;
+                _energyPoints.X1 = energy;
                 _energyPoints.SetAllDirty();
             }
         }
@@ -138,6 +160,7 @@ namespace Gui.Combat
         private float _updateResistanceCooldown;
         private bool _hasShield;
         private bool _hasArmor;
+        private bool _hasStructure;
         private IShip _ship;
     }
 }

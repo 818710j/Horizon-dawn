@@ -22,8 +22,10 @@ namespace Model
 				return "$EnergyDamage";
 			case DamageType.Heat:
 				return "$HeatDamage";
+			case DamageType.Structure:
+				return "$StructureDamage";
 			default:
-				return "-";
+				return "$Corrode";
 			}
 		}
 	}

@@ -19,11 +19,11 @@ using Constructor;
 using Constructor.Model;
 using GameDatabase.Enums;
 using GameDatabase.Model;
-using GameServices.Settings;
 using Services.Audio;
 using Services.ObjectPool;
 using UnityEngine;
 using Zenject;
+using Services.Reources;
 
 namespace Combat.Factory
 {
@@ -34,7 +34,7 @@ namespace Combat.Factory
         [Inject] private readonly ISoundPlayer _soundPlayer;
         [Inject] private readonly EffectFactory _effectFactory;
         [Inject] private readonly PrefabCache _prefabCache;
-        [Inject] private readonly GameSettings _gameSettings;
+        [Inject] private readonly IResourceLocator _resourceLocator;
 
         public IUnit CreateExplosion(Vector2 position, float radius, DamageType damageType, float damage, UnitSide unitSide, Color color, float impulseMultiplier = 1.0f)
         {
@@ -218,9 +218,20 @@ namespace Combat.Factory
             return unit;
         }
 
-        public IEnumerable<WormSegment> CreateWormTail(IShip parent, int size, float weightScale, float hitPoints, PrefabId prefabId, float offset1, float offset2, float extraOffset, ColorScheme colorScheme)
+        public IEnumerable<WormSegment> CreateWormTail(IShip parent, int size, float weightScale, float hitPoints, PrefabId prefabId, float offset1, float offset2, float extraOffset, bool usemyicon, SpriteId spriteid, SpriteId secondspriteid, ColorScheme colorScheme)
         {
             var prefab = _prefabCache.LoadPrefab(prefabId);
+            if (prefab == null)
+            {
+                prefab = _prefabCache.LoadPrefab(new PrefabId("WormSegment", PrefabId.Type.Object));
+            }
+            Sprite icon = null;
+            Sprite secondicon = null;
+            if (usemyicon)
+            {
+                icon = _resourceLocator.GetSprite(new SpriteId(spriteid.Id, SpriteId.Type.Ship));
+                secondicon = _resourceLocator.GetSprite(new SpriteId(secondspriteid.Id, SpriteId.Type.Ship));
+            }
             var damageIndicator = new DamageIndicator(parent, _effectFactory, parent.Type.Side == UnitSide.Player ? 0.75f : 0.5f);
 
             WormSegment segment = null;
@@ -228,8 +239,16 @@ namespace Combat.Factory
             {
                 var parentBody = segment != null ? segment.Body : parent.Body;
                 var parentWeight = segment != null ? segment.Body.Weight * 0.95f : parent.Body.Weight * weightScale;
-
                 var gameObject = new GameObjectHolder(prefab, _objectPool);
+
+                if (usemyicon)
+                {
+                    gameObject.GetComponent<ChangeView>().ChangeableSprite[0].sprite = icon;
+                    gameObject.GetComponent<ChangeView>().ChangeableSprite[1].sprite = secondicon;
+                    gameObject.GetComponent<ChangeView>().ChangeableSprite[2].sprite = icon;
+                    gameObject.GetComponent<ChangeView>().ChangeableSprite[3].sprite = secondicon;
+                }
+
                 gameObject.IsActive = true;
                 var body = gameObject.GetComponent<IBodyComponent>();
                 var position = parentBody.Position - RotationHelpers.Direction(parentBody.Rotation) * parentBody.Scale;
@@ -245,12 +264,12 @@ namespace Combat.Factory
                 if (segment != null)
                 {
                     unit.Connect(segment, offset1, offset2, 30f);
-                    if(_gameSettings.ShowDamage) unit.SetDamageIndicator(damageIndicator, false);
+                    unit.SetDamageIndicator(damageIndicator, false);
                 }
                 else
                 {
                     unit.Connect(parent, offset1 + extraOffset, offset2, 60f);
-                    if(_gameSettings.ShowDamage) unit.SetDamageIndicator(damageIndicator, true);
+                    unit.SetDamageIndicator(damageIndicator, true);
                 }
 
                 segment = unit;

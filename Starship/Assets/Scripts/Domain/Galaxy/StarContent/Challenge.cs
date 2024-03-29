@@ -18,7 +18,6 @@ using GameDatabase.Model;
 using Model.Factories;
 using Session;
 using UnityEngine;
-using Utils;
 using Zenject;
 
 namespace Galaxy.StarContent
@@ -57,7 +56,7 @@ namespace Galaxy.StarContent
             var stage = GetCurrentLevel(starId);
             if (ships.Count <= stage)
             {
-                OptimizedDebug.LogException(new InvalidOperationException("Challenge: no more ships - " + stage));
+                Debug.LogException(new InvalidOperationException("Challenge: no more ships - " + stage));
                 return _database.GetShipBuild(new ItemId<ShipBuild>(DefaultShipBuild));
             }
 
@@ -71,7 +70,7 @@ namespace Galaxy.StarContent
                 item.DifficultyClass == DifficultyClass.Default &&
                 item.Ship.ShipCategory == ShipCategory.Common &&
                 item.Ship.Faction.WanderingShipsDistance <= level &&
-                item.Ship.Layout.CellCount <= 45).
+                item.Ship.Layout.CellCount <= 60).
                 RandomElement(new System.Random(starId));
 
             return ship ?? _database.GalaxySettings.StartingShipBuilds.FirstOrDefault() ?? _database.GetShipBuild(new ItemId<ShipBuild>(DefaultShipBuild));

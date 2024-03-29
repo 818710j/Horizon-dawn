@@ -13,7 +13,9 @@
     <string name="EnginePowerMod">引擎功率 $1</string>
     <string name="EnergyRechargeMod">充能速率 $1</string>
     <string name="BulletVelocityMod2">弹药初速 $1
-伤害 $2</string>
+能耗 $2</string>
+	<string name="Fortified2">防御 $1
+重量 $2</string>
     <string name="AreaOfEffectMod">作用范围 $1</string>
     <string name="ShieldPowerMod">护盾强度 $1</string>
     <string name="DamageMod2">伤害 $1\n冷却速度 $2</string>
@@ -27,4 +29,7 @@
     <string name="Ship_ExtraBlueCells">额外装备槽位</string>
     <string name="Ship_Lightweight">船体基础重量减轻 $1%</string>
     <string name="Ship_Infected">减少$1%装甲值，但每秒回复装甲值的$2%</string>
+	<string name="HitPointsRepairCooldown">装甲回复间隔</string>
+	<string name="RechargeRateCooldown">能量回复间隔</string>
+	<string name="ShieldRechargeRateCooldown">盾容回复间隔</string>
 </resources>

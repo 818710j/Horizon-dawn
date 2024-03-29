@@ -20,10 +20,11 @@
     <string name="HangarSlotNode">额外舰队槽位</string>
     <string name="NewHangarSlotDesc">解锁机库中的一个槽位</string>
     <string name="UpgradeHangarSlotNode">升级机库槽位</string>
-    <string name="UpgradeHangarSlotDesc1">使槽位可以放置驱逐舰级的飞船</string>
-    <string name="UpgradeHangarSlotDesc2">使槽位可以放置巡洋舰级的飞船</string>
-    <string name="UpgradeHangarSlotDesc3">使槽位可以放置战舰级的飞船</string>
-    <string name="UpgradeHangarSlotDesc4">使槽位可以放置旗舰</string>
+    <string name="UpgradeHangarSlotDesc1">使槽位可以放置驱逐舰</string>
+    <string name="UpgradeHangarSlotDesc2">使槽位可以放置巡洋舰</string>
+    <string name="UpgradeHangarSlotDesc3">使槽位可以放置战列舰</string>
+    <string name="UpgradeHangarSlotDesc4">使槽位可以放置亚泰坦</string>
+    <string name="UpgradeHangarSlotDesc5">使槽位可以放置泰坦</string>
     <string name="PlanetaryScannerNode">高级行星探索装置</string>
     <string name="PlanetaryScannerDesc">提升$1%在探索中发现物品的几率</string>
     <string name="HeatDefenseNode">热能抗性船体</string>
@@ -47,5 +48,5 @@
     <string name="ShieldRechargeNode">护盾快充</string>
     <string name="ShieldRechargeDesc">护盾充能速度增加$1%</string>
     <string name="ExceedTheLimitsNode">超越极限</string>
-    <string name="ExceedTheLimitsDesc">飞船等级不再被局限在100以下</string>
+    <string name="ExceedTheLimitsDesc">飞船等级不再被局限在150以下</string>
 </resources>

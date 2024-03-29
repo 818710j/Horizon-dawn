@@ -10,6 +10,10 @@ namespace Constructor.Model
         public float ArmorRepairRate;
         public StatMultiplier ArmorRepairCooldownMultiplier;
 
+        public float StructurePoints;
+        public float StructureRepairRate;
+        public StatMultiplier StructureRepairCooldownMultiplier;
+
         public float EnergyPoints;
         public float EnergyRechargeRate;
         public StatMultiplier EnergyRechargeCooldownMultiplier;
@@ -22,6 +26,7 @@ namespace Constructor.Model
         public float HullRepairBaseCooldown;
         public float EnergyRechargeBaseCooldown;
         public float ShieldRechargeBaseCooldown;
+        public float StructureRepairBaseCooldown;
 
         public float Weight;
 
@@ -32,6 +37,7 @@ namespace Constructor.Model
         public float KineticResistance;
         public float EnergyResistance;
         public float ThermalResistance;
+        public float StructureResistance;
 
         public float EnginePower;
         public float TurnRate;
@@ -60,6 +66,10 @@ namespace Constructor.Model
             stats.ArmorRepairRate = component.ArmorRepairRate * multiplier;
             stats.ArmorRepairCooldownMultiplier = new StatMultiplier(component.ArmorRepairCooldownModifier * multiplier);
 
+            stats.StructurePoints = component.StructurePoints * multiplier;
+            stats.StructureRepairRate = component.StructureRepairRate * multiplier;
+            stats.StructureRepairCooldownMultiplier = new StatMultiplier(component.StructureRepairCooldownModifier * multiplier);
+
             stats.EnergyPoints = component.EnergyPoints * multiplier;
             stats.EnergyRechargeRate = component.EnergyRechargeRate * multiplier;
             stats.EnergyRechargeCooldownMultiplier = new StatMultiplier(component.EnergyRechargeCooldownModifier * multiplier);
@@ -76,6 +86,7 @@ namespace Constructor.Model
             stats.KineticResistance = component.KineticResistance * multiplier;
             stats.EnergyResistance = component.EnergyResistance * multiplier;
             stats.ThermalResistance = component.ThermalResistance * multiplier;
+            stats.StructureResistance = component.StructureResistance * multiplier;
 
             stats.EnginePower = component.EnginePower * multiplier;
             stats.TurnRate = component.TurnRate * multiplier;
@@ -103,6 +114,10 @@ namespace Constructor.Model
             first.ArmorRepairRate += second.ArmorRepairRate;
             first.ArmorRepairCooldownMultiplier += second.ArmorRepairCooldownMultiplier;
 
+            first.StructurePoints += second.StructurePoints;
+            first.StructureRepairRate += second.StructureRepairRate;
+            first.StructureRepairCooldownMultiplier += second.StructureRepairCooldownMultiplier;
+
             first.EnergyPoints += second.EnergyPoints;
             first.EnergyRechargeRate += second.EnergyRechargeRate;
             first.EnergyRechargeCooldownMultiplier += second.EnergyRechargeCooldownMultiplier;
@@ -120,6 +135,7 @@ namespace Constructor.Model
             first.KineticResistance += second.KineticResistance;
             first.EnergyResistance += second.EnergyResistance;
             first.ThermalResistance += second.ThermalResistance;
+            first.StructureResistance += second.StructureResistance;
 
             first.EnginePower += second.EnginePower;
             first.TurnRate += second.TurnRate;

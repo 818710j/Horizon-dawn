@@ -1,0 +1,16 @@
+{
+  "ItemType": 4,
+  "Id": 120,
+  "AmmunitionClass": 32,
+  "DamageType": 1,
+  "Size": 2,
+  "Damage": 10.0,
+  "Range": 20.0,
+  "Velocity": 10.0,
+  "LifeTime": 1.0,
+  "EnergyCost": 5.0,
+  "Color": "#7D7FC9FF",
+  "FireSound": "explosion_09",
+  "HitSound": "launch_09",
+  "BulletPrefab": "EnergyWave"
+}

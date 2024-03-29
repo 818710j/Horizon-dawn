@@ -2,7 +2,7 @@
   "ItemType": 11,
   "Id": 14,
   "Type": 1,
-  "EnergyRechargeRate": 0.5,
+  "EnergyRechargeRate": 1.2,
   "Weight": 100.0,
-  "ThermalResistance": 30.0
+  "ThermalResistance": 33.0
 }

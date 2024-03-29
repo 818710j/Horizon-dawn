@@ -16,6 +16,7 @@ namespace Constructor.Component
             _shipSize = shipSize;
             _component = data;
         }
+        public GameDatabase.DataModel.Component GetComponent() { return _component; }
 
         public void UpdateStats(ref ShipEquipmentStats shipStats)
         {
@@ -25,10 +26,13 @@ namespace Constructor.Component
             {
                 var multiplier = 1f + 0.1f * UpgradeLevel;
                 stats.ArmorPoints *= multiplier;
+                stats.StructurePoints *= multiplier;
                 stats.ShieldPoints *= multiplier;
+
                 stats.EnergyResistance *= multiplier;
                 stats.KineticResistance *= multiplier;
                 stats.ThermalResistance *= multiplier;
+                stats.StructureResistance *= multiplier;
             }
 
             if (_component.Device != null)

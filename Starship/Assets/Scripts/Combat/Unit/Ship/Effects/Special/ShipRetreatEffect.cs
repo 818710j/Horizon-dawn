@@ -64,6 +64,7 @@ namespace Combat.Unit.Ship.Effects.Special
 
         public IEngineModification EngineModification { get { return this; } }
         public IFeaturesModification FeaturesModification { get { return null; } }
+        public IStatsWeaponModification StatsWeaponModification { get { return null; } }
         public ISystemsModification SystemsModification { get { return this; } }
         public IStatsModification StatsModification { get { return null; } }
         public IUnitAction UnitAction { get { return null; } }

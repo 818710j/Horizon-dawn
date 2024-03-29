@@ -147,7 +147,6 @@ namespace Combat.Component.Bullet
         private void Disarm()
         {
             InvokeActions(ConditionType.OnDisarm);
-            
             if (State == UnitState.Active)
                 State = UnitState.Destroyed;
         }

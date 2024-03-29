@@ -237,7 +237,13 @@ namespace Game.Exploration
 
         private int GetRandomShip(System.Random random)
         {
-            var value = random.Next2(Mathf.Min(140, 60 + _planet.Level/2));
+            var value = random.Next2(Mathf.Min(140, 60 + _planet.Level / 2));
+
+            Debug.Log("Drones.Count:        " + Drones.Count);
+            Debug.Log("SmallShips.Count:    " + SmallShips.Count);
+            Debug.Log("BigShips.Count:      " + BigShips.Count);
+            Debug.Log("SubFlagships.Count:  " + SubFlagships.Count);
+
             if (value < 50)
                 return Drones[random.Next(Drones.Count)];
             if (value < 90)
@@ -245,7 +251,7 @@ namespace Game.Exploration
             if (value < 100)
                 return BigShips[random.Next(BigShips.Count)];
 
-            return Flagships[random.Next(Flagships.Count)];
+            return SubFlagships[random.Next(SubFlagships.Count)];
         }
 
         private bool IsValidFaction(ShipBuild build)
@@ -307,10 +313,21 @@ namespace Game.Exploration
 
             return true;
         }
+//        private static bool IsFlagship(ShipBuild build)
+//        {
+//            if (build.Ship.SizeClass != SizeClass.Titan)
+//                return false;
 
-        private static bool IsFlagship(ShipBuild build)
+//            var category = build.Ship.ShipCategory;
+//            if (category == ShipCategory.Starbase || category == ShipCategory.Hidden)
+//                return false;
+
+//            return true;
+//        }
+
+        private static bool IsSubFlagship(ShipBuild build)
         {
-            if (build.Ship.SizeClass != SizeClass.Titan)
+            if (build.Ship.SizeClass != SizeClass.subTitan)
                 return false;
 
             var category = build.Ship.ShipCategory;
@@ -332,15 +349,15 @@ namespace Game.Exploration
             }
         }
 
-        private List<int> Flagships
+        private List<int> SubFlagships
         {
             get
             {
                 if (_capitalShips == null)
-                    _capitalShips = new List<int>(_database.ShipBuildList.Available().Where(IsFlagship).Where(IsAvailable).
+                    _capitalShips = new List<int>(_database.ShipBuildList.Available().Where(IsSubFlagship).Where(IsAvailable).
                         Where(IsValidFaction).Where(IsValidClass).Select(build => build.Id.Value));
 
-                if (_capitalShips.Count == 0) _capitalShips.AddRange(_database.ShipBuildList.Where(IsFlagship).Select(build => build.Id.Value));
+                if (_capitalShips.Count == 0) _capitalShips.AddRange(_database.ShipBuildList.Where(IsSubFlagship).Select(build => build.Id.Value));
                 return _capitalShips;
             }
         }
@@ -392,6 +409,7 @@ namespace Game.Exploration
         Minerals,
         MineralsRare,
         Hive,
+        // TODO: XmasBox,
     }
 
     public struct ObjectiveInfo

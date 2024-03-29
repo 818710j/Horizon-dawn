@@ -1,10 +1,10 @@
 {
   "ItemType": 6,
   "Id": 6,
-  "ShipCategory": 2,
+  "ShipCategory": 7,
   "Name": "$f5_Flagship",
   "Faction": 5,
-  "SizeClass": 4,
+  "SizeClass": 5,
   "IconImage": "flagship5",
   "IconScale": 1.4,
   "ModelImage": "flagship5",

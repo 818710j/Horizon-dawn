@@ -54,7 +54,7 @@ namespace GameServices.Player
             set
             {
                 Assert.IsNotNull(value);
-                Assert.IsTrue(value.Model.SizeClass == SizeClass.Frigate);
+                Assert.IsTrue(value.Model.SizeClass == SizeClass.Frigate || value.Model.SizeClass == SizeClass.Destroyer);
                 Assert.IsTrue(_ships.Contains(value));
                 _explorationShip = value;
                 DataChanged = true;
@@ -115,23 +115,6 @@ namespace GameServices.Player
                     ship.SecondSatellite.Components.Assign(components);
                 }
             }
-            
-            foreach (var component in _strippedComponents.FromComponentsData(_database))
-            {
-                // Locked components are not stripped
-                if (component.Locked) continue;
-                _inventory.Components.Add(component.Info,1);
-            }
-            
-            foreach (var data in _strippedSatellites)
-            {
-                var satellite = _database.GetSatellite(new ItemId<Satellite>(data.Key));
-                if (satellite == null) continue;
-                _inventory.Satellites.Add(satellite, data.Value);
-            }
-            
-            _strippedComponents.Clear();
-            _strippedSatellites.Clear();
 
             _activeShips.CheckIfValid(_playerSkills, true);
         }
@@ -174,24 +157,15 @@ namespace GameServices.Player
             var ships = new List<IShip>();
             foreach (var item in _session.Fleet.Ships)
             {
-                bool added = false;
                 try
                 {
-                    var ship = ShipExtensions.FromShipData(_database, item, _strippedComponents);
-                    added = ship != null;
-                    ships.Add(ship);
+                    ships.Add(ShipExtensions.FromShipData(_database, item));
                 }
                 catch (System.Exception e)
                 {
-                    OptimizedDebug.LogException(e);
+                    UnityEngine.Debug.LogException(e);
                     ships.Add(null);
-                    OptimizedDebug.Log("Unknown ship: " + item.Id);
-                }
-
-                if (!added)
-                {
-                    _strippedSatellites.Increment(item.Satellite1.Id);
-                    _strippedSatellites.Increment(item.Satellite2.Id);
+                    UnityEngine.Debug.Log("Unknown ship: " + item.Id);
                 }
             }
 
@@ -206,20 +180,20 @@ namespace GameServices.Player
             _activeShips.Clear();
             foreach (var item in _session.Fleet.Hangar)
             {
-                OptimizedDebug.Log("group:" + item.Index + " ship:" + item.ShipId);
+                UnityEngine.Debug.Log("group:" + item.Index + " ship:" + item.ShipId);
                 _activeShips[item.Index] = ships[item.ShipId];
             }
 
             _explorationShip = _session.Fleet.ExplorationShipId >= 0 ? ships[_session.Fleet.ExplorationShipId] : null;
 
-            OptimizedDebug.Log("PlayerFleet.Load: " + _ships.Count + " ships");
+            UnityEngine.Debug.Log("PlayerFleet.Load: " + _ships.Count + " ships");
 
             DataChanged = false;
         }
 
         private void SaveShips()
         {
-            OptimizedDebug.Log("PlayerFleet.SaveShips - " + _ships.Count);
+            UnityEngine.Debug.Log("PlayerFleet.SaveShips - " + _ships.Count);
 
             _session.Fleet.Ships.Clear();
 
@@ -274,6 +248,12 @@ namespace GameServices.Player
                 ActiveShipGroup.Add(ship);
             }
 
+            if (_session.Purchases.SupporterPack)
+            {
+                _ships.Add(new CommonShip(_database.GetShipBuild(LegacyShipBuildNames.GetId("fns2"))));
+                ActiveShipGroup.Add(_ships.Last());
+            }
+
             _explorationShip = _ships.FirstOrDefault(ship => ship.Model.SizeClass == SizeClass.Frigate);
 
             foreach (var ship in _ships)
@@ -283,7 +263,7 @@ namespace GameServices.Player
 
         private void OnSessionAboutToSave()
         {
-            OptimizedDebug.Log("PlayerFleet.OnSessionAboutToSave");
+            UnityEngine.Debug.Log("PlayerFleet.OnSessionAboutToSave");
 
             if (DataChanged)
                 SaveShips();
@@ -293,9 +273,9 @@ namespace GameServices.Player
         {
             _ships.Clear();
             _activeShips.Clear();
-            _strippedComponents.Clear();
-            _strippedSatellites.Clear();
         }
+
+        public bool RemoveShip(IShip ship) { return _ships.Remove(ship); }
 
         private bool DataChanged
         {
@@ -321,8 +301,6 @@ namespace GameServices.Player
         private readonly ShipSquad _activeShips = new ShipSquad();
         private readonly ObservableCollection<IShip> _ships = new ObservableCollection<IShip>();
 
-        private readonly List<ShipComponentsData.Component> _strippedComponents = new List<ShipComponentsData.Component>();
-        private readonly Dictionary<int, int> _strippedSatellites = new Dictionary<int, int>();
         private readonly ISessionData _session;
         private readonly IDebugManager _debugManager;
         private readonly SessionAboutToSaveSignal _sessionAboutToSaveSignal;

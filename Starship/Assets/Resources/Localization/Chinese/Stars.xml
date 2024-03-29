@@ -16,12 +16,12 @@
     <string name="NotExplored">未探索</string>
     <string name="ObjectStarBase">太空要塞</string>
     <string name="ObjectSurvival">生存</string>
-    <string name="ObjectBoss">旗舰</string>
+    <string name="ObjectBoss">发现远星歼击舰!</string>
     <string name="ObjectWormhole">虫洞</string>
     <string name="ObjectMultiplayer">多人游戏</string>
     <string name="ObjectArena">竞技场</string>
     <string name="ObjectChallenge">挑战</string>
-    <string name="ObjectBlackMarket">黑市</string>
+    <string name="ObjectBlackMarket">黑心市场</string>
     <string name="ObjectRuins">废弃的太空站</string>
     <string name="ObjectMilitary">军事基地</string>
     <string name="ObjectEvent">求救信标</string>

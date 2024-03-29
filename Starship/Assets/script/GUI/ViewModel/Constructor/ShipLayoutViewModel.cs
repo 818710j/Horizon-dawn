@@ -23,6 +23,9 @@ namespace ViewModel
 		public BlockViewModel OuterBlock;
 		public BlockViewModel IoBlock;
 		public BlockViewModel EngineBlock;
+		public BlockViewModel CoreBlock;
+		public BlockViewModel Core2Block;
+		public BlockViewModel StructureBlock;
 		public RectTransform AllowedBlock;
 		public RectTransform DeniedBlock;
 		public RectTransform LockIcon;
@@ -193,6 +196,9 @@ namespace ViewModel
 			OuterBlock.gameObject.SetActive(false);
 			IoBlock.gameObject.SetActive(false);
 			EngineBlock.gameObject.SetActive(false);
+			CoreBlock.gameObject.SetActive(false);
+			Core2Block.gameObject.SetActive(false);
+			StructureBlock.gameObject.SetActive(false);
 			AllowedBlock.gameObject.SetActive(false);
 			DeniedBlock.gameObject.SetActive(false);
 			ComponentIcon.gameObject.SetActive(false);
@@ -353,6 +359,12 @@ namespace ViewModel
 				return item;
 			case CellType.Engine:
 				return GameObject.Instantiate<BlockViewModel>(EngineBlock);
+			case CellType.CoreBlock:
+				return GameObject.Instantiate<BlockViewModel>(CoreBlock);
+			case CellType.Core2Block:
+				return GameObject.Instantiate<BlockViewModel>(Core2Block);
+			case CellType.StructureBlock:
+				return GameObject.Instantiate<BlockViewModel>(StructureBlock);
 			}
 
 			return null;
@@ -375,9 +387,12 @@ namespace ViewModel
 				if (child == WeaponBlock.transform ||
 				    child == InnerBlock.transform ||
 				    child == OuterBlock.transform ||
-				    child == EngineBlock.transform ||
 				    child == IoBlock.transform ||
-				    child == AllowedBlock.transform ||
+				    child == EngineBlock.transform ||
+				    child == CoreBlock.transform ||
+				    child == Core2Block.transform ||
+					child == StructureBlock.transform ||
+					child == AllowedBlock.transform ||
 				    child == DeniedBlock.transform ||
 				    child == ComponentIcon.transform ||
 				    child == LockIcon.transform ||

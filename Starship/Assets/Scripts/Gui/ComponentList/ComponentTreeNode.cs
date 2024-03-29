@@ -4,7 +4,6 @@ using Constructor;
 using GameDatabase.DataModel;
 using GameDatabase.Enums;
 using GameDatabase.Model;
-using Utils;
 
 namespace Gui.ComponentList
 {
@@ -20,6 +19,8 @@ namespace Gui.ComponentList
             _droneNode = CreateNode("$GroupDrones", new SpriteId("textures/icons/icon_drone", SpriteId.Type.Default));
             _engineNode = CreateNode("$GroupEngines", new SpriteId("textures/icons/icon_engine", SpriteId.Type.Default));
             _specialNode = CreateNode("$GroupSpecial", new SpriteId("textures/icons/icon_gear", SpriteId.Type.Default));
+            _CoreNode = CreateNode("$GroupCore", new SpriteId("textures/gui/star_icon", SpriteId.Type.Default));
+            _StructureNode = CreateNode("$GroupStructure", new SpriteId("textures/gui/star_icon", SpriteId.Type.Default));
         }
 
         public void AddNode(IComponentTreeNode node)
@@ -36,6 +37,8 @@ namespace Gui.ComponentList
         public IComponentTreeNode Engine { get { return _engineNode; } }
         public IComponentTreeNode Energy { get { return _energyNode; } }
         public IComponentTreeNode Special { get { return _specialNode; } }
+        public IComponentTreeNode Core { get { return _CoreNode; } }
+        public IComponentTreeNode Structure { get { return _StructureNode; } }
 
         public string Name { get { return "$GroupAll"; } }
         public SpriteId Icon { get { return new SpriteId("textures/icons/icon_gear", SpriteId.Type.Default); } }
@@ -66,6 +69,13 @@ namespace Gui.ComponentList
                 default:
                     _specialNode.Add(componentInfo);
                     break;
+                case ComponentCategory.Core:
+                    _CoreNode.Add(componentInfo);
+                    break;
+                case ComponentCategory.Structure:
+                    _CoreNode.Add(componentInfo);
+                    break;
+
             }
 
             _count = -1;
@@ -107,6 +117,8 @@ namespace Gui.ComponentList
                 yield return _droneNode;
                 yield return _engineNode;
                 yield return _specialNode;
+                yield return _CoreNode;
+                yield return _StructureNode;
             }
         }
 
@@ -122,6 +134,8 @@ namespace Gui.ComponentList
         private readonly IComponentTreeNode _droneNode;
         private readonly IComponentTreeNode _engineNode;
         private readonly IComponentTreeNode _specialNode;
+        private readonly IComponentTreeNode _CoreNode;
+        private readonly IComponentTreeNode _StructureNode;
         private readonly IComponentQuantityProvider _quantityProvider;
         private readonly List<IComponentTreeNode> _extraNodes = new List<IComponentTreeNode>();
     }
@@ -131,24 +145,12 @@ namespace Gui.ComponentList
         public WeaponNode(IComponentTreeNode parent)
         {
             _parent = parent;
-            _weaponTypes = new List<IComponentTreeNode>
-            {
-                CreateNode("$GroupWeaponC", new SpriteId("textures/weapongroup/icon_weapon_c", SpriteId.Type.Default)),
-                CreateNode("$GroupWeaponL", new SpriteId("textures/weapongroup/icon_weapon_l", SpriteId.Type.Default)),
-                CreateNode("$GroupWeaponM", new SpriteId("textures/weapongroup/icon_weapon_m", SpriteId.Type.Default)),
-                CreateNode("$GroupWeaponT", new SpriteId("textures/weapongroup/icon_weapon_t", SpriteId.Type.Default)),
-                CreateNode("$GroupWeaponS", new SpriteId("textures/weapongroup/icon_weapon_s", SpriteId.Type.Default)),
-                CreateNode("$GroupWeaponAny", new SpriteId("textures/weapongroup/icon_weapon_any", SpriteId.Type.Default))
-            };
-            _indices = new Dictionary<char, int>
-            {
-                { (char) WeaponSlotType.Cannon, 0 },
-                { (char) WeaponSlotType.Laser, 1 },
-                { (char) WeaponSlotType.Missile, 2 },
-                { (char) WeaponSlotType.Torpedo, 3 },
-                { (char) WeaponSlotType.Special, 4 },
-                { (char) WeaponSlotType.Default, 5 },
-            };
+            _projectileNode = CreateNode("$GroupWeaponC", new SpriteId("textures/weapongroup/icon_weapon_c", SpriteId.Type.Default));
+            _beamNode = CreateNode("$GroupWeaponL", new SpriteId("textures/weapongroup/icon_weapon_l", SpriteId.Type.Default));
+            _missileNode = CreateNode("$GroupWeaponM", new SpriteId("textures/weapongroup/icon_weapon_m", SpriteId.Type.Default));
+            _torpedoNode = CreateNode("$GroupWeaponT", new SpriteId("textures/weapongroup/icon_weapon_t", SpriteId.Type.Default));
+            _specialNode = CreateNode("$GroupWeaponS", new SpriteId("textures/weapongroup/icon_weapon_s", SpriteId.Type.Default));
+            _universalNode = CreateNode("$GroupWeaponAny", new SpriteId("textures/weapongroup/icon_weapon_x", SpriteId.Type.Default));
         }
 
         public IComponentTreeNode Parent { get { return _parent; } }
@@ -163,22 +165,30 @@ namespace Gui.ComponentList
             var weapon = componentInfo.Data.Weapon;
             if (weapon == null)
             {
-                OptimizedDebug.LogError("WeaponNode: component is not weapon - " + componentInfo.Data.Id);
+                UnityEngine.Debug.LogError("WeaponNode: component is not weapon - " + componentInfo.Data.Id);
                 return;
             }
 
-            var weaponTypeChar = componentInfo.Data.WeaponSlotType;
-            if (_indices.TryGetValue(weaponTypeChar, out var index))
+            switch (componentInfo.Data.WeaponSlotType)
             {
-                _weaponTypes[index].Add(componentInfo);
-            }
-            else
-            {
-                index = _weaponTypes.Count;
-                var node = CreateNode($"$GroupWeapon{weaponTypeChar}",
-                    new SpriteId($"icon_weapon_{weaponTypeChar}.png", SpriteId.Type.Default));
-                _weaponTypes.Add(node);
-                _indices[weaponTypeChar] = index;
+                case WeaponSlotType.Cannon:
+                    _projectileNode.Add(componentInfo);
+                    break;
+                case WeaponSlotType.Laser:
+                    _beamNode.Add(componentInfo);
+                    break;
+                case WeaponSlotType.Missile:
+                    _missileNode.Add(componentInfo);
+                    break;
+                case WeaponSlotType.Torpedo:
+                    _torpedoNode.Add(componentInfo);
+                    break;
+                case WeaponSlotType.Special:
+                    _specialNode.Add(componentInfo);
+                    break;
+                default:
+                    _universalNode.Add(componentInfo);
+                    break;
             }
         }
 
@@ -201,10 +211,12 @@ namespace Gui.ComponentList
         {
             get
             {
-                foreach (var node in _weaponTypes)
-                {
-                    yield return node;
-                }
+                yield return _projectileNode;
+                yield return _beamNode;
+                yield return _missileNode;
+                yield return _torpedoNode;
+                yield return _specialNode;
+                yield return _universalNode;
             }
         }
 
@@ -215,14 +227,12 @@ namespace Gui.ComponentList
 
         private int _count = -1;
         private readonly IComponentTreeNode _parent;
-        private readonly IList<IComponentTreeNode> _weaponTypes;
-        private readonly IDictionary<char, int> _indices;
-        // private readonly IComponentTreeNode _projectileNode;
-        // private readonly IComponentTreeNode _beamNode;
-        // private readonly IComponentTreeNode _missileNode;
-        // private readonly IComponentTreeNode _torpedoNode;
-        // private readonly IComponentTreeNode _specialNode;
-        // private readonly IComponentTreeNode _universalNode;
+        private readonly IComponentTreeNode _projectileNode;
+        private readonly IComponentTreeNode _beamNode;
+        private readonly IComponentTreeNode _missileNode;
+        private readonly IComponentTreeNode _torpedoNode;
+        private readonly IComponentTreeNode _specialNode;
+        private readonly IComponentTreeNode _universalNode;
     }
 
     public class ComponentNode : IComponentTreeNode
@@ -244,7 +254,7 @@ namespace Gui.ComponentList
         {
             if (componentInfo.Data.Id != _component.Id)
             {
-                OptimizedDebug.LogError("ComponentNode: wrong component id - " + componentInfo.Data.Id);
+                UnityEngine.Debug.LogError("ComponentNode: wrong component id - " + componentInfo.Data.Id);
                 return;
             }
 

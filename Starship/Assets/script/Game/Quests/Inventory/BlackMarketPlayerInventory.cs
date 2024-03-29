@@ -10,10 +10,11 @@ namespace GameModel
 	{
 		public class BlackMarketPlayerInventory : IInventory
 		{
-		    public BlackMarketPlayerInventory(PlayerResources playerResources, ItemTypeFactory itemTypeFactory)
+		    public BlackMarketPlayerInventory(PlayerResources playerResources, ItemTypeFactory itemTypeFactory, bool normal = false)
 		    {
 		        _playerResources = playerResources;
 		        _itemTypeFactory = itemTypeFactory;
+				_normal= normal;
 		    }
 
 			public void Refresh() {}
@@ -22,7 +23,7 @@ namespace GameModel
 			{
 				get
 				{
-				    if (CurrencyExtensions.PremiumCurrencyAllowed)
+				    if (CurrencyExtensions.PremiumCurrencySell&&!_normal)
 				    {
 				        var itemType = _itemTypeFactory.CreateCurrencyItem(Currency.Stars);
                         if (_playerResources.Stars > 0)
@@ -35,6 +36,8 @@ namespace GameModel
 
 		    private readonly PlayerResources _playerResources;
 		    private readonly ItemTypeFactory _itemTypeFactory;
+
+			private bool _normal;
 
 		}
 	}

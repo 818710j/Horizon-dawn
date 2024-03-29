@@ -28,39 +28,9 @@ namespace Model
 				var random = new Random(seed);
 				var count = Maths.Distance.FleetSize(distance, random) - 1;
 				var bossClass = distance > 50 ? DifficultyClass.Class2 : DifficultyClass.Class1;
-
-				// First try to get flagship of requested faction
-				var boss = database.ShipBuildList.Available().Flagships().OfFaction(faction, distance)
-					.OfClass(DifficultyClass.Class1, bossClass).RandomElement(random);
-				// Then flagship of any faction
-				boss = boss ?? database.ShipBuildList.Available().Flagships().OfClass(DifficultyClass.Class1, bossClass).RandomElement(random);
-				// Then just a random flagship
-				boss = boss ?? database.ShipBuildList.Available().Flagships().RandomElement(random);
 				
-				// Try starbases next
-				boss = boss ?? database.ShipBuildList.Available().OfFaction(faction).OfCategory(ShipCategory.Starbase)
-					.RandomElement(random);
-				boss = boss ?? database.ShipBuildList.Available().OfCategory(ShipCategory.Starbase)
-					.RandomElement(random);
-				
-				// Then try all ship sizes until one of them work
-				if (boss == null)
-				{
-					foreach (SizeClass sizeClass in Enum.GetValues(typeof(SizeClass)))
-					{
-						boss = database.ShipBuildList.Available().OfFaction(faction, distance)
-							.OfSize(sizeClass, sizeClass).NormalShips().RandomElement(random);
-						boss = boss ?? database.ShipBuildList.Available().OfSize(sizeClass, sizeClass).NormalShips()
-							.RandomElement(random);
-						if (boss != null) break;
-					}
-				}
-
-				// And then error is thrown
-				if (boss == null)
-				{
-					throw new Exception("No boss found");
-				}
+				var boss = database.ShipBuildList.Available().SubFlagship().OfFaction(faction,distance).OfClass(DifficultyClass.Class1, bossClass).RandomElement(random) ??
+						   database.ShipBuildList.Available().SubFlagship().OfClass(DifficultyClass.Class1, bossClass).RandomElement(random);
 
 				var ships = database.ShipBuildList.Available().NormalShips().OfFaction(faction,distance).LimitLevelAndClass(distance).RandomElements(count, random).OrderBy(item => random.Next());
 				return new CommonFleet(database, ships.Prepend(boss), distance, random.Next());
@@ -70,7 +40,7 @@ namespace Model
 		    {
 		        var random = new Random(seed);
 		        var bossClass = distance < 50 ? DifficultyClass.Default : distance < 150 ? DifficultyClass.Class1 : DifficultyClass.Class2;
-		        var boss = database.ShipBuildList.Available().Flagships().OfFaction(faction, distance).OfClass(bossClass, bossClass).RandomElements(1, random);
+		        var boss = database.ShipBuildList.Available().FlagshipsandsubFlagships().OfFaction(faction, distance).OfClass(bossClass, bossClass).RandomElements(1, random);
 		        return new CommonFleet(database, boss, distance, random.Next());
 		    }
 
@@ -93,11 +63,9 @@ namespace Model
 				var numberOfShips = (int)Math.Round(4*region.BaseDefensePower);
 				var numberOfBosses = (int)Math.Floor(region.BaseDefensePower);
 				var bossClass = numberOfBosses >= 2 ? DifficultyClass.Class2 : DifficultyClass.Class1;
-				var bosses = database.ShipBuildList.Available().Where(item => item.Ship.ShipCategory != ShipCategory.Starbase && item.Ship.SizeClass == SizeClass.Titan).
+				var bosses = database.ShipBuildList.Available().Where(item => item.Ship.ShipCategory != ShipCategory.Starbase && (item.Ship.SizeClass == SizeClass.Titan || item.Ship.SizeClass == SizeClass.subTitan)).
                     OfFactionExplicit(region.Faction).OfClass(DifficultyClass.Class1, bossClass).RandomElements(numberOfBosses, random);
-				var allShips = database.ShipBuildList.Available().NormalShips().OfFactionExplicit(region.Faction)
-					.LimitLevelAndClass(distance);
-                var ships = allShips.RandomElements(numberOfShips, random);
+                var ships = database.ShipBuildList.Available().NormalShips().OfFactionExplicit(region.Faction).LimitLevelAndClass(distance).RandomElements(numberOfShips, random);
 
                 var starbaseClass = region.MilitaryPower < 40 ? DifficultyClass.Default : DifficultyClass.Class1;
 			    var starbase = database.ShipBuildList.Available().Where(item => item.Ship.ShipCategory == ShipCategory.Starbase && item.BuildFaction == region.Faction).BestAvailableClass(starbaseClass).FirstOrDefault();

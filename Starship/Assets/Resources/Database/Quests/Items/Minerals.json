@@ -4,5 +4,8 @@
   "Name": "$Commodity_Minerals",
   "Icon": "stone",
   "Color": "#C0C0C0",
-  "Price": 10
+  "Price": 10,
+  "InMarket": true,
+  "MinAmount": 100,
+  "MaxAmount": 10000
 }

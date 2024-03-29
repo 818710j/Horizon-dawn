@@ -45,6 +45,9 @@ namespace GameModel.Skills
         RequierementBeatAllEnemies = 24,
 
         ExceedTheLimits = 25,
+        RequierementMaxLevel2 = 26,
+        HangarSlot6 = 27,
+        RequierementMaxLevel3 = 28,
     }
 
  //   public enum SkillClass
@@ -63,6 +66,8 @@ namespace GameModel.Skills
                 case SkillType.Undefined:
                 case SkillType.RequierementBeatAllEnemies:
                 case SkillType.RequierementMaxLevel:
+                case SkillType.RequierementMaxLevel2:
+                case SkillType.RequierementMaxLevel3:
                     return false;
                 default:
                     return true;
@@ -107,7 +112,9 @@ namespace GameModel.Skills
 			case SkillType.ShipExperience:
 				return localization.GetString("$ExperienceBooster");
 			case SkillType.RequierementMaxLevel:
-			case SkillType.RequierementBeatAllEnemies:
+			case SkillType.RequierementMaxLevel2:
+            case SkillType.RequierementMaxLevel3:
+            case SkillType.RequierementBeatAllEnemies:
 				return localization.GetString("$ConditionNode");
             case SkillType.HangarSlot1:
                 return localization.GetString("$HangarSlotNode");
@@ -115,6 +122,7 @@ namespace GameModel.Skills
             case SkillType.HangarSlot3:
             case SkillType.HangarSlot4:
             case SkillType.HangarSlot5:
+            case SkillType.HangarSlot6:
                 return localization.GetString("$UpgradeHangarSlotNode");
             case SkillType.PlanetaryScanner:
                 return localization.GetString("$PlanetaryScannerNode");
@@ -162,7 +170,7 @@ namespace GameModel.Skills
 			case SkillType.ShipExperience:
 				return localization.GetString("$ExperienceBoosterDesc", 10*level);
 			case SkillType.RequierementMaxLevel:
-				return localization.GetString("$ShipLevelsRequirement", level, Maths.Experience.MaxPlayerRank);
+				return localization.GetString("$ShipLevelsRequirement", level, Maths.Experience.MaxPlayerRank1);
             case SkillType.HangarSlot1:
                 return localization.GetString("$NewHangarSlotDesc");
             case SkillType.HangarSlot2:
@@ -173,6 +181,8 @@ namespace GameModel.Skills
                 return localization.GetString("$UpgradeHangarSlotDesc3");
             case SkillType.HangarSlot5:
                 return localization.GetString("$UpgradeHangarSlotDesc4");
+            case SkillType.HangarSlot6:
+                return localization.GetString("$UpgradeHangarSlotDesc5");
             case SkillType.PlanetaryScanner:
                 return localization.GetString("$PlanetaryScannerDesc", 10*level);
             case SkillType.HeatDefense:
@@ -199,6 +209,10 @@ namespace GameModel.Skills
 			    return localization.GetString("$BeatAllEnemiesRequirement");
 			case SkillType.ExceedTheLimits:
 			    return localization.GetString("$ExceedTheLimitsDesc");
+			case SkillType.RequierementMaxLevel2:
+				return localization.GetString("$ShipLevelsRequirement", level, Maths.Experience.MaxPlayerRank);
+            case SkillType.RequierementMaxLevel3:
+                 return localization.GetString("$ShipLevelsRequirement", level, Maths.Experience.MaxPlayerRank2);
             }
 
             return string.Empty;

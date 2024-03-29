@@ -22,6 +22,14 @@ namespace GameDatabase.Extensions
         {
             return ships.Where(item => item.Ship.ShipCategory == ShipCategory.Flagship);
         }
+        public static IEnumerable<ShipBuild> SubFlagship(this IEnumerable<ShipBuild> ships)
+        {
+            return ships.Where(item => item.Ship.ShipCategory == ShipCategory.SubFlagship);
+        }
+        public static IEnumerable<ShipBuild> FlagshipsandsubFlagships(this IEnumerable<ShipBuild> ships)
+        {
+            return ships.Where(item => item.Ship.ShipCategory == ShipCategory.Flagship || item.Ship.ShipCategory == ShipCategory.SubFlagship);
+        }
 
         public static IEnumerable<ShipBuild> Titans(this IEnumerable<ShipBuild> ships)
         {
@@ -98,10 +106,6 @@ namespace GameDatabase.Extensions
             SizeClass maxSize)
         {
             return ships.Where(item => item.Ship.SizeClass <= maxSize && item.Ship.SizeClass >= minSize);
-        }
-        public static IEnumerable<ShipBuild> OfCategory(this IEnumerable<ShipBuild> ships, ShipCategory category)
-        {
-            return ships.Where(item => item.Ship.ShipCategory == category);
         }
 
         public static IEnumerable<ShipBuild> LessOrEqualClass(this IEnumerable<ShipBuild> ships,

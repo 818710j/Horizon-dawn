@@ -16,6 +16,7 @@ namespace GameDatabase
 {
 	public partial interface IDatabase
 	{
+        DatabaseContent Content { get; }
 		DatabaseSettings DatabaseSettings { get; }
 		ExplorationSettings ExplorationSettings { get; }
 		GalaxySettings GalaxySettings { get; }
@@ -74,6 +75,7 @@ namespace GameDatabase
 
     public partial class Database : IDatabase
     {
+        public DatabaseContent Content { get; private set; }
 		public DatabaseSettings DatabaseSettings { get; private set; }
 		public ExplorationSettings ExplorationSettings { get; private set; }
 		public GalaxySettings GalaxySettings { get; private set; }
@@ -154,6 +156,7 @@ namespace GameDatabase
 			_visualEffectMap.Clear();
 			_weaponMap.Clear();
 
+            Content = null;
 			DatabaseSettings = null;
 			ExplorationSettings = null;
 			GalaxySettings = null;

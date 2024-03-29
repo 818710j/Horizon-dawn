@@ -1,6 +1,5 @@
 using UnityEngine;
 using GameServices.Player;
-using Utils;
 using Zenject;
 
 namespace ViewModel
@@ -24,7 +23,7 @@ namespace ViewModel
 
 		public void StartButtonClicked()
 		{
-			OptimizedDebug.Log("BossPanelViewModel.StartButtonClicked");
+			UnityEngine.Debug.Log("BossPanelViewModel.StartButtonClicked");
             _motherShip.CurrentStar.Boss.Attack();
         }
 	}

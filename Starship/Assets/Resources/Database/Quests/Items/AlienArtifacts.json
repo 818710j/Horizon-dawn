@@ -4,5 +4,8 @@
   "Name": "$Commodity_Artifacts",
   "Icon": "eye",
   "Color": "#D892A2",
-  "Price": 200
+  "Price": 200,
+  "InMarket": true,
+  "MinAmount": 1,
+  "MaxAmount": 5
 }

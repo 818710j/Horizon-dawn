@@ -42,5 +42,6 @@ namespace GameDatabase.Enums
 		BlackHole,
 		ClusterMissile,
 		HomingCarrier,
+		EnergyWave,
 	}
 }

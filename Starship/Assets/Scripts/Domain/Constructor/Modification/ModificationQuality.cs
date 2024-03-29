@@ -11,11 +11,12 @@ namespace Constructor.Modification
     //    P1 = 3,
     //    P2 = 4,
     //    P3 = 5,
+    //    P4 = 6,
     //}
 
     public static class QualityExtensions
     {
-        public static float PowerMultiplier(this ModificationQuality quality, float n3, float n2, float n1, float p1, float p2, float p3)
+        public static float PowerMultiplier(this ModificationQuality quality, float n3, float n2, float n1, float p1, float p2, float p3, float p4)
         {
             switch (quality)
             {
@@ -31,6 +32,8 @@ namespace Constructor.Modification
                     return p2;
                 case ModificationQuality.P3:
                     return p3;
+                case ModificationQuality.P4:
+                    return p4;
                 default:
                     throw new InvalidEnumArgumentException("quality", (int)quality, typeof(ModificationQuality));
             }

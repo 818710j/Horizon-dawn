@@ -4,5 +4,8 @@
   "Name": "$Commodity_GemStones",
   "Icon": "stone",
   "Color": "#FFDCFF",
-  "Price": 150
+  "Price": 150,
+  "InMarket": true,
+  "MinAmount": 10,
+  "MaxAmount": 200
 }

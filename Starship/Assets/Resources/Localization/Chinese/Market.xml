@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="StarCurrency">星币</string>
+    <string name="StarCurrency">黎明点</string>
     <string name="TokenCurrency">代币</string>
     <string name="Snowflakes">雪花</string>
     <string name="NoItemsInCategory">这个类别中没有物品</string>

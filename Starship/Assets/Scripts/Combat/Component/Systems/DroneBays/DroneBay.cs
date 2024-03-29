@@ -13,8 +13,8 @@ namespace Combat.Component.Systems.DroneBays
 {
     public class DroneBay : SystemBase, IDroneBay
     {
-        public DroneBay(IWeaponPlatform platform, IShip mothership, IDroneBayData data, ShipFactory shipFactory, ShipSettings shipSettings, IDroneReplicator replicator)
-            : base(data.KeyBinding, data.DroneBay.ControlButtonIcon)
+        public DroneBay(IWeaponPlatform platform, IShip mothership, IDroneBayData data, ShipFactory shipFactory, ShipSettings shipSettings, IDroneReplicator replicator,IShip ship)
+            : base(data.KeyBinding, data.DroneBay.ControlButtonIcon,ship)
         {
             _shipFactory = shipFactory;
             _platform = platform;
@@ -33,6 +33,7 @@ namespace Combat.Component.Systems.DroneBays
             var builder = new ShipBuilder(data.Drone);
             builder.Bonuses.ArmorPointsMultiplier = StatMultiplier.FromValue(stats.DefenseMultiplier);
             builder.Bonuses.ShieldPointsMultiplier = StatMultiplier.FromValue(stats.DefenseMultiplier);
+            builder.Bonuses.StructurePointsMultiplier = StatMultiplier.FromValue(stats.DefenseMultiplier);
             builder.Bonuses.DamageMultiplier = StatMultiplier.FromValue(stats.DamageMultiplier);
             builder.Bonuses.VelocityMultiplier = StatMultiplier.FromValue(stats.SpeedMultiplier + (random.NextFloat() - 0.5f) * 0.4f);
             _shipSpec = builder.Build(shipSettings);

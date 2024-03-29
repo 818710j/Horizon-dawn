@@ -15,6 +15,7 @@ namespace Combat.Component.Stats
             _heatDamageColor = new Color(1, 1, 0, opacity);
             _energyDamageColor = new Color(0, 1, 1, opacity);
             _directDamageColor = new Color(1, 0.5f, 1, opacity);
+            _structureDamageColor = new Color(1f, 0.4f, 0.5f, opacity);
             _shieldDamageColor = new Color(0.5f, 0.5f, 0.5f, opacity);
         }
 
@@ -49,6 +50,12 @@ namespace Combat.Component.Stats
                 _shieldChanged = true;
                 _shield += damage.ShieldDamage;
             }
+
+            if (damage.StructureDamage > 0)
+            {
+                _structureChanged = true;
+                _structure += damage.StructureDamage;
+            }
         }
 
         public void Dispose()
@@ -63,6 +70,8 @@ namespace Combat.Component.Stats
                 CreateDamageEffect(_direct, _directDamageColor);
             if (_shield > 1f)
                 CreateDamageEffect(_shield, _shieldDamageColor);
+            if (_structure > 1f)
+                CreateDamageEffect(_structure, _structureDamageColor);
         }
 
         public void Update(float elapsedTime)
@@ -97,12 +106,18 @@ namespace Combat.Component.Stats
                     CreateDamageEffect(_shield, _shieldDamageColor);
                     _shield = 0;
                 }
+                if (_structure > 1f && !_structureChanged)
+                {
+                    CreateDamageEffect(_structure, _structureDamageColor);
+                    _structure = 0;
+                }
             }
 
             _kineticChanged = false;
             _heatChanged = false;
             _energyChanged = false;
             _directChanged = false;
+            _structureChanged = false;
             _shieldChanged = false;
         }
 
@@ -116,11 +131,13 @@ namespace Combat.Component.Stats
         private float _energy;
         private float _direct;
         private float _shield;
+        private float _structure;
 
         private bool _kineticChanged;
         private bool _heatChanged;
         private bool _energyChanged;
         private bool _directChanged;
+        private bool _structureChanged;
         private bool _shieldChanged;
 
         private float _lastShowTime;
@@ -132,6 +149,7 @@ namespace Combat.Component.Stats
         private readonly Color _heatDamageColor;
         private readonly Color _energyDamageColor;
         private readonly Color _directDamageColor;
+        private readonly Color _structureDamageColor;
         private readonly Color _shieldDamageColor;
 
         private readonly EffectFactory _effectFactory;

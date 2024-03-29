@@ -11,7 +11,7 @@
   "AreaOfEffect": 8.0,
   "Damage": 50.0,
   "Range": 100.0,
-  "Velocity": 12.0,
+  "Velocity": 18.0,
   "HitPoints": 3,
   "EnergyCost": 20.0,
   "Color": "#C0FFC0",

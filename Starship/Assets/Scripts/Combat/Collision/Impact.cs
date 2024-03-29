@@ -1,5 +1,6 @@
 ﻿using System;
 using Combat.Component.Body;
+using Constructor.Modification;
 using GameDatabase.Enums;
 using UnityEngine;
 
@@ -57,6 +58,8 @@ namespace Combat.Collision
         public float EnergyDamage;
         public float HeatDamage;
         public float DirectDamage;
+
+        public float StructureDamage;
         public float Repair;
         public float ShieldDamage;
         public float EnergyDrain;
@@ -65,15 +68,58 @@ namespace Combat.Collision
 
         public float GetTotalDamage(Resistance resistance)
         {
-            var minResistance = Mathf.Min(Mathf.Min(resistance.Kinetic, resistance.Energy), resistance.Heat);
-            var damage =
+            //var minResistance = Mathf.Min(Mathf.Min(resistance.Kinetic, resistance.Energy), resistance.Heat);
+            var damage1 =
                 KineticDamage * (1f - resistance.Kinetic) +
                 EnergyDamage * (1f - resistance.Energy) +
-                HeatDamage * (1f - resistance.Heat) +
-                DirectDamage * (1f - 0.5f*resistance.MinResistance);
-            return damage;
+                HeatDamage * (1f - resistance.Heat);
+
+            var damage3 = DirectDamage * (1f - 0.5f * resistance.Structure);
+
+            var damage2 = StructureDamage * (1f - resistance.Structure);
+
+            var r_damage1 = damage1 + damage2 * 2 + damage3;
+            var r_damage2 = damage2 + (damage1 * 0.15f + damage3 * 0.35f) * (1f - resistance.Structure);
+            return r_damage1 + r_damage2;
+        }
+        public float GetArmorTotalDamage(Resistance resistance)
+        {
+            //var minResistance = Mathf.Min(Mathf.Min(resistance.Kinetic, resistance.Energy), resistance.Heat);
+            var damage1 =
+                KineticDamage * (1f - resistance.Kinetic) +
+                EnergyDamage * (1f - resistance.Energy) +
+                HeatDamage * (1f - resistance.Heat);
+
+            var damage3 = DirectDamage * (1f - 0.5f * resistance.Structure);
+
+            var damage2 = StructureDamage * (1f - resistance.Structure);
+
+            var r_damage = damage1 + damage2 * 2 + damage3;
+            Debug.Log("GetArmorTotalDamage:  Damage:  " + (damage1 + damage3) + "  -  StructureDamage:  " + StructureDamage);
+            return r_damage;
+        }
+        public float GetStructureTotalDamage(Resistance resistance, float ex, bool r)
+        {
+            //var minResistance = Mathf.Min(Mathf.Min(resistance.Kinetic, resistance.Energy), resistance.Heat);
+            var damage1 =
+                KineticDamage * (1f - resistance.Kinetic) +
+                EnergyDamage * (1f - resistance.Energy) +
+                HeatDamage * (1f - resistance.Heat);
+
+            var damage3 = DirectDamage * (1f - 0.5f * resistance.Structure);
+
+            var damage2 = StructureDamage * (1f - resistance.Structure);
+
+            var ex_damage = ex == 0 && !r ? (damage1 * 0.15f + damage3 * 0.35f) * (1f - resistance.Structure) : ex;
+            var r_damage = damage2 + ex_damage;
+            Debug.Log("GetStructureTotalDamage:  StructureDamage:  " + damage2 + "  -  ExDamage:  " + ex_damage + "  :  " + (ex == 0 && !r ? damage1 + "  -  " + damage3 : ex));
+            return r_damage;
         }
 
+        public float GetEnergyShieldDamage()
+        {
+            return KineticDamage + EnergyDamage + HeatDamage + DirectDamage + StructureDamage;
+        }
         public void AddDamage(DamageType type, float amount)
         {
             if (amount < 0)
@@ -87,6 +133,8 @@ namespace Combat.Collision
                 EnergyDamage += amount;
             else if (type == DamageType.Heat)
                 HeatDamage += amount;
+            else if (type == DamageType.Structure)
+                StructureDamage += amount;
             else
                 throw new System.ArgumentException("unknown damage type");
         }
@@ -118,7 +166,8 @@ namespace Combat.Collision
                 KineticDamage = this.KineticDamage * (1f - resistance.Kinetic),
                 EnergyDamage = this.EnergyDamage * (1f - resistance.Energy),
                 HeatDamage = this.HeatDamage * (1f - resistance.Heat),
-                DirectDamage = this.DirectDamage * (1f - 0.5f * resistance.MinResistance),
+                DirectDamage = this.DirectDamage * (1f - 0.5f * resistance.Structure),
+                StructureDamage=this.StructureDamage*(1f-resistance.Structure),
                 ShieldDamage = this.ShieldDamage,
                 EnergyDrain = this.EnergyDrain,
                 Impulse = this.Impulse,
@@ -129,7 +178,7 @@ namespace Combat.Collision
 
         public void ApplyShield(float power)
         {
-            var damage = KineticDamage + EnergyDamage + HeatDamage + DirectDamage;
+            var damage = KineticDamage + EnergyDamage + HeatDamage + DirectDamage+StructureDamage;
 
             if (damage <= 0 || power <= 0)
                 return;
@@ -145,13 +194,14 @@ namespace Combat.Collision
                 EnergyDamage -= power * EnergyDamage / damage;
                 HeatDamage -= power * HeatDamage / damage;
                 DirectDamage -= power * DirectDamage / damage;
+                StructureDamage -= power * StructureDamage / damage;
                 ShieldDamage += power;
             }
         }
 
-        public void RemoveDamage(float amount, Resistance resistance)
+        public void RemoveDamage(float amount)
         {
-            var total = GetTotalDamage(resistance);
+            var total = GetEnergyShieldDamage();
             if (total <= amount || total <= 0.000001f)
             {
                 RemoveDamage();
@@ -162,6 +212,7 @@ namespace Combat.Collision
             EnergyDamage -= amount * EnergyDamage / total;
             HeatDamage -= amount * HeatDamage / total;
             DirectDamage -= amount * DirectDamage / total;
+            StructureDamage -= amount * StructureDamage / total;
         }
 
         public void RemoveDamage()
@@ -170,8 +221,45 @@ namespace Combat.Collision
             EnergyDamage = 0;
             HeatDamage = 0;
             DirectDamage = 0;
+            StructureDamage = 0;
         }
 
+        public bool ApplyStructureShield(float power,float amount,Resistance resistance,out float energycost,out float extrastructuredamage)
+        {
+            var _r = false;
+            var damage1 =
+                KineticDamage * (1f - resistance.Kinetic) +
+                EnergyDamage * (1f - resistance.Energy) +
+                HeatDamage * (1f - resistance.Heat);
+
+            var damage3 = DirectDamage * (1f - 0.5f * resistance.Structure);
+
+            var damage2 = StructureDamage;
+
+            var e_damage = damage1 * 0.15f + damage3 * 0.35f;
+            var r_damage2 = damage2 + e_damage;
+
+
+
+            var damage = r_damage2 / power;
+            if(damage>amount)
+            {
+                StructureDamage -= amount * StructureDamage / damage;
+                energycost = amount;
+                extrastructuredamage = e_damage - amount * e_damage / damage;
+                _r = false;
+            }
+            else
+            {
+                StructureDamage = 0;
+                energycost = damage;
+                extrastructuredamage = 0;
+                _r = true;
+            }
+            Debug.Log("ApplyStructureShield:  energycost:  " + energycost + "  -  extrastructuredamage:  "+extrastructuredamage);
+
+            return _r;
+        }
         public void Append(Impact second)
         {
             KineticDamage += second.KineticDamage;

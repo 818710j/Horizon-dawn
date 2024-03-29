@@ -15,6 +15,7 @@ namespace GameDatabase.Enums
 		Destroyer = 1,
 		Cruiser = 2,
 		Battleship = 3,
-		Titan = 4,
+		subTitan = 4,
+		Titan = 5,
 	}
 }

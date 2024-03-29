@@ -19,7 +19,10 @@ namespace GameDatabase.Serializable
 		public float ArmorPoints;
 		public float ArmorRepairRate;
 		public float ArmorRepairCooldownModifier;
-		public float EnergyPoints;
+		public float StructurePoints;
+		public float StructureRepairRate;
+		public float StructureRepairCooldownModifier;
+        public float EnergyPoints;
 		public float EnergyRechargeRate;
 		public float EnergyRechargeCooldownModifier;
 		public float ShieldPoints;
@@ -31,6 +34,7 @@ namespace GameDatabase.Serializable
 		public float KineticResistance;
 		public float EnergyResistance;
 		public float ThermalResistance;
+		public float StructureResistance;
 		public float EnginePower;
 		public float TurnRate;
 		public bool Autopilot;

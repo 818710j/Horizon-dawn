@@ -34,18 +34,26 @@ namespace Combat.Factory
         [Inject] private readonly PrefabCache _prefabCache;
         [Inject] private readonly IResourceLocator _resourceLocator;
 
-        public Satellite CreateSatellite(IShip ship, IWeaponPlatformData data, float cooldown)
+        public IUnit CreateSatellite(IShip ship, IWeaponPlatformData data, float cooldown)
         {
             var satelliteData = data.Companion;
-            var custom = false;
 
-            var prefab = _prefabCache.LoadResourcePrefab("Combat/Satellites/" + satelliteData.Satellite.ModelImage.Id,true);
-            if (ReferenceEquals(prefab, null))
+            GameObjectHolder gameObject;
+
+            var prefab = _prefabCache.LoadResourcePrefab("Combat/Satellites/" + satelliteData.Satellite.ModelImage.Id);
+
+            if (prefab != null)
             {
-                prefab = _prefabCache.LoadResourcePrefab("Combat/Satellites/satellite1", true);
-                custom = true;
+                gameObject = new GameObjectHolder(prefab, _objectPool);
             }
-            var gameObject = new GameObjectHolder(prefab, _objectPool);
+            else
+            {
+                prefab = _prefabCache.LoadResourcePrefab("Combat/Satellites/Default");
+                gameObject = new GameObjectHolder(prefab, _objectPool);
+                var sprite = _resourceLocator.GetSprite(satelliteData.Satellite.ModelImage);
+                gameObject.GetComponent<SpriteRenderer>().sprite = sprite;
+            }
+
 
             var body = gameObject.GetComponent<IBodyComponent>();
             body.Initialize(null, ship.Body.WorldPosition(), ship.Body.WorldRotation(), satelliteData.Satellite.ModelScale, Vector2.zero, 0, satelliteData.Weight);
@@ -53,12 +61,6 @@ namespace Combat.Factory
             var view = gameObject.GetComponent<IView>();
             var collider = gameObject.GetComponent<ICollider>();
 
-            if (custom)
-            {
-                gameObject.GetComponent<SpriteRenderer>().sprite =
-                    _resourceLocator.GetSprite(satelliteData.Satellite.ModelImage);
-            }
-            
             var satellite = new Satellite(new UnitType(UnitClass.Drone, ship.Type.Side, ship), body, view, collider);
             satellite.AddResource(gameObject);
 
@@ -138,7 +140,7 @@ namespace Combat.Factory
             var gameObject = new GameObjectHolder(prefab, _objectPool);
 
             var body = gameObject.GetComponent<IBodyComponent>();
-            body.Initialize(ship.Body, Vector2.zero, 0, 2*radius/ship.Body.Scale, Vector2.zero, 0f, 0.1f);
+            body.Initialize(ship.Body, Vector2.zero, 0, 2*radius/ship.Body.Scale, Vector2.zero, 0f, 0.2f);
             var view = gameObject.GetComponent<IView>();
             var collider = gameObject.GetComponent<ICollider>();
             collider.MaxRange = radius;

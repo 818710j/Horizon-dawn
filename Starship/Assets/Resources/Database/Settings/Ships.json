@@ -9,5 +9,7 @@
   "EnergyRechargeCooldown": 1.0,
   "ShieldRechargeCooldown": 4.0,
   "MaxVelocity": 20.0,
-  "MaxTurnRate": 20.0
+  "MaxTurnRate": 20.0,
+  "BaseStructurePoints": 0.5,
+  "StructureRepairCooldown": 3.0
 }

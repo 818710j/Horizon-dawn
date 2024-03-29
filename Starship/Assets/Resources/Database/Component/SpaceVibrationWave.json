@@ -1,0 +1,25 @@
+{
+  "ItemType": 1,
+  "Id": 264,
+  "Name": "$SpaceShockWave",
+  "DisplayCategory": 1,
+  "Availability": 2,
+  "ComponentStatsId": 1,
+  "Level": 250,
+  "Icon": "energy_wave2",
+  "Layout": "010111111",
+  "CellType": "4",
+  "WeaponId": 121,
+  "AmmunitionId": 121,
+  "WeaponSlotType": "S",
+  "PossibleModifications": [
+    13,
+    8,
+    6,
+    5,
+    2,
+    7,
+    1,
+    16
+  ]
+}

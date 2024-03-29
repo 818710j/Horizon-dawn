@@ -62,8 +62,7 @@ namespace Services.Reources
                     sprite = GetSprite("Textures/Effects/" + spriteId.Id);
                     break;
                 default:
-                    sprite = GetSprite(spriteId.Id);
-                    break;
+                    return GetSprite(spriteId.Id);
             }
 
             if (sprite == null && _database != null)
@@ -77,7 +76,7 @@ namespace Services.Reources
             AudioClip audioClip;
             if (!id) return null;
 
-            return _audio.TryGetValue(id.Id, out audioClip) ? audioClip : _database.GetAudioClip(id.Id)?.AudioClip;
+            return _audio.TryGetValue(id.Id, out audioClip) ? audioClip : _database.GetAudioClip(id.Id).AudioClip;
         }
 
         public Texture2D GetNebulaTexture(int seed)

@@ -38,6 +38,7 @@ namespace Combat.Unit.Ship.Effects.Special
 
         public IEngineModification EngineModification { get { return null; } }
         public IFeaturesModification FeaturesModification { get { return null; } }
+        public IStatsWeaponModification StatsWeaponModification { get { return null; } }
         public ISystemsModification SystemsModification { get { return null; } }
         public IStatsModification StatsModification { get { return null; } }
         public IUnitAction UnitAction { get { return null; } }

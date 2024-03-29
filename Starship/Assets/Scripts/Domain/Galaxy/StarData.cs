@@ -87,8 +87,8 @@ namespace Galaxy
             	objects.Add(StarObjectType.Event);
             if (value >= 300 && value < 325 && faction == Faction.Neutral)
                 objects.Add(StarObjectType.Survival);
-            if (value >= 350 && value < 375 && faction != Faction.Neutral)
-                objects.Add(StarObjectType.Arena);
+            //if (value >= 350 && value < 375 && faction != Faction.Neutral)
+            //    objects.Add(StarObjectType.Arena);
             if (value >= 400 && value < 450 && (faction != Faction.Neutral || value < 420))
                 objects.Add(StarObjectType.Boss);
             if (value >= 450 && value < 475 && faction == Faction.Neutral)
@@ -100,10 +100,12 @@ namespace Galaxy
                 objects.Add(StarObjectType.Challenge);
             if (value >= 600 && value < 650 && faction != Faction.Neutral)
                 objects.Add(StarObjectType.Hive);
-            if (value >= 700 && value < 720 && faction == Faction.Neutral)
-                objects.Add(StarObjectType.BlackMarket);
-            if (value >= 800 && value < 810 && _holidayManager.IsChristmas)
-                objects.Add(StarObjectType.Xmas);
+            if (value >= 710 && value < 740 && faction == Faction.Neutral)
+                objects.Add(StarObjectType.Market);
+            if (value >= 800 && value < 850 && faction == Faction.Neutral)
+                objects.Add(StarObjectType.BlackMarket); 
+            //if (value >= 620 && value < 650 && _holidayManager.IsChristmas)
+            //    objects.Add(StarObjectType.Xmas);
 
             return objects;
         }
@@ -141,6 +143,7 @@ namespace Galaxy
 
             _customStarObjects.Add(stars.Dequeue(), StarObjects.Create(StarObjectType.Ruins));
             _customStarObjects.Add(stars.Dequeue(), StarObjects.Create(StarObjectType.BlackMarket));
+            _customStarObjects.Add(stars.Dequeue(), StarObjects.Create(StarObjectType.Market));
             _customStarObjects.Add(stars.Dequeue(), StarObjects.Create(StarObjectType.Challenge));
             _customStarObjects.Add(stars.Dequeue(), StarObjects.Create(StarObjectType.Boss));
             _customStarObjects.Add(stars.Dequeue(), StarObjects.Create(StarObjectType.Event));
@@ -148,6 +151,11 @@ namespace Galaxy
             _customStarObjects.Add(stars.Dequeue(), StarObjects.Create(StarObjectType.Event));
             _customStarObjects.Add(stars.Dequeue(), StarObjects.Create(StarObjectType.Survival));
             _customStarObjects.Add(stars.Dequeue(), StarObjects.Create(StarObjectType.Wormhole));
+            //if (_holidayManager.IsChristmas)
+            //    _customStarObjects.Add(stars.Dequeue(), StarObjects.Create(StarObjectType.Xmas));
+#if UNITY_ANDROID
+            // TODO: _customStarObjects.Add(stars.Dequeue(), StarObjects.Create(StarObjectType.Multiplayer));
+#endif
 
             while (stars.Count > 0)
                 _customStarObjects.Add(stars.Dequeue(), new StarObjects());

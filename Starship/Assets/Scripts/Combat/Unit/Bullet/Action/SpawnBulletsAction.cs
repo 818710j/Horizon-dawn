@@ -38,11 +38,11 @@ namespace Combat.Component.Bullet.Action
                 return CollisionEffect.None;
 
             if (_magazine <= 1)
-                _factory.Create(this, 0, 0, /*TODO: _offset*/0);
+                _factory.Create(this, 0, 0, /*TODO: _offset*/0, Vector2.zero);
             else
             {
                 for (var i = 0; i < _magazine; ++i)
-                    _factory.Create(this, 0, Random.Range(0, 360), _offset);
+                    _factory.Create(this, 0, Random.Range(0, 360), _offset, Vector2.zero);
             }
 
             if (_audioClipId) _soundPlayer.Play(_audioClipId, GetHashCode());
@@ -70,8 +70,6 @@ namespace Combat.Component.Bullet.Action
 
         public void UpdatePhysics(float elapsedTime) {}
         public void UpdateView(float elapsedTime) {}
-
-        public void AddAttachedChild(IBullet bullet) {}
 
         private float _lastSpawnTime;
         private readonly AudioClipId _audioClipId;

@@ -4,7 +4,6 @@
   "Name": "$EnergySiphon_S",
   "DisplayCategory": 1,
   "ComponentStatsId": 1,
-  "Faction": -1,
   "Icon": "energybeam1",
   "Color": "#FFC0FF",
   "Layout": "1010",

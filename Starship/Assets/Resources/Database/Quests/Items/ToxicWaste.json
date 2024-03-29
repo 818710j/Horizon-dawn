@@ -4,5 +4,8 @@
   "Name": "$Commodity_ToxicWaste",
   "Icon": "scull",
   "Color": "#6FED6C",
-  "Price": 4
+  "Price": 4,
+  "InMarket": true,
+  "MinAmount": 1,
+  "MaxAmount": 10000
 }

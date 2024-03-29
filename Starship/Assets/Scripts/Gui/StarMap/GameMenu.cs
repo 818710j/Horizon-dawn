@@ -35,8 +35,10 @@ namespace Gui.StarMap
         public AnimatedWindow FactionPanel;
         public AnimatedWindow WormholePanel;
         public AnimatedWindow BlackMarketPanel;
+        public AnimatedWindow MarketPanel;
         public AnimatedWindow ChallengePanel;
         public AnimatedWindow OutOfFuelDialog;
+        public AnimatedWindow IapStoreWindow;
         public AnimatedWindow QuestLogWindow;
 
         [SerializeField] private Button StarViewButton;
@@ -65,8 +67,10 @@ namespace Gui.StarMap
         public void ShowFaction() { FactionPanel.Open(); }
         public void ShowWormhole() { WormholePanel.Open(); }
         public void ShowBlackMarket() { BlackMarketPanel.Open(); }
+        public void ShowMarket() { MarketPanel.Open(); }
         public void ShowChallenge() { ChallengePanel.Open(); }
         public void ShowOutOfFuel() { OutOfFuelDialog.Open(); }
+        public void ShowIapStore() { IapStoreWindow.Open(); }
         public void ShowQuestLog() { QuestLogWindow.Open(); }
 
         public void ExitToMainMenu()
@@ -85,7 +89,7 @@ namespace Gui.StarMap
             _starMap.ShowStores = ShopFilterToggle.isOn;
             _starMap.ShowBookmarks = BookmarkFilterToggle.isOn;
             _starMap.ShowArenas = ArenaFilterToggle.isOn;
-            _starMap.ShowXmas = XmasFilterToggle.isOn && _holidayManager.IsChristmas;
+            //_starMap.ShowXmas = XmasFilterToggle.isOn && _holidayManager.IsChristmas;
             _messenger.Broadcast(EventType.StarMapChanged);
         }
 
@@ -97,7 +101,7 @@ namespace Gui.StarMap
             _messenger.AddListener<int>(EventType.ArrivedToPlanet, OnArrivedToPlanet);
             _messenger.AddListener<bool>(EventType.SupplyShipActivated, OnSupplyShipActivated);
 
-            XmasFilterToggle.gameObject.SetActive(_holidayManager.IsChristmas);
+            //XmasFilterToggle.gameObject.SetActive(_holidayManager.IsChristmas);
 
             InitButtons();
             OnFiltersChanged();
@@ -152,20 +156,23 @@ namespace Gui.StarMap
                 case Galaxy.StarObjectType.Challenge:
                     ShowChallenge();
                     break;
-                case Galaxy.StarObjectType.Arena:
-                    ShowArena();
-                    break;
+                //case Galaxy.StarObjectType.Arena:
+                //    ShowArena();
+                //    break;
                 case Galaxy.StarObjectType.Ruins:
                     ShowRuins();
                     break;
-                case Galaxy.StarObjectType.Xmas:
-                    ShowXmas();
-                    break;
+                //case Galaxy.StarObjectType.Xmas:
+                //    ShowXmas();
+                //    break;
                 case Galaxy.StarObjectType.Survival:
                     ShowSurvival();
                     break;
                 case Galaxy.StarObjectType.BlackMarket:
                     ShowBlackMarket();
+                    break;
+                case Galaxy.StarObjectType.Market:
+                    ShowMarket();
                     break;
                 case Galaxy.StarObjectType.Hive:
                     ShowPandemic();

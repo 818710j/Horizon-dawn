@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using GameServices.LevelManager;
+﻿using GameServices.LevelManager;
 using GameServices.Settings;
 using Services.Messenger;
 using UnityEngine;
@@ -12,9 +11,9 @@ namespace GameServices
     {
         [Inject]
         private void Initialize(
-            IMessenger messenger,
+            IMessenger messenger, 
             GameSettings gameSettings,
-            SceneLoadedSignal sceneLoadedSignal,
+            SceneLoadedSignal sceneLoadedSignal, 
             GamePausedSignal.Trigger gamePausedTrigger)
         {
             _messenger = messenger;
@@ -27,19 +26,25 @@ namespace GameServices
             UpdateStatus();
         }
 
-        public void Pause(GameObject key)
+        public void Pause()
         {
-            if (_activePauses.Add(key))
+            _gamePauseCounter++;
+
+            if (_gamePauseCounter == 1)
                 UpdateStatus();
         }
 
-        public void Resume(GameObject key)
+        public void Resume()
         {
-            if (_activePauses.Remove(key))
+            if (_gamePauseCounter == 0)
+                return;
+
+            _gamePauseCounter--;
+            if (_gamePauseCounter == 0)
                 UpdateStatus();
         }
 
-        public bool Paused => _activePauses.Count != 0 || _applicationPaused;
+        public bool Paused => _gamePauseCounter > 0 || _applicationPaused;
 
         public bool ApplicationPaused => _applicationPaused;
 
@@ -65,9 +70,9 @@ namespace GameServices
 
         private void OnSceneLoaded()
         {
-            if (_activePauses.Count > 0)
+            if (_gamePauseCounter > 0)
             {
-                _activePauses.Clear();
+                _gamePauseCounter = 0;
                 UpdateStatus();
             }
         }
@@ -83,7 +88,7 @@ namespace GameServices
         }
 
         private bool _applicationPaused;
-        private readonly HashSet<GameObject> _activePauses = new HashSet<GameObject>();
+        private int _gamePauseCounter = 0;
 
         private bool _runInBackground;
         private IMessenger _messenger;
@@ -93,8 +98,6 @@ namespace GameServices
 
     public class GamePausedSignal : SmartWeakSignal<bool>
     {
-        public class Trigger : TriggerBase
-        {
-        }
+        public class Trigger : TriggerBase {}
     }
 }

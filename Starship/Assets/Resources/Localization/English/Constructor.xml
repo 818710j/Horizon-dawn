@@ -18,14 +18,12 @@
     <string name="EngineSize">Engine Size</string>
     <string name="Damage">Attack</string>
     <string name="HitPoints">Hit Points</string>
-    <string name="RepairRateCooldown">Repair cooldown</string>
     <string name="Energy">Energy</string>
     <string name="ShieldPoints">Shield Points</string>
     <string name="ShieldRechargeRate">Recharge rate</string>
-    <string name="ShieldRechargeRateCooldown">Shield recharge cooldown</string>
     <string name="RepairRate">Repair rate</string>
+	<string name="HitPointsRepairRate">HitPointsRepairRate</string>
     <string name="RechargeRate">Recharge rate</string>
-    <string name="RechargeRateCooldown">Recharge cooldown</string>
     <string name="Weight">Weight</string>
     <string name="RamDamage">Ramming damage</string>
     <string name="DamageAbsorption">Energy absorption</string>
@@ -86,8 +84,6 @@
     <string name="WeaponArea">Area of effect</string>
     <string name="WeaponImpulse">Impulse</string>
     <string name="DamageType">Damage type</string>
-    <string name="WeaponLifetime">Lifetime</string>
-    <string name="WeaponHP">Durability</string>
     <string name="ImpactDamage">Kinetic</string>
     <string name="EnergyDamage">Energy</string>
     <string name="HeatDamage">Heat</string>
@@ -102,13 +98,15 @@
     <string name="EmptySlot1">Empty slot for destroyer class ships</string>
     <string name="EmptySlot2">Empty slot for cruiser class ships</string>
     <string name="EmptySlot3">Empty slot for battleship class ships</string>
-    <string name="EmptySlot4">Empty slot for capital class ships</string>
+    <string name="EmptySlot4">here you can place minor titan.</string>
+    <string name="EmptySlot5">The location of Titan</string>
     <string name="ShipClass">Class:</string>
     <string name="ClassFrigate">Frigate</string>
     <string name="ClassDestroyer">Destroyer</string>
     <string name="ClassCruiser">Cruiser</string>
     <string name="ClassBattleship">Battleship</string>
-    <string name="ClassTitan">Capital Ship</string>
+    <string name="ClasssubTitan">sub-Titan</string>
+    <string name="ClassTitan">Titan</string>
     <string name="GroupAll">All modules</string>
     <string name="GroupWeapon">Weapons</string>
     <string name="GroupArmor">Defense modules</string>
@@ -116,6 +114,7 @@
     <string name="GroupEnergy">Energy modules</string>
     <string name="GroupDrones">Drones</string>
     <string name="GroupSpecial">Special modules</string>
+	<string name="GroupCore">Core equipment</string>
     <string name="GroupShip">$1 ship modules</string>
     <string name="GroupShips">Ships</string>
     <string name="GroupSatellites">Satellites</string>
@@ -125,4 +124,10 @@
     <string name="GroupWeaponM">Missiles</string>
     <string name="GroupWeaponT">Energy torpedoes</string>
     <string name="GroupWeaponS">Special weapons</string>
+	<string name="StructurePoints">StructurePoints</string>
+	<string name="StructurePointsRepairRate">StructurePointsRepairRate</string>
+	<string name="StructurePointsRepairCooldown">StructurePointsRepairCooldown</string>
+	<string name="StructureDamageResistance">StructureDamageResistance</string>
+	<string name="Corrode">Corrode</string>
+	<string name="StructureDamage">Structure</string>
 </resources>
