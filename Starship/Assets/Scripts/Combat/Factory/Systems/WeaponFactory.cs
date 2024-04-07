@@ -102,6 +102,16 @@ namespace Combat.Factory
                             weapon.AddTrigger(CreateFlashEffect(weaponStats, bulletFactory, platform));
                         return weapon;
                     }
+                case WeaponClass.SemiAutomaticGun:
+                    {
+                        bulletFactory.Stats.RandomFactor = 0.2f;
+                        var weapon = new SemiAutomaticGun(platform, weaponStats, bulletFactory, keyBinding, owner);
+                        if (weaponStats.ShotSound)
+                            weapon.AddTrigger(new SoundEffect(_soundPlayer, weaponStats.ShotSound, ConditionType.OnActivate));
+                        if (weaponStats.ShotEffectPrefab)
+                            weapon.AddTrigger(CreateFlashEffect(weaponStats, bulletFactory, platform));
+                        return weapon;
+                    }
                 default:
                     throw new ArgumentOutOfRangeException();
             }

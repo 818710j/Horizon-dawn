@@ -16,5 +16,6 @@ namespace GameDatabase.Enums
 		MashineGun,
 		MultiShot,
 		RequiredCharging,
-	}
+        SemiAutomaticGun,
+    }
 }

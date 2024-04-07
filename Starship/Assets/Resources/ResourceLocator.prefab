@@ -47,6 +47,7 @@ MonoBehaviour:
   _shipSprites:
   - {fileID: 21300000, guid: ee16ca00c1fd3f741aedb07c36be4aa6, type: 3}
   - {fileID: 21300000, guid: f71144f565a08664687376347bdc6cc7, type: 3}
+  - {fileID: 21300000, guid: a652b94c597f9004992af67b99f32b73, type: 3}
   - {fileID: 21300000, guid: 8bf717b0714cd1a479498cd5d68df285, type: 3}
   - {fileID: 21300000, guid: 84521c924dc48f245a12ccd59eaab606, type: 3}
   - {fileID: 21300000, guid: 30b1ebadb58845d4d9ea530ff90a5086, type: 3}
@@ -339,6 +340,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6c687a6ced0aae341a2df35486d5ab8e, type: 3}
   - {fileID: 21300000, guid: ec10b01d41f8c3a459c0c302d483e4a0, type: 3}
   - {fileID: 21300000, guid: 289f17f5e1ae1d54a9994ebe58341746, type: 3}
+  - {fileID: 21300000, guid: 33c4374db449bfd43b33cea8f6b02649, type: 3}
+  - {fileID: 21300000, guid: c1c533b22904dac48b07ff6c3f4dff6e, type: 3}
   - {fileID: 21300000, guid: a83d768660c687e4cb5bc8191d993cf0, type: 3}
   - {fileID: 21300000, guid: cb203e4fbc8c23d47a1dd799f321269e, type: 3}
   - {fileID: 21300000, guid: 44dc4a03322327c4c9986beb747f4f2c, type: 3}
@@ -364,6 +367,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 8c8e4441521014d4da938f5e7bd5685a, type: 3}
   - {fileID: 21300000, guid: 8f91e26c07a35fd418bc62ae765c654c, type: 3}
   - {fileID: 21300000, guid: c768b892fae4e3049ba518e1ecf8070a, type: 3}
+  - {fileID: 21300000, guid: d56ea054519402945923cc4a4bb1bf9b, type: 3}
   - {fileID: 21300000, guid: 728b5a5287d67a944a14f612c7222216, type: 3}
   - {fileID: 21300000, guid: 54d5df3d765b7434180f6ec1b8864f51, type: 3}
   - {fileID: 21300000, guid: c1944c0ec4a3ee74aad7c5d487ea0817, type: 3}
